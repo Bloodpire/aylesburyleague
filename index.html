@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neighborhood Summer League</title>
+    <title>Aylesbury League</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -58,15 +58,15 @@
         /* FIFA Card */
         .card {
             position: relative;
-            /* PROBLEM 1: Card wasn't long enough. We make it 10% taller */
-            aspect-ratio: 2 / 3.3; 
-            padding: 15px; /* Reduced from 20 */
+            aspect-ratio: 2 / 3.6;
+            padding: 15px 15px 22% 15px;
             text-align: center;
             transition: 0.3s;
             clip-path: polygon(0% 0%, 100% 0%, 100% 88%, 50% 100%, 0% 88%);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
             cursor: pointer;
-            overflow: hidden; /* Important for long stats */
+            overflow: hidden;
+            box-sizing: border-box;
         }
 
         .card:hover { transform: translateY(-10px) scale(1.02); }
@@ -103,8 +103,8 @@
             border: 3px solid rgba(255,255,255,0.5);
         }
 
-        .ovr-main { font-size: 3.5rem; font-weight: 900; line-height: 1; margin: 0; }
-        .player-name { font-size: 1.4rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin: 5px 0; padding-bottom: 2px;}
+        .ovr-main { font-size: 3rem; font-weight: 900; line-height: 1; margin: 0; }
+        .player-name { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin: 4px 0; padding-bottom: 2px;}
 
         /* PROBLEM 2: Text Cutoff. Reduced padding and font-size */
         .stats-grid {
@@ -188,7 +188,7 @@
 <body>
 
 <div class="container">
-    <h1>☀️ NEIGHBORHOOD SUMMER LEAGUE</h1>
+    <h1>⚽ AYLESBURY LEAGUE</h1>
 
     <div class="add-player-section">
         <button class="open-modal-btn" onclick="openEditModal()">+ Add New Player</button>
@@ -337,7 +337,18 @@
 
     function resetForm() {
         document.getElementById('edit-id').value = '';
-        document.querySelectorAll('.modal-content input').forEach(i => i.value = '');
+        document.getElementById('name').value = '';
+        document.getElementById('img-url').value = '';
+        document.getElementById('pos').value = '';
+        document.getElementById('pac').value = '';
+        document.getElementById('sho').value = '';
+        document.getElementById('pas').value = '';
+        document.getElementById('dri').value = '';
+        document.getElementById('def').value = '';
+        document.getElementById('phy').value = '';
+        document.getElementById('wf').value = '⭐⭐⭐⭐'; // reset to default 4★
+        document.getElementById('modalTitle').innerText = 'Add New Player';
+        document.getElementById('saveBtnText').innerText = 'Add to League';
     }
 
     // Close modal if user clicks outside of it
