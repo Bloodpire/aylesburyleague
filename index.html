@@ -58,15 +58,17 @@
         /* FIFA Card */
         .card {
             position: relative;
-            aspect-ratio: 2 / 3.6;
-            padding: 15px 15px 22% 15px;
+            aspect-ratio: 2 / 3.1;
+            padding: 12px 15px 10px 15px;
             text-align: center;
             transition: 0.3s;
-            clip-path: polygon(0% 0%, 100% 0%, 100% 88%, 50% 100%, 0% 88%);
+            clip-path: polygon(0% 0%, 100% 0%, 100% 92%, 50% 100%, 0% 92%);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
             cursor: pointer;
-            overflow: hidden;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .card:hover { transform: translateY(-10px) scale(1.02); }
@@ -94,28 +96,29 @@
         }
 
         .player-img {
-            width: 100px; /* Reduced from 110 */
-            height: 100px;
-            margin: 5px auto;
+            width: 90px;
+            height: 90px;
+            margin: 3px auto;
             border-radius: 50%;
             background: rgba(255,255,255,0.3);
             object-fit: cover;
             border: 3px solid rgba(255,255,255,0.5);
         }
 
-        .ovr-main { font-size: 3rem; font-weight: 900; line-height: 1; margin: 0; }
-        .player-name { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin: 4px 0; padding-bottom: 2px;}
+        .ovr-main { font-size: 2.8rem; font-weight: 900; line-height: 1; margin: 0; }
+        .player-name { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin: 3px 0; padding-bottom: 2px; width: 100%;}
 
-        /* PROBLEM 2: Text Cutoff. Reduced padding and font-size */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             font-weight: bold;
-            font-size: 1rem; /* Slightly reduced */
-            margin-top: 5px; /* Less space between name and stats */
-            gap: 1px; /* Less vertical gap */
+            font-size: 0.9rem;
+            margin-top: 4px;
+            gap: 0;
+            width: 100%;
+            padding-bottom: 8%;
         }
-        .stat-item { padding: 1px 0; } /* Minimal vertical padding */
+        .stat-item { padding: 1px 0; }
 
         /* Modal Styles */
         .modal {
@@ -231,17 +234,13 @@
 
     const modal = document.getElementById('playerModal');
 
-    /* PROBLEM 3: Edit Menu didn't work. Improved the logic here */
     function openEditModal(playerId = null) {
-        // Reset everything first
         resetForm();
 
-        if (playerId) {
-            // Find the player data
-            const p = players.find(x => x.id === parseInt(playerId));
-            if (!p) return; // Guard clause if player not found
+        if (playerId !== null) {
+            const p = players.find(x => x.id === playerId);
+            if (!p) return;
 
-            // Fill the form fields
             document.getElementById('modalTitle').innerText = `Edit ${p.name}`;
             document.getElementById('edit-id').value = p.id;
             document.getElementById('name').value = p.name;
@@ -255,10 +254,6 @@
             document.getElementById('def').value = p.def;
             document.getElementById('phy').value = p.phy;
             document.getElementById('saveBtnText').innerText = "Update Player Info";
-        } else {
-            // New player logic
-            document.getElementById('modalTitle').innerText = "Add New Player";
-            document.getElementById('saveBtnText').innerText = "Add to League";
         }
         modal.style.display = "block";
     }
@@ -280,7 +275,7 @@
         const ovr = Math.round(stats.reduce((a, b) => a + b) / 6);
         
         const playerData = {
-            id: idInput ? parseInt(idInput) : Date.now(),
+            id: idInput ? Number(idInput) : Date.now(),
             name: document.getElementById('name').value || "Player",
             img: document.getElementById('img-url').value || "https://cdn-icons-png.flaticon.com/512/1163/1163481.png",
             pos: (document.getElementById('pos').value || "ST").toUpperCase(),
@@ -291,7 +286,7 @@
         };
 
         if (idInput) {
-            const index = players.findIndex(p => p.id === parseInt(idInput));
+            const index = players.findIndex(p => p.id === Number(idInput));
             players[index] = playerData;
         } else {
             players.push(playerData);
@@ -299,14 +294,6 @@
 
         updateDisplay();
         closeModal();
-    }
-
-    function removePlayer(e, id) {
-        e.stopPropagation(); // Stops the modal from opening
-        if(confirm("Permanently delete this player?")) {
-            players = players.filter(p => p.id !== id);
-            updateDisplay();
-        }
     }
 
     function updateDisplay() {
@@ -317,21 +304,35 @@
 
         players.forEach((p, index) => {
             let tier = p.ovr >= 80 ? 'gold' : (p.ovr >= 70 ? 'silver' : 'bronze');
-            container.innerHTML += `
-                <div class="card ${tier}" onclick="openEditModal(${p.id})">
-                    <button class="delete-x" onclick="removePlayer(event, ${p.id})">X</button>
+            const card = document.createElement('div');
+            card.className = `card ${tier}`;
+            card.dataset.id = p.id;
+            card.innerHTML = `
+                    <button class="delete-x" data-id="${p.id}">X</button>
                     <div style="font-weight:bold; font-size: 0.8rem;">RANK #${index + 1}</div>
                     <img src="${p.img}" class="player-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
                     <div class="ovr-main">${p.ovr}</div>
                     <div class="player-name">${p.name}</div>
                     <div style="font-weight:bold; opacity: 0.9;">${p.pos} | ${p.wf}</div>
                     <div class="stats-grid">
-                        <div class="stat-item">PAC ${p.pac}</div> <div class="stat-item">SHO ${p.sho}</div>
-                        <div class="stat-item">PAS ${p.pas}</div> <div class="stat-item">DRI ${p.dri}</div>
-                        <div class="stat-item">DEF ${p.def}</div> <div class="stat-item">PHY ${p.phy}</div>
+                        <div class="stat-item">PAC ${p.pac}</div><div class="stat-item">SHO ${p.sho}</div>
+                        <div class="stat-item">PAS ${p.pas}</div><div class="stat-item">DRI ${p.dri}</div>
+                        <div class="stat-item">DEF ${p.def}</div><div class="stat-item">PHY ${p.phy}</div>
                     </div>
-                </div>
             `;
+            // Edit on card click
+            card.addEventListener('click', function() {
+                openEditModal(p.id);
+            });
+            // Delete on X click (stop propagation so card click doesn't fire)
+            card.querySelector('.delete-x').addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (confirm("Permanently delete this player?")) {
+                    players = players.filter(x => x.id !== p.id);
+                    updateDisplay();
+                }
+            });
+            container.appendChild(card);
         });
     }
 
