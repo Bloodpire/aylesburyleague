@@ -11,6 +11,7 @@
             --gold-card: linear-gradient(160deg, #ffe359 0%, #cf9a2a 100%);
             --silver-card: linear-gradient(160deg, #e0e0e0 0%, #8e8e8e 100%);
             --bronze-card: linear-gradient(160deg, #d3915f 0%, #6e3a15 100%);
+            --off-white-overlay: rgba(255, 255, 255, 0.95);
         }
 
         body {
@@ -19,6 +20,7 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
+            overflow-x: hidden;
         }
 
         .container { max-width: 1200px; margin: auto; }
@@ -26,7 +28,7 @@
 
         /* Add Player Bar */
         .add-player-section {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--off-white-overlay);
             padding: 15px;
             border-radius: 50px;
             text-align: center;
@@ -56,18 +58,20 @@
         /* FIFA Card */
         .card {
             position: relative;
-            aspect-ratio: 2 / 3;
-            padding: 20px;
+            /* PROBLEM 1: Card wasn't long enough. We make it 10% taller */
+            aspect-ratio: 2 / 3.3; 
+            padding: 15px; /* Reduced from 20 */
             text-align: center;
             transition: 0.3s;
             clip-path: polygon(0% 0%, 100% 0%, 100% 88%, 50% 100%, 0% 88%);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
             cursor: pointer;
+            overflow: hidden; /* Important for long stats */
         }
 
         .card:hover { transform: translateY(-10px) scale(1.02); }
-        .card.gold { background: var(--gold-card); }
-        .card.silver { background: var(--silver-card); }
+        .card.gold { background: var(--gold-card); color: #222; }
+        .card.silver { background: var(--silver-card); color: #222; }
         .card.bronze { background: var(--bronze-card); color: white; }
 
         .delete-x {
@@ -90,27 +94,30 @@
         }
 
         .player-img {
-            width: 110px;
-            height: 110px;
-            margin: 10px auto;
+            width: 100px; /* Reduced from 110 */
+            height: 100px;
+            margin: 5px auto;
             border-radius: 50%;
             background: rgba(255,255,255,0.3);
             object-fit: cover;
             border: 3px solid rgba(255,255,255,0.5);
         }
 
-        .ovr-main { font-size: 3.8rem; font-weight: 900; line-height: 1; margin: 0; }
-        .player-name { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin: 5px 0; }
+        .ovr-main { font-size: 3.5rem; font-weight: 900; line-height: 1; margin: 0; }
+        .player-name { font-size: 1.4rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin: 5px 0; padding-bottom: 2px;}
 
+        /* PROBLEM 2: Text Cutoff. Reduced padding and font-size */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             font-weight: bold;
-            font-size: 1.1rem;
-            margin-top: 10px;
+            font-size: 1rem; /* Slightly reduced */
+            margin-top: 5px; /* Less space between name and stats */
+            gap: 1px; /* Less vertical gap */
         }
+        .stat-item { padding: 1px 0; } /* Minimal vertical padding */
 
-        /* Modal / Menu Styles */
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -133,7 +140,7 @@
             position: relative;
         }
 
-        .modal-header { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; text-align: center; }
+        .modal-header { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; text-align: center; color: #333; }
 
         .form-grid {
             display: grid;
@@ -149,7 +156,10 @@
             border-radius: 8px;
             font-size: 1rem;
             font-family: 'Oswald', sans-serif;
+            box-sizing: border-box; /* Crucial for width */
         }
+
+        input { width: 100%; }
 
         .save-btn {
             grid-column: span 2;
@@ -162,6 +172,7 @@
             font-weight: bold;
             cursor: pointer;
             margin-top: 10px;
+            text-transform: uppercase;
         }
 
         .close-modal {
@@ -210,7 +221,7 @@
             <input type="number" id="def" placeholder="DEF" max="99">
             <input type="number" id="phy" placeholder="PHY" max="99">
             
-            <button class="save-btn" onclick="savePlayer()">Save Player Data</button>
+            <button class="save-btn" onclick="savePlayer()" id="saveBtnText">Save Player Data</button>
         </div>
     </div>
 </div>
@@ -220,10 +231,18 @@
 
     const modal = document.getElementById('playerModal');
 
+    /* PROBLEM 3: Edit Menu didn't work. Improved the logic here */
     function openEditModal(playerId = null) {
+        // Reset everything first
+        resetForm();
+
         if (playerId) {
-            const p = players.find(x => x.id === playerId);
-            document.getElementById('modalTitle').innerText = "Edit Player Info";
+            // Find the player data
+            const p = players.find(x => x.id === parseInt(playerId));
+            if (!p) return; // Guard clause if player not found
+
+            // Fill the form fields
+            document.getElementById('modalTitle').innerText = `Edit ${p.name}`;
             document.getElementById('edit-id').value = p.id;
             document.getElementById('name').value = p.name;
             document.getElementById('img-url').value = p.img.includes('flaticon') ? '' : p.img;
@@ -235,9 +254,11 @@
             document.getElementById('dri').value = p.dri;
             document.getElementById('def').value = p.def;
             document.getElementById('phy').value = p.phy;
+            document.getElementById('saveBtnText').innerText = "Update Player Info";
         } else {
+            // New player logic
             document.getElementById('modalTitle').innerText = "Add New Player";
-            resetForm();
+            document.getElementById('saveBtnText').innerText = "Add to League";
         }
         modal.style.display = "block";
     }
@@ -281,7 +302,7 @@
     }
 
     function removePlayer(e, id) {
-        e.stopPropagation(); // Prevents opening the edit menu when clicking X
+        e.stopPropagation(); // Stops the modal from opening
         if(confirm("Permanently delete this player?")) {
             players = players.filter(p => p.id !== id);
             updateDisplay();
@@ -299,15 +320,15 @@
             container.innerHTML += `
                 <div class="card ${tier}" onclick="openEditModal(${p.id})">
                     <button class="delete-x" onclick="removePlayer(event, ${p.id})">X</button>
-                    <div style="font-weight:bold; font-size: 0.9rem;">RANK #${index + 1}</div>
+                    <div style="font-weight:bold; font-size: 0.8rem;">RANK #${index + 1}</div>
                     <img src="${p.img}" class="player-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
                     <div class="ovr-main">${p.ovr}</div>
                     <div class="player-name">${p.name}</div>
                     <div style="font-weight:bold; opacity: 0.9;">${p.pos} | ${p.wf}</div>
                     <div class="stats-grid">
-                        <span>PAC ${p.pac}</span> <span>SHO ${p.sho}</span>
-                        <span>PAS ${p.pas}</span> <span>DRI ${p.dri}</span>
-                        <span>DEF ${p.def}</span> <span>PHY ${p.phy}</span>
+                        <div class="stat-item">PAC ${p.pac}</div> <div class="stat-item">SHO ${p.sho}</div>
+                        <div class="stat-item">PAS ${p.pas}</div> <div class="stat-item">DRI ${p.dri}</div>
+                        <div class="stat-item">DEF ${p.def}</div> <div class="stat-item">PHY ${p.phy}</div>
                     </div>
                 </div>
             `;
