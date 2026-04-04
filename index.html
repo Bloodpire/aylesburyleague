@@ -58,11 +58,10 @@
         /* FIFA Card */
         .card {
             position: relative;
-            aspect-ratio: 2 / 3.1;
-            padding: 12px 15px 10px 15px;
+            width: 100%;
+            padding: 12px 15px 0 15px;
             text-align: center;
             transition: 0.3s;
-            clip-path: polygon(0% 0%, 100% 0%, 100% 92%, 50% 100%, 0% 92%);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
             cursor: pointer;
             box-sizing: border-box;
@@ -70,6 +69,21 @@
             flex-direction: column;
             align-items: center;
         }
+
+        /* The pointed bottom is a pseudo-element, not clip-path */
+        .card::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 40px;
+            clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
+            margin-top: 10px;
+            flex-shrink: 0;
+        }
+
+        .card.gold::after { background: #cf9a2a; }
+        .card.silver::after { background: #8e8e8e; }
+        .card.bronze::after { background: #6e3a15; }
 
         .card:hover { transform: translateY(-10px) scale(1.02); }
         .card.gold { background: var(--gold-card); color: #222; }
@@ -116,7 +130,6 @@
             margin-top: 4px;
             gap: 0;
             width: 100%;
-            padding-bottom: 8%;
         }
         .stat-item { padding: 1px 0; }
 
@@ -231,16 +244,16 @@
 
 <script>
     let players = JSON.parse(localStorage.getItem('neighborhoodPlayers')) || [];
+    // Ensure all IDs are strings for consistent comparison
+    players = players.map(p => ({ ...p, id: String(p.id) }));
 
     const modal = document.getElementById('playerModal');
 
     function openEditModal(playerId = null) {
         resetForm();
-
         if (playerId !== null) {
-            const p = players.find(x => x.id === playerId);
-            if (!p) return;
-
+            const p = players.find(x => x.id === String(playerId));
+            if (!p) { console.warn('Player not found:', playerId, players); return; }
             document.getElementById('modalTitle').innerText = `Edit ${p.name}`;
             document.getElementById('edit-id').value = p.id;
             document.getElementById('name').value = p.name;
@@ -275,7 +288,7 @@
         const ovr = Math.round(stats.reduce((a, b) => a + b) / 6);
         
         const playerData = {
-            id: idInput ? Number(idInput) : Date.now(),
+            id: idInput ? String(idInput) : String(Date.now()),
             name: document.getElementById('name').value || "Player",
             img: document.getElementById('img-url').value || "https://cdn-icons-png.flaticon.com/512/1163/1163481.png",
             pos: (document.getElementById('pos').value || "ST").toUpperCase(),
@@ -286,7 +299,7 @@
         };
 
         if (idInput) {
-            const index = players.findIndex(p => p.id === Number(idInput));
+            const index = players.findIndex(p => p.id === String(idInput));
             players[index] = playerData;
         } else {
             players.push(playerData);
@@ -322,13 +335,13 @@
             `;
             // Edit on card click
             card.addEventListener('click', function() {
-                openEditModal(p.id);
+                openEditModal(String(p.id));
             });
             // Delete on X click (stop propagation so card click doesn't fire)
             card.querySelector('.delete-x').addEventListener('click', function(e) {
                 e.stopPropagation();
                 if (confirm("Permanently delete this player?")) {
-                    players = players.filter(x => x.id !== p.id);
+                    players = players.filter(x => x.id !== String(p.id));
                     updateDisplay();
                 }
             });
