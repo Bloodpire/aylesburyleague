@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neighborhood Summer League</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --sky-blue: #00BFFF;
@@ -18,50 +19,38 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
-            color: #222;
         }
 
         .container { max-width: 1200px; margin: auto; }
-        h1 { text-align: center; color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); font-size: 3rem; margin-bottom: 10px; }
+        h1 { text-align: center; color: white; text-shadow: 2px 2px 10px rgba(0,0,0,0.2); font-size: 3.5rem; margin-bottom: 20px; }
 
-        /* Admin Panel */
-        .admin-panel {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        /* Add Player Bar */
+        .add-player-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 50px;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        .admin-panel input, .admin-panel select {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-family: 'Oswald', sans-serif;
-        }
-
-        .btn {
-            padding: 10px 20px;
+        .open-modal-btn {
+            background: #2ecc71;
+            color: white;
             border: none;
-            border-radius: 5px;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
         }
 
-        .add-btn { background: #2ecc71; color: white; }
-        .update-btn { background: #3498db; color: white; display: none; }
-
         /* Card Grid */
         #leaderboard {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 30px;
-            padding-bottom: 50px;
         }
 
         /* FIFA Card */
@@ -73,91 +62,192 @@
             transition: 0.3s;
             clip-path: polygon(0% 0%, 100% 0%, 100% 88%, 50% 100%, 0% 88%);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            cursor: pointer;
         }
 
-        .card:hover { transform: translateY(-10px); }
+        .card:hover { transform: translateY(-10px) scale(1.02); }
         .card.gold { background: var(--gold-card); }
         .card.silver { background: var(--silver-card); }
         .card.bronze { background: var(--bronze-card); color: white; }
 
+        .delete-x {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
         .player-img {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto;
+            width: 110px;
+            height: 110px;
+            margin: 10px auto;
             border-radius: 50%;
             background: rgba(255,255,255,0.3);
             object-fit: cover;
             border: 3px solid rgba(255,255,255,0.5);
         }
 
-        .ovr-main { font-size: 3.5rem; font-weight: 900; line-height: 1; margin: 5px 0; }
-        .player-name { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin-bottom: 10px; }
+        .ovr-main { font-size: 3.8rem; font-weight: 900; line-height: 1; margin: 0; }
+        .player-name { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin: 5px 0; }
 
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             font-weight: bold;
             font-size: 1.1rem;
-            margin-bottom: 15px;
+            margin-top: 10px;
         }
 
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            position: absolute;
-            bottom: 45px;
-            width: 100%;
+        /* Modal / Menu Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
             left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
         }
 
-        .action-btn {
-            background: rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,0,0,0.2);
-            padding: 4px 8px;
-            font-size: 0.7rem;
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .modal-header { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; text-align: center; }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .full-width { grid-column: span 2; }
+
+        input, select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .save-btn {
+            grid-column: span 2;
+            background: var(--sky-blue);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
             cursor: pointer;
-            border-radius: 3px;
+            margin-top: 10px;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="container">
     <h1>☀️ NEIGHBORHOOD SUMMER LEAGUE</h1>
 
-    <div class="admin-panel" id="input-form">
-        <input type="hidden" id="edit-id">
-        <input type="text" id="name" placeholder="Name">
-        <input type="text" id="img-url" placeholder="Photo Link (URL)">
-        <input type="text" id="pos" placeholder="POS" style="width: 50px;">
-        <select id="wf">
-            <option value="⭐">1★</option>
-            <option value="⭐⭐">2★</option>
-            <option value="⭐⭐⭐">3★</option>
-            <option value="⭐⭐⭐⭐" selected>4★</option>
-            <option value="⭐⭐⭐⭐⭐">5★</option>
-        </select>
-        <input type="number" id="pac" placeholder="PAC" style="width: 50px;">
-        <input type="number" id="sho" placeholder="SHO" style="width: 50px;">
-        <input type="number" id="pas" placeholder="PAS" style="width: 50px;">
-        <input type="number" id="dri" placeholder="DRI" style="width: 50px;">
-        <input type="number" id="def" placeholder="DEF" style="width: 50px;">
-        <input type="number" id="phy" placeholder="PHY" style="width: 50px;">
-        
-        <button class="btn add-btn" id="add-btn" onclick="savePlayer()">Add Player</button>
-        <button class="btn update-btn" id="update-btn" onclick="savePlayer()">Update Player</button>
+    <div class="add-player-section">
+        <button class="open-modal-btn" onclick="openEditModal()">+ Add New Player</button>
     </div>
 
     <div id="leaderboard"></div>
 </div>
 
+<div id="playerModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div class="modal-header" id="modalTitle">Add Player</div>
+        
+        <div class="form-grid">
+            <input type="hidden" id="edit-id">
+            <input type="text" id="name" placeholder="Full Name" class="full-width">
+            <input type="text" id="img-url" placeholder="Photo URL (Optional)" class="full-width">
+            <input type="text" id="pos" placeholder="POS (ST, CM, etc.)">
+            <select id="wf">
+                <option value="⭐">1★ WF</option>
+                <option value="⭐⭐">2★ WF</option>
+                <option value="⭐⭐⭐">3★ WF</option>
+                <option value="⭐⭐⭐⭐" selected>4★ WF</option>
+                <option value="⭐⭐⭐⭐⭐">5★ WF</option>
+            </select>
+            <input type="number" id="pac" placeholder="PAC" max="99">
+            <input type="number" id="sho" placeholder="SHO" max="99">
+            <input type="number" id="pas" placeholder="PAS" max="99">
+            <input type="number" id="dri" placeholder="DRI" max="99">
+            <input type="number" id="def" placeholder="DEF" max="99">
+            <input type="number" id="phy" placeholder="PHY" max="99">
+            
+            <button class="save-btn" onclick="savePlayer()">Save Player Data</button>
+        </div>
+    </div>
+</div>
+
 <script>
     let players = JSON.parse(localStorage.getItem('neighborhoodPlayers')) || [];
 
+    const modal = document.getElementById('playerModal');
+
+    function openEditModal(playerId = null) {
+        if (playerId) {
+            const p = players.find(x => x.id === playerId);
+            document.getElementById('modalTitle').innerText = "Edit Player Info";
+            document.getElementById('edit-id').value = p.id;
+            document.getElementById('name').value = p.name;
+            document.getElementById('img-url').value = p.img.includes('flaticon') ? '' : p.img;
+            document.getElementById('pos').value = p.pos;
+            document.getElementById('wf').value = p.wf;
+            document.getElementById('pac').value = p.pac;
+            document.getElementById('sho').value = p.sho;
+            document.getElementById('pas').value = p.pas;
+            document.getElementById('dri').value = p.dri;
+            document.getElementById('def').value = p.def;
+            document.getElementById('phy').value = p.phy;
+        } else {
+            document.getElementById('modalTitle').innerText = "Add New Player";
+            resetForm();
+        }
+        modal.style.display = "block";
+    }
+
+    function closeModal() {
+        modal.style.display = "none";
+    }
+
     function savePlayer() {
-        const id = document.getElementById('edit-id').value;
+        const idInput = document.getElementById('edit-id').value;
         const stats = [
             parseInt(document.getElementById('pac').value) || 0,
             parseInt(document.getElementById('sho').value) || 0,
@@ -169,7 +259,7 @@
         const ovr = Math.round(stats.reduce((a, b) => a + b) / 6);
         
         const playerData = {
-            id: id ? parseInt(id) : Date.now(),
+            id: idInput ? parseInt(idInput) : Date.now(),
             name: document.getElementById('name').value || "Player",
             img: document.getElementById('img-url').value || "https://cdn-icons-png.flaticon.com/512/1163/1163481.png",
             pos: (document.getElementById('pos').value || "ST").toUpperCase(),
@@ -179,40 +269,20 @@
             ovr: ovr
         };
 
-        if (id) {
-            // Update existing
-            const index = players.findIndex(p => p.id === parseInt(id));
+        if (idInput) {
+            const index = players.findIndex(p => p.id === parseInt(idInput));
             players[index] = playerData;
         } else {
-            // Add new
             players.push(playerData);
         }
 
         updateDisplay();
-        resetForm();
+        closeModal();
     }
 
-    function editPlayer(id) {
-        const p = players.find(player => player.id === id);
-        document.getElementById('edit-id').value = p.id;
-        document.getElementById('name').value = p.name;
-        document.getElementById('img-url').value = p.img.includes('flaticon') ? '' : p.img;
-        document.getElementById('pos').value = p.pos;
-        document.getElementById('wf').value = p.wf;
-        document.getElementById('pac').value = p.pac;
-        document.getElementById('sho').value = p.sho;
-        document.getElementById('pas').value = p.pas;
-        document.getElementById('dri').value = p.dri;
-        document.getElementById('def').value = p.def;
-        document.getElementById('phy').value = p.phy;
-
-        document.getElementById('add-btn').style.display = 'none';
-        document.getElementById('update-btn').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function removePlayer(id) {
-        if(confirm("Remove this player?")) {
+    function removePlayer(e, id) {
+        e.stopPropagation(); // Prevents opening the edit menu when clicking X
+        if(confirm("Permanently delete this player?")) {
             players = players.filter(p => p.id !== id);
             updateDisplay();
         }
@@ -227,20 +297,17 @@
         players.forEach((p, index) => {
             let tier = p.ovr >= 80 ? 'gold' : (p.ovr >= 70 ? 'silver' : 'bronze');
             container.innerHTML += `
-                <div class="card ${tier}">
-                    <div style="font-weight:bold">#${index + 1}</div>
+                <div class="card ${tier}" onclick="openEditModal(${p.id})">
+                    <button class="delete-x" onclick="removePlayer(event, ${p.id})">X</button>
+                    <div style="font-weight:bold; font-size: 0.9rem;">RANK #${index + 1}</div>
                     <img src="${p.img}" class="player-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
                     <div class="ovr-main">${p.ovr}</div>
                     <div class="player-name">${p.name}</div>
-                    <div style="font-weight:bold">${p.pos} | ${p.wf}</div>
+                    <div style="font-weight:bold; opacity: 0.9;">${p.pos} | ${p.wf}</div>
                     <div class="stats-grid">
                         <span>PAC ${p.pac}</span> <span>SHO ${p.sho}</span>
                         <span>PAS ${p.pas}</span> <span>DRI ${p.dri}</span>
                         <span>DEF ${p.def}</span> <span>PHY ${p.phy}</span>
-                    </div>
-                    <div class="actions">
-                        <button class="action-btn" onclick="editPlayer(${p.id})">Edit</button>
-                        <button class="action-btn" onclick="removePlayer(${p.id})">Del</button>
                     </div>
                 </div>
             `;
@@ -249,9 +316,12 @@
 
     function resetForm() {
         document.getElementById('edit-id').value = '';
-        document.querySelectorAll('#input-form input').forEach(i => i.value = '');
-        document.getElementById('add-btn').style.display = 'block';
-        document.getElementById('update-btn').style.display = 'none';
+        document.querySelectorAll('.modal-content input').forEach(i => i.value = '');
+    }
+
+    // Close modal if user clicks outside of it
+    window.onclick = function(event) {
+        if (event.target == modal) closeModal();
     }
 
     updateDisplay();
