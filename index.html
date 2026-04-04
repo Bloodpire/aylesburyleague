@@ -3,132 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neighborhood FC Leaderboard</title>
+    <title>Neighborhood Summer League</title>
     <style>
         :root {
-            --gold: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
-            --silver: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%);
-            --bronze: linear-gradient(135deg, #804a00 0%, #3d2300 100%);
-            --dark: #121212;
+            /* Summer Vibe Colors */
+            --sky-blue: #00BFFF;
+            --ocean-blue: #0077be;
+            --sun-yellow: #FFD700;
+            
+            /* Card Colors */
+            --gold-card: linear-gradient(160deg, #ffe359 0%, #cf9a2a 100%);
+            --silver-card: linear-gradient(160deg, #e0e0e0 0%, #8e8e8e 100%);
+            --bronze-card: linear-gradient(160deg, #d3915f 0%, #6e3a15 100%);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a1a;
-            color: white;
+            font-family: 'Oswald', 'Segoe UI', sans-serif;
+            background: var(--sky-blue); /* Bright Summer Blue */
+            background-image: linear-gradient(180deg, #00BFFF 0%, #87CEEB 100%);
+            min-height: 100vh;
+            color: #333;
             margin: 0;
             padding: 20px;
         }
 
-        .container { max-width: 1000px; margin: auto; }
-        h1 { text-align: center; color: #f6d365; }
+        .container { max-width: 1100px; margin: auto; }
+        
+        h1 { 
+            text-align: center; 
+            color: white; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-size: 3rem;
+            text-transform: uppercase;
+        }
 
         /* Form Styling */
         .admin-panel {
-            background: #252525;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 40px;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
 
         input, select {
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            background: #333;
-            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
         }
 
-        button {
-            padding: 10px 20px;
-            background: #f6d365;
+        button.add-btn {
+            padding: 12px 25px;
+            background: #ff6b6b;
+            color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.3s;
         }
 
-        /* Card Grid */
+        button.add-btn:hover { background: #ee5253; transform: translateY(-2px); }
+
+        /* Leaderboard Grid */
         #leaderboard {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
         }
 
-        /* FIFA Card Design */
+        /* NEW FIFA CARD LOOK */
         .card {
-            background: var(--dark);
-            border-radius: 15px;
+            aspect-ratio: 2 / 3;
+            border-radius: 10px 10px 10px 50px; /* FIFA Card Shape */
             padding: 20px;
             position: relative;
             text-align: center;
-            border: 2px solid transparent;
-            transition: transform 0.2s;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            color: #222; /* Darker text for better contrast on light cards */
+            clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 50% 100%, 0% 85%); /* Traditional FIFA bottom clip */
         }
 
-        .card:hover { transform: scale(1.05); }
+        .card:hover { transform: scale(1.08) rotate(1deg); }
 
-        .card.gold { border-color: #f6d365; box-shadow: 0 0 15px rgba(246, 211, 101, 0.4); }
-        .card.silver { border-color: #bdc3c7; box-shadow: 0 0 15px rgba(189, 195, 199, 0.4); }
-        .card.bronze { border-color: #804a00; box-shadow: 0 0 15px rgba(128, 74, 0, 0.4); }
+        /* Tier Colors - FULL BACKGROUNDS */
+        .card.gold { background: var(--gold-card); border: 2px solid #fffbcf; }
+        .card.silver { background: var(--silver-card); border: 2px solid #ffffff; }
+        .card.bronze { background: var(--bronze-card); border: 2px solid #ffcca3; color: white; }
 
         .rank-badge {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(255,255,255,0.1);
-            padding: 5px 10px;
-            border-radius: 50%;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.4);
+            padding: 5px 12px;
+            border-radius: 20px;
             font-weight: bold;
+            font-size: 0.9rem;
         }
 
-        .ovr { font-size: 2.5rem; font-weight: 800; margin: 10px 0; }
-        .name { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
-        .pos-wf { color: #aaa; margin-bottom: 15px; }
+        .ovr { font-size: 3.5rem; font-weight: 900; line-height: 1; margin: 15px 0 5px 0; }
+        .name { font-size: 1.4rem; text-transform: uppercase; font-weight: 900; border-bottom: 1px solid rgba(0,0,0,0.1); padding-bottom: 5px; margin-bottom: 5px; }
+        .pos-wf { font-weight: bold; font-size: 1rem; opacity: 0.8; }
 
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            border-top: 1px solid #333;
-            padding-top: 10px;
-            font-size: 0.9rem;
+            gap: 5px;
+            margin-top: 15px;
+            font-weight: bold;
         }
 
-        .stat { margin: 3px 0; }
+        .stat { font-size: 1.1rem; }
+        
         .remove-btn {
-            margin-top: 15px;
-            background: #ff4d4d;
+            margin-top: 25px;
+            background: rgba(0,0,0,0.1);
+            border: 1px solid rgba(0,0,0,0.2);
+            border-radius: 4px;
+            cursor: pointer;
             font-size: 0.7rem;
-            padding: 5px 10px;
+            padding: 4px 8px;
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="container">
-    <h1>🏆 Aylesbury League</h1>
+    <h1>☀️ NEIGHBORHOOD SUMMER LEAGUE</h1>
 
     <div class="admin-panel">
-        <input type="text" id="name" placeholder="Player Name">
-        <input type="text" id="pos" placeholder="POS (e.g. ST)">
+        <input type="text" id="name" placeholder="Name">
+        <input type="text" id="pos" placeholder="POS" style="width: 60px;">
         <select id="wf">
-            <option value="⭐">1 Star WF</option>
-            <option value="⭐⭐">2 Star WF</option>
-            <option value="⭐⭐⭐">3 Star WF</option>
-            <option value="⭐⭐⭐⭐" selected>4 Star WF</option>
-            <option value="⭐⭐⭐⭐⭐">5 Star WF</option>
+            <option value="⭐">1★ WF</option>
+            <option value="⭐⭐">2★ WF</option>
+            <option value="⭐⭐⭐">3★ WF</option>
+            <option value="⭐⭐⭐⭐" selected>4★ WF</option>
+            <option value="⭐⭐⭐⭐⭐">5★ WF</option>
         </select>
-        <input type="number" id="pac" placeholder="PAC" max="99">
-        <input type="number" id="sho" placeholder="SHO" max="99">
-        <input type="number" id="pas" placeholder="PAS" max="99">
-        <input type="number" id="dri" placeholder="DRI" max="99">
-        <input type="number" id="def" placeholder="DEF" max="99">
-        <input type="number" id="phy" placeholder="PHY" max="99">
-        <button onclick="addPlayer()">Add Player</button>
+        <input type="number" id="pac" placeholder="PAC" style="width: 60px;">
+        <input type="number" id="sho" placeholder="SHO" style="width: 60px;">
+        <input type="number" id="pas" placeholder="PAS" style="width: 60px;">
+        <input type="number" id="dri" placeholder="DRI" style="width: 60px;">
+        <input type="number" id="def" placeholder="DEF" style="width: 60px;">
+        <input type="number" id="phy" placeholder="PHY" style="width: 60px;">
+        <button class="add-btn" onclick="addPlayer()">Add Player</button>
     </div>
 
     <div id="leaderboard"></div>
@@ -151,8 +178,8 @@
         
         const newPlayer = {
             id: Date.now(),
-            name: document.getElementById('name').value,
-            pos: document.getElementById('pos').value,
+            name: document.getElementById('name').value || "Unknown",
+            pos: (document.getElementById('pos').value || "N/A").toUpperCase(),
             wf: document.getElementById('wf').value,
             pac: stats[0], sho: stats[1], pas: stats[2],
             dri: stats[3], def: stats[4], phy: stats[5],
@@ -170,7 +197,6 @@
     }
 
     function updateDisplay() {
-        // Sort by Overall Rating
         players.sort((a, b) => b.ovr - a.ovr);
         localStorage.setItem('neighborhoodPlayers', JSON.stringify(players));
 
@@ -184,19 +210,19 @@
 
             container.innerHTML += `
                 <div class="card ${tier}">
-                    <div class="rank-badge">#${index + 1}</div>
+                    <div class="rank-badge">RANK #${index + 1}</div>
                     <div class="ovr">${p.ovr}</div>
                     <div class="name">${p.name}</div>
                     <div class="pos-wf">${p.pos} | ${p.wf}</div>
                     <div class="stats-grid">
-                        <div class="stat">PAC: ${p.pac}</div>
-                        <div class="stat">SHO: ${p.sho}</div>
-                        <div class="stat) ">PAS: ${p.pas}</div>
-                        <div class="stat">DRI: ${p.dri}</div>
-                        <div class="stat">DEF: ${p.def}</div>
-                        <div class="stat">PHY: ${p.phy}</div>
+                        <div class="stat">PAC ${p.pac}</div>
+                        <div class="stat">SHO ${p.sho}</div>
+                        <div class="stat">PAS ${p.pas}</div>
+                        <div class="stat">DRI ${p.dri}</div>
+                        <div class="stat">DEF ${p.def}</div>
+                        <div class="stat">PHY ${p.phy}</div>
                     </div>
-                    <button class="remove-btn" onclick="removePlayer(${p.id})">Remove</button>
+                    <button class="remove-btn" onclick="removePlayer(${p.id})">Remove Player</button>
                 </div>
             `;
         });
@@ -206,7 +232,6 @@
         document.querySelectorAll('input').forEach(i => i.value = '');
     }
 
-    // Initial Load
     updateDisplay();
 </script>
 
