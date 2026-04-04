@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neighborhood FC Leaderboard</title>
+    <style>
+        :root {
+            --gold: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            --silver: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%);
+            --bronze: linear-gradient(135deg, #804a00 0%, #3d2300 100%);
+            --dark: #121212;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container { max-width: 1000px; margin: auto; }
+        h1 { text-align: center; color: #f6d365; }
+
+        /* Form Styling */
+        .admin-panel {
+            background: #252525;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        input, select {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: #333;
+            color: white;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #f6d365;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Card Grid */
+        #leaderboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        /* FIFA Card Design */
+        .card {
+            background: var(--dark);
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .card:hover { transform: scale(1.05); }
+
+        .card.gold { border-color: #f6d365; box-shadow: 0 0 15px rgba(246, 211, 101, 0.4); }
+        .card.silver { border-color: #bdc3c7; box-shadow: 0 0 15px rgba(189, 195, 199, 0.4); }
+        .card.bronze { border-color: #804a00; box-shadow: 0 0 15px rgba(128, 74, 0, 0.4); }
+
+        .rank-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 5px 10px;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+
+        .ovr { font-size: 2.5rem; font-weight: 800; margin: 10px 0; }
+        .name { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+        .pos-wf { color: #aaa; margin-bottom: 15px; }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .stat { margin: 3px 0; }
+        .remove-btn {
+            margin-top: 15px;
+            background: #ff4d4d;
+            font-size: 0.7rem;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🏆 NEIGHBORHOOD ELITE</h1>
+
+    <div class="admin-panel">
+        <input type="text" id="name" placeholder="Player Name">
+        <input type="text" id="pos" placeholder="POS (e.g. ST)">
+        <select id="wf">
+            <option value="⭐">1 Star WF</option>
+            <option value="⭐⭐">2 Star WF</option>
+            <option value="⭐⭐⭐">3 Star WF</option>
+            <option value="⭐⭐⭐⭐" selected>4 Star WF</option>
+            <option value="⭐⭐⭐⭐⭐">5 Star WF</option>
+        </select>
+        <input type="number" id="pac" placeholder="PAC" max="99">
+        <input type="number" id="sho" placeholder="SHO" max="99">
+        <input type="number" id="pas" placeholder="PAS" max="99">
+        <input type="number" id="dri" placeholder="DRI" max="99">
+        <input type="number" id="def" placeholder="DEF" max="99">
+        <input type="number" id="phy" placeholder="PHY" max="99">
+        <button onclick="addPlayer()">Add Player</button>
+    </div>
+
+    <div id="leaderboard"></div>
+</div>
+
+<script>
+    let players = JSON.parse(localStorage.getItem('neighborhoodPlayers')) || [];
+
+    function addPlayer() {
+        const stats = [
+            parseInt(document.getElementById('pac').value) || 0,
+            parseInt(document.getElementById('sho').value) || 0,
+            parseInt(document.getElementById('pas').value) || 0,
+            parseInt(document.getElementById('dri').value) || 0,
+            parseInt(document.getElementById('def').value) || 0,
+            parseInt(document.getElementById('phy').value) || 0
+        ];
+
+        const ovr = Math.round(stats.reduce((a, b) => a + b) / 6);
+        
+        const newPlayer = {
+            id: Date.now(),
+            name: document.getElementById('name').value,
+            pos: document.getElementById('pos').value,
+            wf: document.getElementById('wf').value,
+            pac: stats[0], sho: stats[1], pas: stats[2],
+            dri: stats[3], def: stats[4], phy: stats[5],
+            ovr: ovr
+        };
+
+        players.push(newPlayer);
+        updateDisplay();
+        clearForm();
+    }
+
+    function removePlayer(id) {
+        players = players.filter(p => p.id !== id);
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        // Sort by Overall Rating
+        players.sort((a, b) => b.ovr - a.ovr);
+        localStorage.setItem('neighborhoodPlayers', JSON.stringify(players));
+
+        const container = document.getElementById('leaderboard');
+        container.innerHTML = '';
+
+        players.forEach((p, index) => {
+            let tier = 'bronze';
+            if (p.ovr >= 80) tier = 'gold';
+            else if (p.ovr >= 70) tier = 'silver';
+
+            container.innerHTML += `
+                <div class="card ${tier}">
+                    <div class="rank-badge">#${index + 1}</div>
+                    <div class="ovr">${p.ovr}</div>
+                    <div class="name">${p.name}</div>
+                    <div class="pos-wf">${p.pos} | ${p.wf}</div>
+                    <div class="stats-grid">
+                        <div class="stat">PAC: ${p.pac}</div>
+                        <div class="stat">SHO: ${p.sho}</div>
+                        <div class="stat) ">PAS: ${p.pas}</div>
+                        <div class="stat">DRI: ${p.dri}</div>
+                        <div class="stat">DEF: ${p.def}</div>
+                        <div class="stat">PHY: ${p.phy}</div>
+                    </div>
+                    <button class="remove-btn" onclick="removePlayer(${p.id})">Remove</button>
+                </div>
+            `;
+        });
+    }
+
+    function clearForm() {
+        document.querySelectorAll('input').forEach(i => i.value = '');
+    }
+
+    // Initial Load
+    updateDisplay();
+</script>
+
+</body>
+</html>
