@@ -1,376 +1,868 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aylesbury League</title>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soccer Team Score Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
         :root {
-            --sky-blue: #00BFFF;
-            --gold-card: linear-gradient(160deg, #ffe359 0%, #cf9a2a 100%);
-            --silver-card: linear-gradient(160deg, #e0e0e0 0%, #8e8e8e 100%);
-            --bronze-card: linear-gradient(160deg, #d3915f 0%, #6e3a15 100%);
-            --off-white-overlay: rgba(255, 255, 255, 0.95);
+            --primary: #0055ff;
+            --secondary: #00bfff;
+            --background: #e6f3ff;
+            --surface: rgba(255, 255, 255, 0.94);
+            --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+            --radius: 24px;
         }
 
+        * { box-sizing: border-box; }
         body {
-            font-family: 'Oswald', sans-serif;
-            background: linear-gradient(180deg, #00BFFF 0%, #87CEEB 100%);
-            min-height: 100vh;
             margin: 0;
-            padding: 20px;
-            overflow-x: hidden;
+            min-height: 100vh;
+            font-family: 'Oswald', sans-serif;
+            background: radial-gradient(circle at top, #d6f0ff 0%, #c4e7ff 30%, #f6fbff 100%);
+            color: #102a43;
         }
 
-        .container { max-width: 1200px; margin: auto; }
-        h1 { text-align: center; color: white; text-shadow: 2px 2px 10px rgba(0,0,0,0.2); font-size: 3.5rem; margin-bottom: 20px; }
+        .container {
+            width: min(1200px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 28px 0 48px;
+        }
 
-        /* Add Player Bar */
-        .add-player-section {
-            background: var(--off-white-overlay);
-            padding: 15px;
-            border-radius: 50px;
+        header {
             text-align: center;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
         }
 
-        .open-modal-btn {
-            background: #2ecc71;
-            color: white;
+        h1 {
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            margin: 0;
+            letter-spacing: -0.04em;
+        }
+
+        p.lead {
+            margin: 12px auto 0;
+            max-width: 760px;
+            line-height: 1.6;
+            color: #264653;
+        }
+
+        .tabs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .tab-button {
             border: none;
-            padding: 10px 30px;
-            border-radius: 25px;
-            font-size: 1.2rem;
-            font-weight: bold;
+            border-radius: 999px;
+            background: white;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            font-weight: 700;
             cursor: pointer;
+            color: #0f172a;
+            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+            box-shadow: 0 10px 22px rgba(16, 42, 67, 0.08);
+        }
+
+        .tab-button.active,
+        .tab-button:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .notice {
+            min-height: 42px;
+            border-radius: 18px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+            font-weight: 700;
+        }
+
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        .panel {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+        }
+
+        .grid-3 {
+            display: grid;
+            gap: 18px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        .metric-card {
+            border-radius: 22px;
+            background: white;
+            padding: 22px;
+            box-shadow: 0 16px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .metric-card h3 {
+            margin: 0 0 8px;
+            font-size: 0.92rem;
+            color: #485f7d;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
         }
 
-        /* Card Grid */
-        #leaderboard {
+        .metric-card .value {
+            font-size: 2.7rem;
+            font-weight: 900;
+            margin: 0;
+        }
+
+        .card-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 30px;
+            gap: 18px;
         }
 
-        /* FIFA Card */
-        .card {
-            position: relative;
-            width: 100%;
-            padding: 12px 15px 0 15px;
-            text-align: center;
-            transition: 0.3s;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            cursor: pointer;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* The pointed bottom is a pseudo-element, not clip-path */
-        .card::after {
-            content: '';
-            display: block;
-            width: 100%;
-            height: 40px;
-            clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
-            margin-top: 10px;
-            flex-shrink: 0;
-        }
-
-        .card.gold::after { background: #cf9a2a; }
-        .card.silver::after { background: #8e8e8e; }
-        .card.bronze::after { background: #6e3a15; }
-
-        .card:hover { transform: translateY(-10px) scale(1.02); }
-        .card.gold { background: var(--gold-card); color: #222; }
-        .card.silver { background: var(--silver-card); color: #222; }
-        .card.bronze { background: var(--bronze-card); color: white; }
-
-        .delete-x {
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            background: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-
-        .player-img {
-            width: 90px;
-            height: 90px;
-            margin: 3px auto;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            object-fit: cover;
-            border: 3px solid rgba(255,255,255,0.5);
-        }
-
-        .ovr-main { font-size: 2.8rem; font-weight: 900; line-height: 1; margin: 0; }
-        .player-name { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin: 3px 0; padding-bottom: 2px; width: 100%;}
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-top: 4px;
-            gap: 0;
-            width: 100%;
-        }
-        .stat-item { padding: 1px 0; }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
+        .team-card,
+        .player-card,
+        .history-card,
+        .manage-card {
             background: white;
-            margin: 5% auto;
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
-            border-radius: 20px;
-            position: relative;
+            border-radius: 22px;
+            padding: 20px;
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
         }
 
-        .modal-header { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; text-align: center; color: #333; }
+        .team-card > div,
+        .player-card > div,
+        .history-card > div {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .team-card .team-name,
+        .player-card .player-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .player-card .meta,
+        .team-card .meta,
+        .history-card .meta {
+            color: #5f6f84;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .small-pill {
+            display: inline-flex;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: white;
+            background: var(--primary);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .button-group button,
+        .save-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .button-group button:hover,
+        .save-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .save-btn {
+            background: var(--primary);
+            color: white;
+            width: 100%;
+            max-width: 260px;
+        }
+
+        .danger-btn {
+            background: #ff5c5c;
+            color: white;
+        }
 
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         }
 
-        .full-width { grid-column: span 2; }
-
-        input, select {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border-radius: 14px;
+            border: 1px solid #dbe3ee;
+            padding: 14px 16px;
             font-size: 1rem;
-            font-family: 'Oswald', sans-serif;
-            box-sizing: border-box; /* Crucial for width */
+            color: #102a43;
+            background: white;
         }
 
-        input { width: 100%; }
-
-        .save-btn {
-            grid-column: span 2;
-            background: var(--sky-blue);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            text-transform: uppercase;
+        textarea {
+            resize: vertical;
+            min-height: 98px;
         }
 
-        .close-modal {
-            position: absolute;
-            right: 20px;
-            top: 15px;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #999;
+        label {
+            display: block;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            font-weight: 700;
+            color: #334e68;
+        }
+
+        .field-group {
+            display: grid;
+            gap: 6px;
+        }
+
+        .field-inline {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .field-inline input[type='color'] {
+            width: 72px;
+            height: 48px;
+            padding: 0;
+            border-radius: 14px;
+        }
+
+        @media (max-width: 720px) {
+            .tabs,
+            .grid-3,
+            .form-grid,
+            .button-group {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <h1>⚽ AYLESBURY LEAGUE</h1>
+    <header>
+        <h1>Soccer Team Score Dashboard</h1>
+        <p class="lead">Hosted as a static dashboard and backed by Supabase for shared team and player score data. Use the admin section to manage squads, track score events, reset values, and review history.</p>
+    </header>
 
-    <div class="add-player-section">
-        <button class="open-modal-btn" onclick="openEditModal()">+ Add New Player</button>
+    <div id="configStatus" class="notice" style="background:#fef3c7;color:#92400e;">Update <code>SUPABASE_URL</code> and <code>SUPABASE_ANON_KEY</code> in <code>index.html</code> to connect the dashboard.</div>
+    <div id="noticeBox"></div>
+
+    <div class="tabs">
+        <button class="tab-button active" data-target="dashboardSection">Dashboard</button>
+        <button class="tab-button" data-target="playersSection">Players</button>
+        <button class="tab-button" data-target="teamsSection">Teams</button>
+        <button class="tab-button" data-target="adminSection">Admin</button>
+        <button class="tab-button" data-target="historySection">History</button>
     </div>
 
-    <div id="leaderboard"></div>
-</div>
-
-<div id="playerModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <div class="modal-header" id="modalTitle">Add Player</div>
-        
-        <div class="form-grid">
-            <input type="hidden" id="edit-id">
-            <input type="text" id="name" placeholder="Full Name" class="full-width">
-            <input type="text" id="img-url" placeholder="Photo URL (Optional)" class="full-width">
-            <input type="text" id="pos" placeholder="POS (ST, CM, etc.)">
-            <select id="wf">
-                <option value="⭐">1★ WF</option>
-                <option value="⭐⭐">2★ WF</option>
-                <option value="⭐⭐⭐">3★ WF</option>
-                <option value="⭐⭐⭐⭐" selected>4★ WF</option>
-                <option value="⭐⭐⭐⭐⭐">5★ WF</option>
-            </select>
-            <input type="number" id="pac" placeholder="PAC" max="99">
-            <input type="number" id="sho" placeholder="SHO" max="99">
-            <input type="number" id="pas" placeholder="PAS" max="99">
-            <input type="number" id="dri" placeholder="DRI" max="99">
-            <input type="number" id="def" placeholder="DEF" max="99">
-            <input type="number" id="phy" placeholder="PHY" max="99">
-            
-            <button class="save-btn" onclick="savePlayer()" id="saveBtnText">Save Player Data</button>
+    <section id="dashboardSection" class="active">
+        <div class="grid-3">
+            <article class="metric-card">
+                <h3>Teams</h3>
+                <p class="value" id="summaryTeams">0</p>
+            </article>
+            <article class="metric-card">
+                <h3>Players</h3>
+                <p class="value" id="summaryPlayers">0</p>
+            </article>
+            <article class="metric-card">
+                <h3>Total League Score</h3>
+                <p class="value" id="summaryScore">0</p>
+            </article>
         </div>
-    </div>
+
+        <div class="panel">
+            <h2>Team Dashboard</h2>
+            <div id="teamDashboard" class="card-list"></div>
+        </div>
+
+        <div class="panel">
+            <h2>Player Dashboard</h2>
+            <div id="playerDashboard" class="card-list"></div>
+        </div>
+    </section>
+
+    <section id="playersSection">
+        <div class="panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <h2>Players</h2>
+                <button class="save-btn" onclick="showAdminTab('playerForm')">New Player</button>
+            </div>
+            <div id="playersList" class="card-list"></div>
+        </div>
+    </section>
+
+    <section id="teamsSection">
+        <div class="panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <h2>Teams</h2>
+                <button class="save-btn" onclick="showAdminTab('teamForm')">New Team</button>
+            </div>
+            <div id="teamsList" class="card-list"></div>
+        </div>
+    </section>
+
+    <section id="adminSection">
+        <div class="panel manage-card" id="teamForm">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <h2>Manage Teams</h2>
+                    <p class="meta">Create or update teams with a color code for dashboard styling.</p>
+                </div>
+            </div>
+            <div class="form-grid">
+                <input type="hidden" id="team-id" />
+                <div class="field-group">
+                    <label for="team-name">Team Name</label>
+                    <input id="team-name" type="text" placeholder="Eagles, Lions, Devils" />
+                </div>
+                <div class="field-group field-inline">
+                    <div>
+                        <label for="team-color">Team Color</label>
+                        <input id="team-color" type="color" value="#0055ff" />
+                    </div>
+                </div>
+                <button class="save-btn" onclick="saveTeam()">Save Team</button>
+            </div>
+        </div>
+
+        <div class="panel manage-card" id="playerForm">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <h2>Manage Players</h2>
+                    <p class="meta">A shared persistent roster from Supabase, visible on every device.</p>
+                </div>
+            </div>
+            <div class="form-grid">
+                <input type="hidden" id="player-id" />
+                <div class="field-group">
+                    <label for="player-name">Player Name</label>
+                    <input id="player-name" type="text" placeholder="Lionel Messi" />
+                </div>
+                <div class="field-group">
+                    <label for="player-position">Position</label>
+                    <input id="player-position" type="text" placeholder="ST, CM, GK" />
+                </div>
+                <div class="field-group">
+                    <label for="player-team">Team</label>
+                    <select id="player-team"></select>
+                </div>
+                <div class="field-group">
+                    <label for="player-score">Score</label>
+                    <input id="player-score" type="number" min="0" value="0" />
+                </div>
+                <div class="field-group">
+                    <label for="player-goals">Goals</label>
+                    <input id="player-goals" type="number" min="0" value="0" />
+                </div>
+                <div class="field-group">
+                    <label for="player-assists">Assists</label>
+                    <input id="player-assists" type="number" min="0" value="0" />
+                </div>
+                <button class="save-btn" onclick="savePlayer()">Save Player</button>
+            </div>
+        </div>
+
+        <div class="panel manage-card" id="scoreForm">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <h2>Score Events</h2>
+                    <p class="meta">Track goals, assists, wins, bonuses, and history for every player.</p>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="field-group">
+                    <label for="event-player">Player</label>
+                    <select id="event-player"></select>
+                </div>
+                <div class="field-group">
+                    <label for="event-action">Action</label>
+                    <select id="event-action">
+                        <option>Goal</option>
+                        <option>Assist</option>
+                        <option>Win</option>
+                        <option>Clean Sheet</option>
+                        <option>Bonus</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label for="event-points">Points</label>
+                    <input id="event-points" type="number" min="1" value="3" />
+                </div>
+                <div class="field-group">
+                    <label for="event-note">Note</label>
+                    <textarea id="event-note" placeholder="Match, date or event details"></textarea>
+                </div>
+                <button class="save-btn" onclick="saveScoreEvent()">Record Event</button>
+            </div>
+        </div>
+
+        <div class="panel manage-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <h2>Reset Scores</h2>
+                    <p class="meta">Reset scores for every player and preserve the reset action in history.</p>
+                </div>
+                <button class="save-btn danger-btn" onclick="resetScores()">Reset League Scores</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="historySection">
+        <div class="panel">
+            <h2>History</h2>
+            <div id="historyList" class="card-list"></div>
+        </div>
+    </section>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 <script>
-    let players = JSON.parse(localStorage.getItem('neighborhoodPlayers')) || [];
-    // Ensure all IDs are strings for consistent comparison
-    players = players.map(p => ({ ...p, id: String(p.id) }));
+    const SUPABASE_URL = 'https://oicckdhmpuantnvbavio.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_wBlGZtAx-K518bJvAa61nQ_v1xkPsv7';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const modal = document.getElementById('playerModal');
+    let teams = [];
+    let players = [];
+    let historyEvents = [];
 
-    function openEditModal(playerId = null) {
-        resetForm();
-        if (playerId !== null) {
-            const p = players.find(x => x.id === String(playerId));
-            if (!p) { console.warn('Player not found:', playerId, players); return; }
-            document.getElementById('modalTitle').innerText = `Edit ${p.name}`;
-            document.getElementById('edit-id').value = p.id;
-            document.getElementById('name').value = p.name;
-            document.getElementById('img-url').value = p.img.includes('flaticon') ? '' : p.img;
-            document.getElementById('pos').value = p.pos;
-            document.getElementById('wf').value = p.wf;
-            document.getElementById('pac').value = p.pac;
-            document.getElementById('sho').value = p.sho;
-            document.getElementById('pas').value = p.pas;
-            document.getElementById('dri').value = p.dri;
-            document.getElementById('def').value = p.def;
-            document.getElementById('phy').value = p.phy;
-            document.getElementById('saveBtnText').innerText = "Update Player Info";
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                switchSection(button.dataset.target);
+            });
+        });
+        switchSection('dashboardSection');
+        init();
+    });
+
+    function switchSection(id) {
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.toggle('active', section.id === id);
+        });
+    }
+
+    async function init() {
+        const configStatus = document.getElementById('configStatus');
+        if (SUPABASE_URL.includes('YOUR_') || SUPABASE_ANON_KEY.includes('YOUR_')) {
+            configStatus.innerText = 'Supabase is not configured. Replace SUPABASE_URL and SUPABASE_ANON_KEY in index.html with your project values.';
+            configStatus.style.background = '#fde2e2';
+            configStatus.style.color = '#991b1b';
+            return;
         }
-        modal.style.display = "block";
+        configStatus.innerText = 'Supabase connected. Loading league data...';
+        configStatus.style.background = '#e0f2fe';
+        configStatus.style.color = '#0369a1';
+        await refreshAll();
     }
 
-    function closeModal() {
-        modal.style.display = "none";
+    async function refreshAll() {
+        await Promise.all([loadTeams(), loadPlayers(), loadHistory()]);
+        calculateMetrics();
+        renderAll();
     }
 
-    function savePlayer() {
-        const idInput = document.getElementById('edit-id').value;
-        const stats = [
-            parseInt(document.getElementById('pac').value) || 0,
-            parseInt(document.getElementById('sho').value) || 0,
-            parseInt(document.getElementById('pas').value) || 0,
-            parseInt(document.getElementById('dri').value) || 0,
-            parseInt(document.getElementById('def').value) || 0,
-            parseInt(document.getElementById('phy').value) || 0
-        ];
-        const ovr = Math.round(stats.reduce((a, b) => a + b) / 6);
-        
-        const playerData = {
-            id: idInput ? String(idInput) : String(Date.now()),
-            name: document.getElementById('name').value || "Player",
-            img: document.getElementById('img-url').value || "https://cdn-icons-png.flaticon.com/512/1163/1163481.png",
-            pos: (document.getElementById('pos').value || "ST").toUpperCase(),
-            wf: document.getElementById('wf').value,
-            pac: stats[0], sho: stats[1], pas: stats[2],
-            dri: stats[3], def: stats[4], phy: stats[5],
-            ovr: ovr
-        };
-
-        if (idInput) {
-            const index = players.findIndex(p => p.id === String(idInput));
-            players[index] = playerData;
-        } else {
-            players.push(playerData);
+    async function loadTeams() {
+        const { data, error } = await supabase.from('teams').select('*').order('name');
+        if (error) {
+            showNotice('Unable to load teams: ' + error.message, 'warning');
+            teams = [];
+            return;
         }
-
-        updateDisplay();
-        closeModal();
+        teams = data || [];
     }
 
-    function updateDisplay() {
-        players.sort((a, b) => b.ovr - a.ovr);
-        localStorage.setItem('neighborhoodPlayers', JSON.stringify(players));
-        const container = document.getElementById('leaderboard');
+    async function loadPlayers() {
+        const { data, error } = await supabase.from('players').select('*').order('score', { ascending: false });
+        if (error) {
+            showNotice('Unable to load players: ' + error.message, 'warning');
+            players = [];
+            return;
+        }
+        players = data || [];
+    }
+
+    async function loadHistory() {
+        const { data, error } = await supabase.from('score_events').select('*, player:players(name), team:teams(name)').order('created_at', { ascending: false }).limit(200);
+        if (error) {
+            showNotice('Unable to load history: ' + error.message, 'warning');
+            historyEvents = [];
+            return;
+        }
+        historyEvents = data || [];
+    }
+
+    function calculateMetrics() {
+        teams.forEach(team => {
+            const roster = players.filter(player => player.team_id === team.id);
+            team.player_count = roster.length;
+            team.score = roster.reduce((sum, player) => sum + Number(player.score || 0), 0);
+            team.goals = roster.reduce((sum, player) => sum + Number(player.goals || 0), 0);
+            team.assists = roster.reduce((sum, player) => sum + Number(player.assists || 0), 0);
+        });
+    }
+
+    function renderAll() {
+        renderSummary();
+        renderTeamDashboard();
+        renderPlayerDashboard();
+        renderTeamsList();
+        renderPlayersList();
+        renderHistory();
+        populateAdminSelectors();
+    }
+
+    function renderSummary() {
+        document.getElementById('summaryTeams').innerText = teams.length;
+        document.getElementById('summaryPlayers').innerText = players.length;
+        document.getElementById('summaryScore').innerText = players.reduce((sum, player) => sum + Number(player.score || 0), 0);
+    }
+
+    function renderTeamDashboard() {
+        const container = document.getElementById('teamDashboard');
         container.innerHTML = '';
-
-        players.forEach((p, index) => {
-            let tier = p.ovr >= 80 ? 'gold' : (p.ovr >= 70 ? 'silver' : 'bronze');
-            const card = document.createElement('div');
-            card.className = `card ${tier}`;
-            card.dataset.id = p.id;
+        if (!teams.length) {
+            container.innerHTML = '<div class="team-card">No teams available yet. Add a team in Admin.</div>';
+            return;
+        }
+        teams.forEach(team => {
+            const card = document.createElement('article');
+            card.className = 'team-card';
             card.innerHTML = `
-                    <button class="delete-x" data-id="${p.id}">X</button>
-                    <div style="font-weight:bold; font-size: 0.8rem;">RANK #${index + 1}</div>
-                    <img src="${p.img}" class="player-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
-                    <div class="ovr-main">${p.ovr}</div>
-                    <div class="player-name">${p.name}</div>
-                    <div style="font-weight:bold; opacity: 0.9;">${p.pos} | ${p.wf}</div>
-                    <div class="stats-grid">
-                        <div class="stat-item">PAC ${p.pac}</div><div class="stat-item">SHO ${p.sho}</div>
-                        <div class="stat-item">PAS ${p.pas}</div><div class="stat-item">DRI ${p.dri}</div>
-                        <div class="stat-item">DEF ${p.def}</div><div class="stat-item">PHY ${p.phy}</div>
-                    </div>
+                <div>
+                    <div class="team-name">${team.name}</div>
+                    <div class="meta">Score: <strong>${team.score}</strong> • Players: <strong>${team.player_count}</strong></div>
+                </div>
+                <div class="button-group">
+                    <button class="save-btn" onclick="editTeam('${team.id}')">Edit</button>
+                    <button class="save-btn danger-btn" onclick="deleteTeam('${team.id}')">Delete</button>
+                </div>
+                <div style="margin-top:14px; display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap:10px;">
+                    <div class="small-pill">Goals: ${team.goals}</div>
+                    <div class="small-pill">Assists: ${team.assists}</div>
+                    <div class="small-pill" style="background:${team.color || '#0055ff'}">Color</div>
+                </div>
             `;
-            // Edit on card click
-            card.addEventListener('click', function() {
-                openEditModal(String(p.id));
-            });
-            // Delete on X click (stop propagation so card click doesn't fire)
-            card.querySelector('.delete-x').addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (confirm("Permanently delete this player?")) {
-                    players = players.filter(x => x.id !== String(p.id));
-                    updateDisplay();
-                }
-            });
             container.appendChild(card);
         });
     }
 
-    function resetForm() {
-        document.getElementById('edit-id').value = '';
-        document.getElementById('name').value = '';
-        document.getElementById('img-url').value = '';
-        document.getElementById('pos').value = '';
-        document.getElementById('pac').value = '';
-        document.getElementById('sho').value = '';
-        document.getElementById('pas').value = '';
-        document.getElementById('dri').value = '';
-        document.getElementById('def').value = '';
-        document.getElementById('phy').value = '';
-        document.getElementById('wf').value = '⭐⭐⭐⭐'; // reset to default 4★
-        document.getElementById('modalTitle').innerText = 'Add New Player';
-        document.getElementById('saveBtnText').innerText = 'Add to League';
+    function renderPlayerDashboard() {
+        const container = document.getElementById('playerDashboard');
+        container.innerHTML = '';
+        if (!players.length) {
+            container.innerHTML = '<div class="player-card">No players added yet. Add a player in Admin.</div>';
+            return;
+        }
+        players.slice(0, 8).forEach(player => {
+            const team = teams.find(team => team.id === player.team_id) || { name: 'No team' };
+            const card = document.createElement('article');
+            card.className = 'player-card';
+            card.innerHTML = `
+                <div>
+                    <div class="player-name">${player.name}</div>
+                    <div class="meta">${player.position || 'Unassigned'} • ${team.name}</div>
+                </div>
+                <div style="text-align:right; min-width:120px;">
+                    <div class="small-pill">Score: ${player.score || 0}</div>
+                    <div class="meta">Goals: ${player.goals || 0} • Assists: ${player.assists || 0}</div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
     }
 
-    // Close modal if user clicks outside of it
-    window.onclick = function(event) {
-        if (event.target == modal) closeModal();
+    function renderTeamsList() {
+        const container = document.getElementById('teamsList');
+        container.innerHTML = '';
+        if (!teams.length) {
+            container.innerHTML = '<div class="team-card">No teams available.</div>';
+            return;
+        }
+        teams.forEach(team => {
+            const row = document.createElement('article');
+            row.className = 'team-card';
+            row.innerHTML = `
+                <div>
+                    <div class="team-name">${team.name}</div>
+                    <div class="meta">Players: ${team.player_count} • Score: ${team.score}</div>
+                </div>
+                <div class="button-group">
+                    <button class="save-btn" onclick="editTeam('${team.id}')">Edit</button>
+                    <button class="save-btn danger-btn" onclick="deleteTeam('${team.id}')">Delete</button>
+                </div>
+            `;
+            container.appendChild(row);
+        });
     }
 
-    updateDisplay();
+    function renderPlayersList() {
+        const container = document.getElementById('playersList');
+        container.innerHTML = '';
+        if (!players.length) {
+            container.innerHTML = '<div class="player-card">No players available.</div>';
+            return;
+        }
+        players.forEach(player => {
+            const team = teams.find(team => team.id === player.team_id) || { name: 'No team' };
+            const row = document.createElement('article');
+            row.className = 'player-card';
+            row.innerHTML = `
+                <div style="min-width:220px;">
+                    <div class="player-name">${player.name}</div>
+                    <div class="meta">${player.position || 'Position unknown'} • ${team.name}</div>
+                    <div class="meta">Score: ${player.score || 0} • Goals: ${player.goals || 0} • Assists: ${player.assists || 0}</div>
+                </div>
+                <div class="button-group">
+                    <button class="save-btn" onclick="editPlayer('${player.id}')">Edit</button>
+                    <button class="save-btn danger-btn" onclick="deletePlayer('${player.id}')">Delete</button>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function renderHistory() {
+        const container = document.getElementById('historyList');
+        container.innerHTML = '';
+        if (!historyEvents.length) {
+            container.innerHTML = '<div class="history-card">No history records found.</div>';
+            return;
+        }
+        historyEvents.forEach(event => {
+            const row = document.createElement('article');
+            row.className = 'history-card';
+            const time = event.created_at ? new Date(event.created_at).toLocaleString() : 'Unknown time';
+            row.innerHTML = `
+                <div class="history-details">
+                    <div style="font-weight:700;">${event.action} • ${event.points || 0} pts</div>
+                    <div class="meta">${event.note || 'No note'} • ${event.player?.name || 'Unknown player'} • ${event.team?.name || 'Unknown team'}</div>
+                </div>
+                <div class="meta" style="min-width:120px; text-align:right;">${time}</div>
+            `;
+            container.appendChild(row);
+        });
+    }
+
+    function populateAdminSelectors() {
+        const teamSelect = document.getElementById('player-team');
+        const playerSelect = document.getElementById('event-player');
+        teamSelect.innerHTML = `<option value="">Select team</option>${teams.map(team => `<option value="${team.id}">${team.name}</option>`).join('')}`;
+        playerSelect.innerHTML = `<option value="">Select player</option>${players.map(player => `<option value="${player.id}">${player.name} (${player.position || 'N/A'})</option>`).join('')}`;
+    }
+
+    function showAdminTab(formId) {
+        switchSection('adminSection');
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.target === 'adminSection');
+        });
+        document.getElementById(formId).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function saveTeam() {
+        const id = document.getElementById('team-id').value;
+        const name = document.getElementById('team-name').value.trim();
+        const color = document.getElementById('team-color').value;
+        if (!name) {
+            showNotice('Team name is required.', 'warning');
+            return;
+        }
+        const payload = { name, color };
+        const result = id
+            ? await supabase.from('teams').update(payload).eq('id', id)
+            : await supabase.from('teams').insert(payload);
+        if (result.error) {
+            showNotice('Team save failed: ' + result.error.message, 'warning');
+            return;
+        }
+        clearTeamForm();
+        await refreshAll();
+        showNotice('Team saved successfully.', 'info');
+    }
+
+    async function savePlayer() {
+        const id = document.getElementById('player-id').value;
+        const name = document.getElementById('player-name').value.trim();
+        const position = document.getElementById('player-position').value.trim();
+        const teamId = document.getElementById('player-team').value;
+        const score = Number(document.getElementById('player-score').value) || 0;
+        const goals = Number(document.getElementById('player-goals').value) || 0;
+        const assists = Number(document.getElementById('player-assists').value) || 0;
+        if (!name || !teamId) {
+            showNotice('Player name and team are required.', 'warning');
+            return;
+        }
+        const payload = { name, position, team_id: teamId, score, goals, assists };
+        const result = id
+            ? await supabase.from('players').update(payload).eq('id', id)
+            : await supabase.from('players').insert(payload);
+        if (result.error) {
+            showNotice('Player save failed: ' + result.error.message, 'warning');
+            return;
+        }
+        clearPlayerForm();
+        await refreshAll();
+        showNotice('Player saved successfully.', 'info');
+    }
+
+    async function saveScoreEvent() {
+        const playerId = document.getElementById('event-player').value;
+        const action = document.getElementById('event-action').value;
+        const points = Number(document.getElementById('event-points').value) || 0;
+        const note = document.getElementById('event-note').value.trim();
+        if (!playerId || points <= 0) {
+            showNotice('Select a player and enter a valid points value.', 'warning');
+            return;
+        }
+        const player = players.find(item => item.id === playerId);
+        if (!player) {
+            showNotice('Selected player not found.', 'warning');
+            return;
+        }
+        const teamId = player.team_id;
+        const event = { player_id: playerId, team_id: teamId, action, points, note, created_at: new Date().toISOString() };
+        const { error: eventError } = await supabase.from('score_events').insert(event);
+        if (eventError) {
+            showNotice('History save failed: ' + eventError.message, 'warning');
+            return;
+        }
+        const updates = { score: Number(player.score || 0) + points };
+        if (action === 'Goal') updates.goals = Number(player.goals || 0) + 1;
+        if (action === 'Assist') updates.assists = Number(player.assists || 0) + 1;
+        const { error: playerError } = await supabase.from('players').update(updates).eq('id', playerId);
+        if (playerError) {
+            showNotice('Player update failed: ' + playerError.message, 'warning');
+            return;
+        }
+        await refreshAll();
+        clearEventForm();
+        showNotice('Score event recorded.', 'info');
+    }
+
+    async function resetScores() {
+        if (!confirm('Reset all player scores and record a reset event in history?')) return;
+        const { error: resetError } = await supabase.from('players').update({ score: 0, goals: 0, assists: 0 }).neq('id', '');
+        if (resetError) {
+            showNotice('Reset failed: ' + resetError.message, 'warning');
+            return;
+        }
+        const { error: eventError } = await supabase.from('score_events').insert({ action: 'Reset', points: 0, note: 'League reset', created_at: new Date().toISOString() });
+        if (eventError) {
+            showNotice('Reset event save failed: ' + eventError.message, 'warning');
+            return;
+        }
+        await refreshAll();
+        showNotice('All player scores have been reset.', 'info');
+    }
+
+    function editTeam(teamId) {
+        const team = teams.find(item => item.id === teamId);
+        if (!team) return;
+        document.getElementById('team-id').value = team.id;
+        document.getElementById('team-name').value = team.name;
+        document.getElementById('team-color').value = team.color || '#0055ff';
+        showAdminTab('teamForm');
+    }
+
+    function editPlayer(playerId) {
+        const player = players.find(item => item.id === playerId);
+        if (!player) return;
+        document.getElementById('player-id').value = player.id;
+        document.getElementById('player-name').value = player.name;
+        document.getElementById('player-position').value = player.position || '';
+        document.getElementById('player-team').value = player.team_id || '';
+        document.getElementById('player-score').value = Number(player.score || 0);
+        document.getElementById('player-goals').value = Number(player.goals || 0);
+        document.getElementById('player-assists').value = Number(player.assists || 0);
+        showAdminTab('playerForm');
+    }
+
+    async function deleteTeam(teamId) {
+        if (!confirm('Delete this team and all related players and score history?')) return;
+        await supabase.from('score_events').delete().eq('team_id', teamId);
+        await supabase.from('players').delete().eq('team_id', teamId);
+        const { error } = await supabase.from('teams').delete().eq('id', teamId);
+        if (error) return showNotice('Team delete failed: ' + error.message, 'warning');
+        await refreshAll();
+        showNotice('Team deleted.', 'info');
+    }
+
+    async function deletePlayer(playerId) {
+        if (!confirm('Delete this player and related history events?')) return;
+        await supabase.from('score_events').delete().eq('player_id', playerId);
+        const { error } = await supabase.from('players').delete().eq('id', playerId);
+        if (error) return showNotice('Player delete failed: ' + error.message, 'warning');
+        await refreshAll();
+        showNotice('Player deleted.', 'info');
+    }
+
+    function clearTeamForm() {
+        document.getElementById('team-id').value = '';
+        document.getElementById('team-name').value = '';
+        document.getElementById('team-color').value = '#0055ff';
+    }
+
+    function clearPlayerForm() {
+        document.getElementById('player-id').value = '';
+        document.getElementById('player-name').value = '';
+        document.getElementById('player-position').value = '';
+        document.getElementById('player-team').value = '';
+        document.getElementById('player-score').value = 0;
+        document.getElementById('player-goals').value = 0;
+        document.getElementById('player-assists').value = 0;
+    }
+
+    function clearEventForm() {
+        document.getElementById('event-player').value = '';
+        document.getElementById('event-action').value = 'Goal';
+        document.getElementById('event-points').value = 3;
+        document.getElementById('event-note').value = '';
+    }
+
+    function showNotice(message, type = 'info') {
+        const box = document.getElementById('noticeBox');
+        box.textContent = message;
+        box.style.background = type === 'warning' ? '#fee2e2' : '#dbeafe';
+        box.style.color = type === 'warning' ? '#991b1b' : '#1e40af';
+        box.classList.add('notice');
+        setTimeout(() => {
+            if (box.textContent === message) box.textContent = '';
+        }, 7000);
+    }
 </script>
 </body>
 </html>
