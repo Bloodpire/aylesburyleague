@@ -43,7 +43,17 @@ create table score_events (
 );
 ```
 
-3. In Supabase, under Settings → API, copy your `anon` public key and project URL.
+4. If Row Level Security is enabled, run these SQL commands in Supabase SQL editor before using the app:
+
+```sql
+alter table public.teams enable row level security;
+alter table public.players enable row level security;
+alter table public.score_events enable row level security;
+```
+
+Then create the policies needed for browser access.
+
+5. In Supabase, under Settings → API, copy your `anon` public key and project URL.
 4. Open `index.html` and replace `SUPABASE_URL` and `SUPABASE_ANON_KEY` with your Supabase values.
 
 ## Deploy to Vercel
