@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -449,11 +449,13 @@
     </section>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-    const SUPABASE_URL = 'https://oicckdhmpuantnvbavio.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_wBlGZtAx-K518bJvAa61nQ_v1xkPsv7';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const SUPABASE_URL = 'https://bmwiqpkgdbeohkwbqaft.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_kguMGdM9yIP_qoUdOU6x_w_4ObYO4Wt';
+    const supabaseClient = typeof window.supabase !== 'undefined'
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
 
     let teams = [];
     let players = [];
@@ -485,6 +487,12 @@
             configStatus.style.color = '#991b1b';
             return;
         }
+        if (!supabaseClient) {
+            configStatus.innerText = 'Supabase library failed to load. Check the CDN script and browser console for errors.';
+            configStatus.style.background = '#fde2e2';
+            configStatus.style.color = '#991b1b';
+            return;
+        }
         configStatus.innerText = 'Supabase connected. Loading league data...';
         configStatus.style.background = '#e0f2fe';
         configStatus.style.color = '#0369a1';
@@ -498,7 +506,7 @@
     }
 
     async function loadTeams() {
-        const { data, error } = await supabase.from('teams').select('*').order('name');
+        const { data, error } = await supabaseClient.from('teams').select('*').order('name');
         if (error) {
             showNotice('Unable to load teams: ' + error.message, 'warning');
             teams = [];
@@ -508,7 +516,7 @@
     }
 
     async function loadPlayers() {
-        const { data, error } = await supabase.from('players').select('*').order('score', { ascending: false });
+        const { data, error } = await supabaseClient.from('players').select('*').order('score', { ascending: false });
         if (error) {
             showNotice('Unable to load players: ' + error.message, 'warning');
             players = [];
@@ -518,7 +526,7 @@
     }
 
     async function loadHistory() {
-        const { data, error } = await supabase.from('score_events').select('*, player:players(name), team:teams(name)').order('created_at', { ascending: false }).limit(200);
+        const { data, error } = await supabaseClient.from('score_events').select('*, player:players(name), team:teams(name)').order('created_at', { ascending: false }).limit(200);
         if (error) {
             showNotice('Unable to load history: ' + error.message, 'warning');
             historyEvents = [];
@@ -566,7 +574,7 @@
             card.innerHTML = `
                 <div>
                     <div class="team-name">${team.name}</div>
-                    <div class="meta">Score: <strong>${team.score}</strong> â€¢ Players: <strong>${team.player_count}</strong></div>
+                    <div class="meta">Score: <strong>${team.score}</strong> • Players: <strong>${team.player_count}</strong></div>
                 </div>
                 <div class="button-group">
                     <button class="save-btn" onclick="editTeam('${team.id}')">Edit</button>
@@ -596,11 +604,11 @@
             card.innerHTML = `
                 <div>
                     <div class="player-name">${player.name}</div>
-                    <div class="meta">${player.position || 'Unassigned'} â€¢ ${team.name}</div>
+                    <div class="meta">${player.position || 'Unassigned'} • ${team.name}</div>
                 </div>
                 <div style="text-align:right; min-width:120px;">
                     <div class="small-pill">Score: ${player.score || 0}</div>
-                    <div class="meta">Goals: ${player.goals || 0} â€¢ Assists: ${player.assists || 0}</div>
+                    <div class="meta">Goals: ${player.goals || 0} • Assists: ${player.assists || 0}</div>
                 </div>
             `;
             container.appendChild(card);
@@ -620,7 +628,7 @@
             row.innerHTML = `
                 <div>
                     <div class="team-name">${team.name}</div>
-                    <div class="meta">Players: ${team.player_count} â€¢ Score: ${team.score}</div>
+                    <div class="meta">Players: ${team.player_count} • Score: ${team.score}</div>
                 </div>
                 <div class="button-group">
                     <button class="save-btn" onclick="editTeam('${team.id}')">Edit</button>
@@ -645,8 +653,8 @@
             row.innerHTML = `
                 <div style="min-width:220px;">
                     <div class="player-name">${player.name}</div>
-                    <div class="meta">${player.position || 'Position unknown'} â€¢ ${team.name}</div>
-                    <div class="meta">Score: ${player.score || 0} â€¢ Goals: ${player.goals || 0} â€¢ Assists: ${player.assists || 0}</div>
+                    <div class="meta">${player.position || 'Position unknown'} • ${team.name}</div>
+                    <div class="meta">Score: ${player.score || 0} • Goals: ${player.goals || 0} • Assists: ${player.assists || 0}</div>
                 </div>
                 <div class="button-group">
                     <button class="save-btn" onclick="editPlayer('${player.id}')">Edit</button>
@@ -670,8 +678,8 @@
             const time = event.created_at ? new Date(event.created_at).toLocaleString() : 'Unknown time';
             row.innerHTML = `
                 <div class="history-details">
-                    <div style="font-weight:700;">${event.action} â€¢ ${event.points || 0} pts</div>
-                    <div class="meta">${event.note || 'No note'} â€¢ ${event.player?.name || 'Unknown player'} â€¢ ${event.team?.name || 'Unknown team'}</div>
+                    <div style="font-weight:700;">${event.action} • ${event.points || 0} pts</div>
+                    <div class="meta">${event.note || 'No note'} • ${event.player?.name || 'Unknown player'} • ${event.team?.name || 'Unknown team'}</div>
                 </div>
                 <div class="meta" style="min-width:120px; text-align:right;">${time}</div>
             `;
@@ -704,8 +712,8 @@
         }
         const payload = { name, color };
         const result = id
-            ? await supabase.from('teams').update(payload).eq('id', id)
-            : await supabase.from('teams').insert(payload);
+            ? await supabaseClient.from('teams').update(payload).eq('id', id)
+            : await supabaseClient.from('teams').insert(payload);
         if (result.error) {
             showNotice('Team save failed: ' + result.error.message, 'warning');
             return;
@@ -729,8 +737,8 @@
         }
         const payload = { name, position, team_id: teamId, score, goals, assists };
         const result = id
-            ? await supabase.from('players').update(payload).eq('id', id)
-            : await supabase.from('players').insert(payload);
+            ? await supabaseClient.from('players').update(payload).eq('id', id)
+            : await supabaseClient.from('players').insert(payload);
         if (result.error) {
             showNotice('Player save failed: ' + result.error.message, 'warning');
             return;
@@ -756,7 +764,7 @@
         }
         const teamId = player.team_id;
         const event = { player_id: playerId, team_id: teamId, action, points, note, created_at: new Date().toISOString() };
-        const { error: eventError } = await supabase.from('score_events').insert(event);
+        const { error: eventError } = await supabaseClient.from('score_events').insert(event);
         if (eventError) {
             showNotice('History save failed: ' + eventError.message, 'warning');
             return;
@@ -764,7 +772,7 @@
         const updates = { score: Number(player.score || 0) + points };
         if (action === 'Goal') updates.goals = Number(player.goals || 0) + 1;
         if (action === 'Assist') updates.assists = Number(player.assists || 0) + 1;
-        const { error: playerError } = await supabase.from('players').update(updates).eq('id', playerId);
+        const { error: playerError } = await supabaseClient.from('players').update(updates).eq('id', playerId);
         if (playerError) {
             showNotice('Player update failed: ' + playerError.message, 'warning');
             return;
@@ -776,12 +784,12 @@
 
     async function resetScores() {
         if (!confirm('Reset all player scores and record a reset event in history?')) return;
-        const { error: resetError } = await supabase.from('players').update({ score: 0, goals: 0, assists: 0 }).neq('id', '');
+        const { error: resetError } = await supabaseClient.from('players').update({ score: 0, goals: 0, assists: 0 }).neq('id', '');
         if (resetError) {
             showNotice('Reset failed: ' + resetError.message, 'warning');
             return;
         }
-        const { error: eventError } = await supabase.from('score_events').insert({ action: 'Reset', points: 0, note: 'League reset', created_at: new Date().toISOString() });
+        const { error: eventError } = await supabaseClient.from('score_events').insert({ action: 'Reset', points: 0, note: 'League reset', created_at: new Date().toISOString() });
         if (eventError) {
             showNotice('Reset event save failed: ' + eventError.message, 'warning');
             return;
@@ -814,9 +822,9 @@
 
     async function deleteTeam(teamId) {
         if (!confirm('Delete this team and all related players and score history?')) return;
-        await supabase.from('score_events').delete().eq('team_id', teamId);
-        await supabase.from('players').delete().eq('team_id', teamId);
-        const { error } = await supabase.from('teams').delete().eq('id', teamId);
+        await supabaseClient.from('score_events').delete().eq('team_id', teamId);
+        await supabaseClient.from('players').delete().eq('team_id', teamId);
+        const { error } = await supabaseClient.from('teams').delete().eq('id', teamId);
         if (error) return showNotice('Team delete failed: ' + error.message, 'warning');
         await refreshAll();
         showNotice('Team deleted.', 'info');
@@ -824,8 +832,8 @@
 
     async function deletePlayer(playerId) {
         if (!confirm('Delete this player and related history events?')) return;
-        await supabase.from('score_events').delete().eq('player_id', playerId);
-        const { error } = await supabase.from('players').delete().eq('id', playerId);
+        await supabaseClient.from('score_events').delete().eq('player_id', playerId);
+        const { error } = await supabaseClient.from('players').delete().eq('id', playerId);
         if (error) return showNotice('Player delete failed: ' + error.message, 'warning');
         await refreshAll();
         showNotice('Player deleted.', 'info');
