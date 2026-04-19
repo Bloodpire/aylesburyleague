@@ -4,18 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aylesbury League</title>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --sky-blue: #00BFFF;
-            --gold-card: linear-gradient(160deg, #ffe359 0%, #cf9a2a 100%);
-            --silver-card: linear-gradient(160deg, #e0e0e0 0%, #8e8e8e 100%);
-            --bronze-card: linear-gradient(160deg, #d3915f 0%, #6e3a15 100%);
-            --totw-gold: #c9a84c;
-            --totw-gold-light: #f0d060;
-            --totw-gold-dark: #7a5a10;
-            --off-white-overlay: rgba(255, 255, 255, 0.95);
+            --off-white-overlay: rgba(255,255,255,0.95);
         }
+
+        * { box-sizing: border-box; }
 
         body {
             font-family: 'Oswald', sans-serif;
@@ -27,323 +23,258 @@
         }
 
         .container { max-width: 1200px; margin: auto; }
-        h1 { text-align: center; color: white; text-shadow: 2px 2px 10px rgba(0,0,0,0.2); font-size: 3.5rem; margin-bottom: 20px; }
+        h1 { text-align: center; color: white; text-shadow: 2px 2px 10px rgba(0,0,0,0.25); font-size: 3.5rem; margin-bottom: 20px; }
 
         /* ── Admin bar ── */
-        .admin-bar {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
+        .admin-bar { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-bottom: 10px; }
         .admin-status { color: white; font-size: 0.95rem; opacity: 0.9; }
         .admin-btn {
-            background: rgba(255,255,255,0.2);
-            color: white;
+            background: rgba(255,255,255,0.2); color: white;
             border: 2px solid rgba(255,255,255,0.6);
-            padding: 7px 20px;
-            border-radius: 25px;
-            font-size: 0.95rem;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: 'Oswald', sans-serif;
-            transition: 0.2s;
+            padding: 7px 20px; border-radius: 25px;
+            font-size: 0.95rem; font-weight: bold; cursor: pointer;
+            font-family: 'Oswald', sans-serif; transition: 0.2s;
         }
         .admin-btn:hover { background: rgba(255,255,255,0.35); }
         .admin-btn.logout { border-color: #ff6b6b; color: #ff6b6b; }
         .admin-btn.logout:hover { background: rgba(255,107,107,0.15); }
 
-        /* ── Section header row ── */
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 18px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .section-title {
-            color: white;
-            font-size: 2rem;
-            font-weight: 700;
-            text-shadow: 1px 1px 6px rgba(0,0,0,0.2);
-            margin: 0;
-        }
+        /* ── Section headers ── */
+        .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+        .section-title { color: white; font-size: 2rem; font-weight: 700; text-shadow: 1px 1px 6px rgba(0,0,0,0.2); margin: 0; }
 
-        /* ── Action bars ── */
-        .add-player-section {
-            background: var(--off-white-overlay);
-            padding: 10px 20px;
-            border-radius: 50px;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        .open-modal-btn {
-            background: #2ecc71;
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-family: 'Oswald', sans-serif;
-        }
+        .add-player-section { background: var(--off-white-overlay); padding: 10px 20px; border-radius: 50px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .open-modal-btn { background: #2ecc71; color: white; border: none; padding: 10px 30px; border-radius: 25px; font-size: 1.1rem; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Oswald', sans-serif; }
         .open-modal-btn:disabled { background: #aaa; cursor: not-allowed; opacity: 0.6; }
 
-        .add-totw-section {
-            background: rgba(0,0,0,0.25);
-            border: 2px solid var(--totw-gold);
-            padding: 10px 20px;
-            border-radius: 50px;
-            text-align: center;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.2);
-        }
-        .open-totw-btn {
-            background: linear-gradient(135deg, #1a1a1a, #2e2200);
-            color: var(--totw-gold-light);
-            border: 1px solid var(--totw-gold);
-            padding: 10px 30px;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-family: 'Oswald', sans-serif;
-            letter-spacing: 1px;
-        }
-        .open-totw-btn:disabled { background: #aaa; cursor: not-allowed; opacity: 0.6; border-color: #aaa; color: white; }
+        .add-totw-section { background: rgba(0,0,0,0.3); border: 2px solid #c9a84c; padding: 10px 20px; border-radius: 50px; text-align: center; box-shadow: 0 8px 18px rgba(0,0,0,0.25); }
+        .open-totw-btn { background: linear-gradient(135deg, #1a1200, #2e2000); color: #f0d060; border: 1px solid #c9a84c; padding: 10px 30px; border-radius: 25px; font-size: 1.1rem; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 1px; }
+        .open-totw-btn:disabled { background: #555; cursor: not-allowed; opacity: 0.6; border-color: #888; color: #aaa; }
 
         /* ── Card Grids ── */
-        #leaderboard, #totw-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 30px;
-        }
+        #leaderboard, #totw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 30px; }
 
-        /* ── Base FIFA Card ── */
-        .card {
+        /* ── FC26 Shield Card ── */
+        /*  clip-path matches the FC26 crest:
+            top-left notch, straight top, top-right notch,
+            right side, bottom-right curve to point, bottom-left, left side */
+        .fc-card {
             position: relative;
             width: 100%;
-            padding: 12px 15px 0 15px;
-            text-align: center;
-            transition: 0.3s;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-            cursor: pointer;
-            box-sizing: border-box;
+            aspect-ratio: 0.72;
+            clip-path: polygon(
+                0% 8%,
+                8% 0%,
+                92% 0%,
+                100% 8%,
+                100% 68%,
+                50% 100%,
+                0% 68%
+            );
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
+            padding: 14px 14px 28px 14px;
+            cursor: pointer;
+            transition: transform 0.25s, filter 0.25s;
+            text-align: center;
+            overflow: hidden;
         }
-        .card::after {
+        .fc-card:hover { transform: translateY(-10px) scale(1.03); filter: brightness(1.08); }
+
+        /* Inner texture overlay — the fan/ray pattern */
+        .fc-card::before {
             content: '';
-            display: block;
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Gold tier ── */
+        .fc-card.gold {
+            background: linear-gradient(160deg, #ffe97a 0%, #d4a82a 50%, #8a6010 100%);
+            color: #1a0e00;
+            box-shadow: 0 20px 50px rgba(180,130,0,0.5);
+        }
+        .fc-card.gold::before {
+            background: repeating-conic-gradient(from 220deg at 30% 110%, rgba(255,255,255,0.07) 0deg, transparent 3deg, transparent 6deg);
+        }
+
+        /* ── Silver tier ── */
+        .fc-card.silver {
+            background: linear-gradient(160deg, #f0f0f0 0%, #b0b0b0 50%, #606060 100%);
+            color: #111;
+            box-shadow: 0 20px 50px rgba(100,100,100,0.4);
+        }
+        .fc-card.silver::before {
+            background: repeating-conic-gradient(from 220deg at 30% 110%, rgba(255,255,255,0.09) 0deg, transparent 3deg, transparent 6deg);
+        }
+
+        /* ── Bronze tier ── */
+        .fc-card.bronze {
+            background: linear-gradient(160deg, #e8a070 0%, #b06030 50%, #5a2808 100%);
+            color: #fff;
+            box-shadow: 0 20px 50px rgba(120,60,0,0.5);
+        }
+        .fc-card.bronze::before {
+            background: repeating-conic-gradient(from 220deg at 30% 110%, rgba(255,255,255,0.07) 0deg, transparent 3deg, transparent 6deg);
+        }
+
+        /* ── TOTW Black/Gold tier ── */
+        .fc-card.totw {
+            background: linear-gradient(155deg, #1e1400 0%, #080808 40%, #100c00 100%);
+            color: #f0d060;
+            box-shadow:
+                0 0 0 2px #c9a84c,
+                0 0 24px rgba(200,165,70,0.4),
+                0 20px 50px rgba(0,0,0,0.8);
+        }
+        .fc-card.totw::before {
+            background: repeating-conic-gradient(from 220deg at 30% 110%, rgba(201,168,76,0.06) 0deg, transparent 3deg, transparent 6deg);
+        }
+
+        /* Shine strip on TOTW */
+        .fc-card.totw::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 22%;
+            width: 18%; height: 100%;
+            background: linear-gradient(180deg, rgba(201,168,76,0.0) 0%, rgba(201,168,76,0.12) 40%, rgba(201,168,76,0.0) 100%);
+            transform: skewX(-8deg);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── Card inner content ── */
+        .card-inner { position: relative; z-index: 1; width: 100%; display: flex; flex-direction: column; align-items: center; }
+
+        /* Top row: OVR left, POS+WF right */
+        .card-top-row {
             width: 100%;
-            height: 40px;
-            clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
-            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+        .card-ovr { font-size: 2.4rem; font-weight: 900; line-height: 1; }
+        .card-pos-wf { text-align: right; font-size: 0.75rem; font-weight: 700; line-height: 1.4; opacity: 0.9; }
+
+        .fc-card.totw .card-ovr { color: #f0d060; text-shadow: 0 0 10px rgba(240,208,96,0.6); }
+        .fc-card.totw .card-pos-wf { color: #d4b86a; }
+
+        /* TOTW label */
+        .totw-label {
+            font-size: 0.55rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #f0d060;
+            border: 1px solid #c9a84c;
+            padding: 1px 5px;
+            border-radius: 2px;
+            margin-bottom: 4px;
+            background: rgba(0,0,0,0.4);
+            align-self: center;
+        }
+
+        /* Player photo */
+        .card-img-wrap {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 2px auto 4px auto;
+            border: 2px solid rgba(255,255,255,0.35);
+            background: rgba(255,255,255,0.1);
             flex-shrink: 0;
         }
-        .card:hover { transform: translateY(-10px) scale(1.02); }
+        .fc-card.totw .card-img-wrap {
+            border-color: #c9a84c;
+            box-shadow: 0 0 10px rgba(201,168,76,0.45);
+        }
+        .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Leaderboard tiers */
-        .card.gold   { background: var(--gold-card);   color: #222; }
-        .card.silver { background: var(--silver-card); color: #222; }
-        .card.bronze { background: var(--bronze-card); color: white; }
-        .card.gold::after   { background: #cf9a2a; }
-        .card.silver::after { background: #8e8e8e; }
-        .card.bronze::after { background: #6e3a15; }
-
-        /* TOTW card — FC26 style */
-        .card.totw {
-            background: linear-gradient(170deg, #1c1408 0%, #0a0a0a 45%, #1a1000 100%);
-            color: var(--totw-gold-light);
-            box-shadow:
-                0 0 0 2px var(--totw-gold),
-                0 0 18px rgba(201,168,76,0.35),
-                0 20px 40px rgba(0,0,0,0.6);
-            border: none;
-        }
-        .card.totw::after {
-            background: linear-gradient(180deg, var(--totw-gold) 0%, var(--totw-gold-dark) 100%);
-            box-shadow: 0 -2px 8px rgba(201,168,76,0.3);
-        }
-        .card.totw .player-name {
-            border-bottom: 1px solid var(--totw-gold);
-            color: white;
-            letter-spacing: 0.5px;
-        }
-        .card.totw .ovr-main {
-            color: var(--totw-gold-light);
-            text-shadow: 0 0 12px rgba(240,208,96,0.5);
-        }
-        .card.totw .stats-grid {
-            color: #d4b86a;
+        /* Gold divider for TOTW */
+        .totw-divider-line {
+            width: 65%; height: 1px;
+            background: linear-gradient(90deg, transparent, #c9a84c, transparent);
+            margin: 2px auto 3px auto;
         }
 
-        /* Gold shimmer line under photo on TOTW */
-        .totw-gold-line {
-            width: 70%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--totw-gold), transparent);
-            margin: 4px auto 2px auto;
-        }
-
-        .totw-badge {
-            position: absolute;
-            top: 7px;
-            right: 10px;
-            font-size: 0.6rem;
-            font-weight: 900;
-            letter-spacing: 1.5px;
+        /* Name */
+        .card-name {
+            font-size: 0.95rem; font-weight: 700;
             text-transform: uppercase;
-            color: var(--totw-gold-light);
-            background: rgba(0,0,0,0.5);
-            border: 1px solid var(--totw-gold);
-            border-radius: 3px;
-            padding: 2px 5px;
-            line-height: 1.4;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid rgba(0,0,0,0.12);
+            width: 100%; padding-bottom: 3px; margin-bottom: 3px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
+        .fc-card.totw .card-name { border-bottom-color: rgba(201,168,76,0.4); color: white; }
 
-        /* ── Shared card internals ── */
+        /* Stats */
+        .card-stats {
+            display: grid; grid-template-columns: 1fr 1fr;
+            font-size: 0.78rem; font-weight: 700;
+            width: 100%; gap: 0;
+        }
+        .card-stat { padding: 1px 0; }
+        .fc-card.totw .card-stats { color: #d4b86a; }
+
+        /* Rank badge */
+        .rank-badge { font-size: 0.72rem; font-weight: 700; opacity: 0.75; margin-bottom: 2px; }
+
+        /* Delete button */
         .delete-x {
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            background: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
+            position: absolute; top: 8px; left: 8px;
+            background: #ff4d4d; color: white; border: none;
+            border-radius: 50%; width: 22px; height: 22px;
+            font-weight: bold; cursor: pointer; z-index: 20;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px;
         }
-        .delete-x:disabled { background: #999; cursor: not-allowed; opacity: 0.5; }
-        .lock-icon { position: absolute; top: 10px; right: 15px; font-size: 14px; opacity: 0.5; }
-
-        .player-img {
-            width: 90px; height: 90px;
-            margin: 3px auto;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            object-fit: cover;
-            border: 3px solid rgba(255,255,255,0.5);
-        }
-        .ovr-main { font-size: 2.8rem; font-weight: 900; line-height: 1; margin: 0; }
-        .player-name { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin: 3px 0; padding-bottom: 2px; width: 100%; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; font-weight: bold; font-size: 0.9rem; margin-top: 4px; gap: 0; width: 100%; }
-        .stat-item { padding: 1px 0; }
+        .delete-x:disabled { background: #888; cursor: not-allowed; opacity: 0.5; }
+        .lock-icon { position: absolute; top: 8px; right: 8px; font-size: 13px; opacity: 0.5; z-index: 20; }
 
         /* ── TOTW section wrapper ── */
         .totw-section { margin-top: 60px; margin-bottom: 40px; }
-        .totw-divider {
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-            margin-bottom: 28px;
-            border: none;
+        .totw-hr {
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, #c9a84c 30%, #c9a84c 70%, transparent);
+            border: none; margin-bottom: 28px;
         }
 
         /* ── Modals ── */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-        }
-        .modal-content {
-            background: white;
-            margin: 5% auto;
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
-            border-radius: 20px;
-            position: relative;
-        }
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+        .modal-content { background: white; margin: 5% auto; padding: 30px; width: 90%; max-width: 500px; border-radius: 20px; position: relative; }
         .modal-header { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; text-align: center; color: #333; }
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .full-width { grid-column: span 2; }
-        input, select {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: 'Oswald', sans-serif;
-            box-sizing: border-box;
-        }
+        input, select { padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; font-family: 'Oswald', sans-serif; box-sizing: border-box; }
         input { width: 100%; }
-        .save-btn {
-            grid-column: span 2;
-            background: var(--sky-blue);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            text-transform: uppercase;
-            font-family: 'Oswald', sans-serif;
-        }
-        .save-btn.totw-save { background: linear-gradient(135deg, #1a1a1a, #2e2200); color: var(--totw-gold-light); border: 1px solid var(--totw-gold); }
+        .save-btn { grid-column: span 2; background: var(--sky-blue); color: white; border: none; padding: 15px; border-radius: 10px; font-size: 1.2rem; font-weight: bold; cursor: pointer; margin-top: 10px; text-transform: uppercase; font-family: 'Oswald', sans-serif; }
+        .save-btn.totw-save { background: linear-gradient(135deg, #1a1200, #2e2000); color: #f0d060; border: 1px solid #c9a84c; }
         .close-modal { position: absolute; right: 20px; top: 15px; font-size: 2rem; cursor: pointer; color: #999; }
-
-        /* Login modal */
         #loginModal .modal-content { max-width: 380px; }
+        #totwModal .modal-content { border-top: 4px solid #c9a84c; }
         .login-form { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
-        .login-form input { width: 100%; box-sizing: border-box; }
-        .login-submit-btn {
-            background: var(--sky-blue);
-            color: white;
-            border: none;
-            padding: 13px;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-            font-family: 'Oswald', sans-serif;
-        }
+        .login-form input { width: 100%; }
+        .login-submit-btn { background: var(--sky-blue); color: white; border: none; padding: 13px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Oswald', sans-serif; }
         #loginError { color: #e74c3c; font-size: 0.9rem; text-align: center; min-height: 20px; }
         .auth-badge { display: inline-block; background: #2ecc71; color: white; border-radius: 20px; padding: 3px 12px; font-size: 0.85rem; font-weight: bold; }
-
-        /* TOTW modal accent */
-        #totwModal .modal-content { border-top: 5px solid var(--totw-gold); }
-
-        /* Empty state */
-        .empty-totw {
-            grid-column: 1 / -1;
-            text-align: center;
-            color: rgba(255,255,255,0.7);
-            font-size: 1.1rem;
-            padding: 30px;
-        }
+        .empty-totw { grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.7); font-size: 1.1rem; padding: 30px; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <h1>⚽ AYLESBURY LEAGUE</h1>
 
-    <!-- Admin bar -->
     <div class="admin-bar">
         <span class="admin-status" id="adminStatus">🔒 Not logged in</span>
         <button class="admin-btn" id="adminActionBtn" onclick="handleAdminBtn()">Admin Login</button>
     </div>
 
-    <!-- Leaderboard section -->
     <div class="section-header">
         <h2 class="section-title">🏆 Leaderboard</h2>
         <div class="add-player-section">
@@ -352,9 +283,8 @@
     </div>
     <div id="leaderboard"></div>
 
-    <!-- TOTW section -->
     <div class="totw-section">
-        <hr class="totw-divider">
+        <hr class="totw-hr">
         <div class="section-header">
             <h2 class="section-title">👑 Team of the Week</h2>
             <div class="add-totw-section">
@@ -365,7 +295,7 @@
     </div>
 </div>
 
-<!-- Player Edit Modal -->
+<!-- Player Modal -->
 <div id="playerModal" class="modal">
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -374,12 +304,10 @@
             <input type="hidden" id="edit-id">
             <input type="text" id="name" placeholder="Full Name" class="full-width">
             <input type="text" id="img-url" placeholder="Photo URL (Optional)" class="full-width">
-            <input type="text" id="pos" placeholder="POS (ST, CM, etc.)">
+            <input type="text" id="pos" placeholder="POS (ST, CM...)">
             <select id="wf">
-                <option value="⭐">1★ WF</option>
-                <option value="⭐⭐">2★ WF</option>
-                <option value="⭐⭐⭐">3★ WF</option>
-                <option value="⭐⭐⭐⭐" selected>4★ WF</option>
+                <option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option>
+                <option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option>
                 <option value="⭐⭐⭐⭐⭐">5★ WF</option>
             </select>
             <input type="number" id="pac" placeholder="PAC" max="99">
@@ -388,7 +316,7 @@
             <input type="number" id="dri" placeholder="DRI" max="99">
             <input type="number" id="def" placeholder="DEF" max="99">
             <input type="number" id="phy" placeholder="PHY" max="99">
-            <button class="save-btn" onclick="savePlayer()" id="saveBtnText">Save Player Data</button>
+            <button class="save-btn" onclick="savePlayer()" id="saveBtnText">Save Player</button>
         </div>
     </div>
 </div>
@@ -402,12 +330,10 @@
             <input type="hidden" id="totw-edit-id">
             <input type="text" id="totw-name" placeholder="Full Name" class="full-width">
             <input type="text" id="totw-img-url" placeholder="Photo URL (Optional)" class="full-width">
-            <input type="text" id="totw-pos" placeholder="POS (ST, CM, etc.)">
+            <input type="text" id="totw-pos" placeholder="POS (ST, CM...)">
             <select id="totw-wf">
-                <option value="⭐">1★ WF</option>
-                <option value="⭐⭐">2★ WF</option>
-                <option value="⭐⭐⭐">3★ WF</option>
-                <option value="⭐⭐⭐⭐" selected>4★ WF</option>
+                <option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option>
+                <option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option>
                 <option value="⭐⭐⭐⭐⭐">5★ WF</option>
             </select>
             <input type="number" id="totw-pac" placeholder="PAC" max="99">
@@ -438,57 +364,43 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-    // ── Supabase config ──────────────────────────────────────────────────────
     const SUPABASE_URL      = 'https://bmwiqpkgdbeohkwbqaft.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_kguMGdM9yIP_qoUdOU6x_w_4ObYO4Wt';
     const supabaseClient    = typeof window.supabase !== 'undefined'
-        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-        : null;
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-    const LOCAL_KEY      = 'neighborhoodPlayers';
-    const LOCAL_KEY_TOTW = 'totwPlayers';
+    const LOCAL_KEY = 'neighborhoodPlayers', LOCAL_KEY_TOTW = 'totwPlayers';
 
-    // ── Auth state (in-memory only) ──────────────────────────────────────────
+    // ── Auth ─────────────────────────────────────────────────────────────────
     let currentAdmin = null;
-    function isLoggedIn() { return currentAdmin !== null; }
+    const isLoggedIn = () => currentAdmin !== null;
 
     function updateAdminUI() {
-        const statusEl   = document.getElementById('adminStatus');
-        const btnEl      = document.getElementById('adminActionBtn');
-        const addBtn     = document.getElementById('addPlayerBtn');
-        const addTotwBtn = document.getElementById('addTotwBtn');
+        const s = document.getElementById('adminStatus');
+        const b = document.getElementById('adminActionBtn');
+        const a = document.getElementById('addPlayerBtn');
+        const t = document.getElementById('addTotwBtn');
         if (isLoggedIn()) {
-            statusEl.innerHTML = `✅ Logged in as <span class="auth-badge">${currentAdmin.username}</span>`;
-            btnEl.textContent = 'Logout';
-            btnEl.classList.add('logout');
-            addBtn.disabled = false;
-            addTotwBtn.disabled = false;
+            s.innerHTML = `✅ Logged in as <span class="auth-badge">${currentAdmin.username}</span>`;
+            b.textContent = 'Logout'; b.classList.add('logout');
+            a.disabled = false; t.disabled = false;
         } else {
-            statusEl.textContent = '🔒 Not logged in';
-            btnEl.textContent = 'Admin Login';
-            btnEl.classList.remove('logout');
-            addBtn.disabled = true;
-            addTotwBtn.disabled = true;
+            s.textContent = '🔒 Not logged in';
+            b.textContent = 'Admin Login'; b.classList.remove('logout');
+            a.disabled = true; t.disabled = true;
         }
-        updateDisplay();
-        updateTotwDisplay();
+        updateDisplay(); updateTotwDisplay();
     }
 
     function handleAdminBtn() { isLoggedIn() ? logout() : openLoginModal(); }
     function logout() { currentAdmin = null; updateAdminUI(); }
 
     let pendingAuthCallback = null;
-    function requireAuth(cb) {
-        if (isLoggedIn()) { cb(); }
-        else { pendingAuthCallback = cb; openLoginModal(); }
-    }
+    function requireAuth(cb) { if (isLoggedIn()) cb(); else { pendingAuthCallback = cb; openLoginModal(); } }
 
-    // ── Login Modal ──────────────────────────────────────────────────────────
     const loginModal = document.getElementById('loginModal');
-
     function openLoginModal() {
-        document.getElementById('loginUsername').value = '';
-        document.getElementById('loginPassword').value = '';
+        ['loginUsername','loginPassword'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('loginError').textContent = '';
         loginModal.style.display = 'block';
         setTimeout(() => document.getElementById('loginUsername').focus(), 100);
@@ -496,63 +408,156 @@
     function closeLoginModal() { loginModal.style.display = 'none'; pendingAuthCallback = null; }
 
     async function submitLogin() {
-        const username = document.getElementById('loginUsername').value.trim();
-        const password = document.getElementById('loginPassword').value;
-        const errorEl  = document.getElementById('loginError');
-        if (!username || !password) { errorEl.textContent = 'Please enter username and password.'; return; }
-        errorEl.textContent = '⏳ Checking credentials…';
+        const u = document.getElementById('loginUsername').value.trim();
+        const p = document.getElementById('loginPassword').value;
+        const e = document.getElementById('loginError');
+        if (!u || !p) { e.textContent = 'Enter username and password.'; return; }
+        e.textContent = '⏳ Checking…';
         try {
-            const { data, error } = await supabaseClient
-                .from('admins').select('id, username')
-                .eq('username', username).eq('password', password).maybeSingle();
+            const { data, error } = await supabaseClient.from('admins').select('id,username')
+                .eq('username', u).eq('password', p).maybeSingle();
             if (error) throw error;
             if (data) {
                 currentAdmin = { id: data.id, username: data.username };
-                closeLoginModal();
-                updateAdminUI();
+                closeLoginModal(); updateAdminUI();
                 if (pendingAuthCallback) { const cb = pendingAuthCallback; pendingAuthCallback = null; cb(); }
-            } else {
-                errorEl.textContent = '❌ Invalid username or password.';
-            }
-        } catch (err) { console.error('Login error:', err); errorEl.textContent = '⚠️ Login failed. Try again.'; }
+            } else { e.textContent = '❌ Invalid credentials.'; }
+        } catch (err) { e.textContent = '⚠️ Login failed.'; }
     }
 
-    // ── Leaderboard Players ──────────────────────────────────────────────────
+    // ── Card builder ─────────────────────────────────────────────────────────
+    function buildFCCard(p, index, isTotw) {
+        const loggedIn = isLoggedIn();
+        const tier = isTotw ? 'totw' : (p.ovr >= 80 ? 'gold' : p.ovr >= 70 ? 'silver' : 'bronze');
+
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'position:relative; cursor:pointer;';
+        wrap.dataset.id = p.id;
+
+        // Delete button (outside clip-path so it's always clickable)
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete-x';
+        delBtn.textContent = 'X';
+        if (!loggedIn) { delBtn.disabled = true; delBtn.title = 'Login as admin to delete'; }
+        delBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            const act = () => { if (confirm(isTotw ? 'Remove from TOTW?' : 'Delete this player?')) { isTotw ? deleteTotwPlayer(p.id) : deletePlayer(p.id); } };
+            loggedIn ? act() : requireAuth(act);
+        });
+        wrap.appendChild(delBtn);
+
+        if (!loggedIn) {
+            const lock = document.createElement('span');
+            lock.className = 'lock-icon'; lock.textContent = '🔒';
+            wrap.appendChild(lock);
+        }
+
+        const card = document.createElement('div');
+        card.className = `fc-card ${tier}`;
+
+        const inner = document.createElement('div');
+        inner.className = 'card-inner';
+
+        // Top row: OVR + POS/WF
+        const topRow = document.createElement('div');
+        topRow.className = 'card-top-row';
+        topRow.innerHTML = `
+            <div class="card-ovr">${p.ovr}</div>
+            <div class="card-pos-wf">${p.pos}<br>${p.wf}</div>`;
+        inner.appendChild(topRow);
+
+        // TOTW label
+        if (isTotw) {
+            const lbl = document.createElement('div');
+            lbl.className = 'totw-label';
+            lbl.textContent = 'TEAM OF THE WEEK';
+            inner.appendChild(lbl);
+        } else {
+            const rank = document.createElement('div');
+            rank.className = 'rank-badge';
+            rank.textContent = `RANK #${index + 1}`;
+            inner.appendChild(rank);
+        }
+
+        // Photo
+        const imgWrap = document.createElement('div');
+        imgWrap.className = 'card-img-wrap';
+        const img = document.createElement('img');
+        img.src = p.img;
+        img.onerror = () => img.src = 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png';
+        imgWrap.appendChild(img);
+        inner.appendChild(imgWrap);
+
+        // Gold divider for TOTW
+        if (isTotw) {
+            const divLine = document.createElement('div');
+            divLine.className = 'totw-divider-line';
+            inner.appendChild(divLine);
+        }
+
+        // Name
+        const name = document.createElement('div');
+        name.className = 'card-name';
+        name.textContent = p.name;
+        inner.appendChild(name);
+
+        // Stats
+        const stats = document.createElement('div');
+        stats.className = 'card-stats';
+        stats.innerHTML = `
+            <div class="card-stat">PAC ${p.pac}</div><div class="card-stat">SHO ${p.sho}</div>
+            <div class="card-stat">PAS ${p.pas}</div><div class="card-stat">DRI ${p.dri}</div>
+            <div class="card-stat">DEF ${p.def}</div><div class="card-stat">PHY ${p.phy}</div>`;
+        inner.appendChild(stats);
+
+        card.appendChild(inner);
+        wrap.appendChild(card);
+
+        // Click to edit
+        card.addEventListener('click', () => {
+            if (isTotw) requireAuth(() => openTotwModal(String(p.id)));
+            else requireAuth(() => openEditModal(String(p.id)));
+        });
+
+        return wrap;
+    }
+
+    // ── Leaderboard ──────────────────────────────────────────────────────────
     let players = [];
     const modal = document.getElementById('playerModal');
 
     async function fetchPlayersFromSupabase() {
         try {
-            const { data, error } = await supabaseClient
-                .from('players_records').select('*').order('ovr', { ascending: false });
+            const { data, error } = await supabaseClient.from('players_records').select('*').order('ovr', { ascending: false });
             if (error) throw error;
             players = (data || []).map(d => ({ ...d, id: String(d.id) }));
             updateDisplay();
         } catch (err) {
-            console.error('Players fetch error:', err);
             players = (JSON.parse(localStorage.getItem(LOCAL_KEY)) || []).map(p => ({ ...p, id: String(p.id) }));
             updateDisplay();
         }
     }
 
+    function updateDisplay() {
+        players.sort((a, b) => b.ovr - a.ovr);
+        const container = document.getElementById('leaderboard');
+        container.innerHTML = '';
+        players.forEach((p, i) => container.appendChild(buildFCCard(p, i, false)));
+    }
+
     function openEditModal(playerId = null) {
         resetForm();
-        if (playerId !== null) {
+        if (playerId) {
             const p = players.find(x => x.id === String(playerId));
             if (!p) return;
             document.getElementById('modalTitle').innerText = `Edit ${p.name}`;
-            document.getElementById('edit-id').value  = p.id;
-            document.getElementById('name').value     = p.name;
-            document.getElementById('img-url').value  = p.img && p.img.includes('flaticon') ? '' : p.img;
-            document.getElementById('pos').value      = p.pos;
-            document.getElementById('wf').value       = p.wf;
-            document.getElementById('pac').value      = p.pac;
-            document.getElementById('sho').value      = p.sho;
-            document.getElementById('pas').value      = p.pas;
-            document.getElementById('dri').value      = p.dri;
-            document.getElementById('def').value      = p.def;
-            document.getElementById('phy').value      = p.phy;
-            document.getElementById('saveBtnText').innerText = 'Update Player Info';
+            document.getElementById('edit-id').value = p.id;
+            document.getElementById('name').value = p.name;
+            document.getElementById('img-url').value = p.img?.includes('flaticon') ? '' : p.img;
+            document.getElementById('pos').value = p.pos;
+            document.getElementById('wf').value = p.wf;
+            ['pac','sho','pas','dri','def','phy'].forEach(s => document.getElementById(s).value = p[s]);
+            document.getElementById('saveBtnText').innerText = 'Update Player';
         }
         modal.style.display = 'block';
     }
@@ -561,19 +566,19 @@
     async function savePlayer() {
         if (!isLoggedIn()) { alert('Admin login required.'); return; }
         const idInput = document.getElementById('edit-id').value;
-        const stats   = ['pac','sho','pas','dri','def','phy'].map(s => parseInt(document.getElementById(s).value) || 0);
-        const ovr     = Math.round(stats.reduce((a,b) => a+b) / 6);
+        const stats = ['pac','sho','pas','dri','def','phy'].map(s => parseInt(document.getElementById(s).value) || 0);
         const playerData = {
-            id: idInput ? String(idInput) : String(Date.now()),
+            id: idInput || String(Date.now()),
             name: document.getElementById('name').value || 'Player',
-            img:  document.getElementById('img-url').value || 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',
-            pos:  (document.getElementById('pos').value || 'ST').toUpperCase(),
-            wf:   document.getElementById('wf').value,
-            pac: stats[0], sho: stats[1], pas: stats[2], dri: stats[3], def: stats[4], phy: stats[5], ovr
+            img: document.getElementById('img-url').value || 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',
+            pos: (document.getElementById('pos').value || 'ST').toUpperCase(),
+            wf: document.getElementById('wf').value,
+            pac: stats[0], sho: stats[1], pas: stats[2], dri: stats[3], def: stats[4], phy: stats[5],
+            ovr: Math.round(stats.reduce((a,b) => a+b) / 6)
         };
         if (supabaseClient) {
             try { const { error } = await supabaseClient.from('players_records').upsert(playerData); if (error) throw error; }
-            catch (err) { console.error('Upsert error:', err); alert('Failed to save. See console.'); }
+            catch (err) { alert('Failed to save. See console.'); console.error(err); }
         } else {
             if (idInput) players[players.findIndex(p => p.id === String(idInput))] = playerData;
             else players.push(playerData);
@@ -587,54 +592,12 @@
         if (!isLoggedIn()) { alert('Admin login required.'); return; }
         if (supabaseClient) {
             try { const { error } = await supabaseClient.from('players_records').delete().eq('id', playerId); if (error) throw error; }
-            catch (err) { console.error('Delete error:', err); alert('Failed to delete. See console.'); }
+            catch (err) { alert('Failed to delete.'); console.error(err); }
         } else {
             players = players.filter(x => x.id !== String(playerId));
             localStorage.setItem(LOCAL_KEY, JSON.stringify(players));
             updateDisplay();
         }
-    }
-
-    function buildCard(p, index, isTotw) {
-        const loggedIn = isLoggedIn();
-        const card = document.createElement('div');
-        const tier = isTotw ? 'totw' : (p.ovr >= 80 ? 'gold' : (p.ovr >= 70 ? 'silver' : 'bronze'));
-        card.className = `card ${tier}`;
-        card.dataset.id = p.id;
-        card.innerHTML = `
-            <button class="delete-x" data-id="${p.id}" ${loggedIn ? '' : 'disabled title="Login as admin to delete"'}>X</button>
-            ${isTotw
-                ? '<span class="totw-badge">TOTW</span><div style="font-weight:900;font-size:0.72rem;letter-spacing:2px;color:#c9a84c;margin-top:2px;">TEAM OF THE WEEK</div>'
-                : (loggedIn ? '' : '<span class="lock-icon">🔒</span>') + `<div style="font-weight:bold;font-size:0.8rem;">RANK #${index + 1}</div>`
-            }
-            <img src="${p.img}" class="player-img" ${isTotw ? 'style="border-color: var(--totw-gold); box-shadow: 0 0 10px rgba(201,168,76,0.4);"' : ''} onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
-            ${isTotw ? '<div class="totw-gold-line"></div>' : ''}
-            <div class="ovr-main">${p.ovr}</div>
-            <div class="player-name">${p.name}</div>
-            <div style="font-weight:bold;opacity:0.9;">${p.pos} | ${p.wf}</div>
-            <div class="stats-grid">
-                <div class="stat-item">PAC ${p.pac}</div><div class="stat-item">SHO ${p.sho}</div>
-                <div class="stat-item">PAS ${p.pas}</div><div class="stat-item">DRI ${p.dri}</div>
-                <div class="stat-item">DEF ${p.def}</div><div class="stat-item">PHY ${p.phy}</div>
-            </div>`;
-        return card;
-    }
-
-    function updateDisplay() {
-        players.sort((a, b) => b.ovr - a.ovr);
-        const container = document.getElementById('leaderboard');
-        container.innerHTML = '';
-        const loggedIn = isLoggedIn();
-        players.forEach((p, index) => {
-            const card = buildCard(p, index, false);
-            card.addEventListener('click', () => requireAuth(() => openEditModal(String(p.id))));
-            card.querySelector('.delete-x').addEventListener('click', e => {
-                e.stopPropagation();
-                const act = () => { if (confirm('Permanently delete this player?')) deletePlayer(p.id); };
-                loggedIn ? act() : requireAuth(act);
-            });
-            container.appendChild(card);
-        });
     }
 
     function resetForm() {
@@ -644,41 +607,45 @@
         document.getElementById('saveBtnText').innerText = 'Add to League';
     }
 
-    // ── TOTW Players ─────────────────────────────────────────────────────────
+    // ── TOTW ─────────────────────────────────────────────────────────────────
     let totwPlayers = [];
     const totwModal = document.getElementById('totwModal');
 
     async function fetchTotwFromSupabase() {
         try {
-            const { data, error } = await supabaseClient
-                .from('totw_players').select('*').order('ovr', { ascending: false });
+            const { data, error } = await supabaseClient.from('totw_players').select('*').order('ovr', { ascending: false });
             if (error) throw error;
             totwPlayers = (data || []).map(d => ({ ...d, id: String(d.id) }));
             updateTotwDisplay();
         } catch (err) {
-            console.error('TOTW fetch error:', err);
             totwPlayers = (JSON.parse(localStorage.getItem(LOCAL_KEY_TOTW)) || []).map(p => ({ ...p, id: String(p.id) }));
             updateTotwDisplay();
         }
     }
 
+    function updateTotwDisplay() {
+        totwPlayers.sort((a, b) => b.ovr - a.ovr);
+        const container = document.getElementById('totw-grid');
+        container.innerHTML = '';
+        if (!totwPlayers.length) {
+            container.innerHTML = '<div class="empty-totw">No players selected yet — admins can add the Team of the Week above.</div>';
+            return;
+        }
+        totwPlayers.forEach(p => container.appendChild(buildFCCard(p, 0, true)));
+    }
+
     function openTotwModal(playerId = null) {
         resetTotwForm();
-        if (playerId !== null) {
+        if (playerId) {
             const p = totwPlayers.find(x => x.id === String(playerId));
             if (!p) return;
             document.getElementById('totwModalTitle').innerText = `Edit ${p.name}`;
-            document.getElementById('totw-edit-id').value  = p.id;
-            document.getElementById('totw-name').value     = p.name;
-            document.getElementById('totw-img-url').value  = p.img && p.img.includes('flaticon') ? '' : p.img;
-            document.getElementById('totw-pos').value      = p.pos;
-            document.getElementById('totw-wf').value       = p.wf;
-            document.getElementById('totw-pac').value      = p.pac;
-            document.getElementById('totw-sho').value      = p.sho;
-            document.getElementById('totw-pas').value      = p.pas;
-            document.getElementById('totw-dri').value      = p.dri;
-            document.getElementById('totw-def').value      = p.def;
-            document.getElementById('totw-phy').value      = p.phy;
+            document.getElementById('totw-edit-id').value = p.id;
+            document.getElementById('totw-name').value = p.name;
+            document.getElementById('totw-img-url').value = p.img?.includes('flaticon') ? '' : p.img;
+            document.getElementById('totw-pos').value = p.pos;
+            document.getElementById('totw-wf').value = p.wf;
+            ['pac','sho','pas','dri','def','phy'].forEach(s => document.getElementById(`totw-${s}`).value = p[s]);
             document.getElementById('totwSaveBtnText').innerText = 'Update TOTW Player';
         }
         totwModal.style.display = 'block';
@@ -688,19 +655,19 @@
     async function saveTotwPlayer() {
         if (!isLoggedIn()) { alert('Admin login required.'); return; }
         const idInput = document.getElementById('totw-edit-id').value;
-        const stats   = ['totw-pac','totw-sho','totw-pas','totw-dri','totw-def','totw-phy'].map(s => parseInt(document.getElementById(s).value) || 0);
-        const ovr     = Math.round(stats.reduce((a,b) => a+b) / 6);
+        const stats = ['pac','sho','pas','dri','def','phy'].map(s => parseInt(document.getElementById(`totw-${s}`).value) || 0);
         const playerData = {
-            id:   idInput ? String(idInput) : String(Date.now()),
+            id: idInput || String(Date.now()),
             name: document.getElementById('totw-name').value || 'Player',
-            img:  document.getElementById('totw-img-url').value || 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',
-            pos:  (document.getElementById('totw-pos').value || 'ST').toUpperCase(),
-            wf:   document.getElementById('totw-wf').value,
-            pac: stats[0], sho: stats[1], pas: stats[2], dri: stats[3], def: stats[4], phy: stats[5], ovr
+            img: document.getElementById('totw-img-url').value || 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',
+            pos: (document.getElementById('totw-pos').value || 'ST').toUpperCase(),
+            wf: document.getElementById('totw-wf').value,
+            pac: stats[0], sho: stats[1], pas: stats[2], dri: stats[3], def: stats[4], phy: stats[5],
+            ovr: Math.round(stats.reduce((a,b) => a+b) / 6)
         };
         if (supabaseClient) {
             try { const { error } = await supabaseClient.from('totw_players').upsert(playerData); if (error) throw error; }
-            catch (err) { console.error('TOTW upsert error:', err); alert('Failed to save TOTW player. See console.'); }
+            catch (err) { alert('Failed to save TOTW player. See console.'); console.error(err); }
         } else {
             if (idInput) totwPlayers[totwPlayers.findIndex(p => p.id === String(idInput))] = playerData;
             else totwPlayers.push(playerData);
@@ -714,33 +681,12 @@
         if (!isLoggedIn()) { alert('Admin login required.'); return; }
         if (supabaseClient) {
             try { const { error } = await supabaseClient.from('totw_players').delete().eq('id', playerId); if (error) throw error; }
-            catch (err) { console.error('TOTW delete error:', err); alert('Failed to delete. See console.'); }
+            catch (err) { alert('Failed to delete.'); console.error(err); }
         } else {
             totwPlayers = totwPlayers.filter(x => x.id !== String(playerId));
             localStorage.setItem(LOCAL_KEY_TOTW, JSON.stringify(totwPlayers));
             updateTotwDisplay();
         }
-    }
-
-    function updateTotwDisplay() {
-        totwPlayers.sort((a, b) => b.ovr - a.ovr);
-        const container = document.getElementById('totw-grid');
-        container.innerHTML = '';
-        const loggedIn = isLoggedIn();
-        if (totwPlayers.length === 0) {
-            container.innerHTML = '<div class="empty-totw">No players selected yet — admins can add the Team of the Week above.</div>';
-            return;
-        }
-        totwPlayers.forEach(p => {
-            const card = buildCard(p, 0, true);
-            card.addEventListener('click', () => requireAuth(() => openTotwModal(String(p.id))));
-            card.querySelector('.delete-x').addEventListener('click', e => {
-                e.stopPropagation();
-                const act = () => { if (confirm('Remove from Team of the Week?')) deleteTotwPlayer(p.id); };
-                loggedIn ? act() : requireAuth(act);
-            });
-            container.appendChild(card);
-        });
     }
 
     function resetTotwForm() {
@@ -751,35 +697,30 @@
         document.getElementById('totwSaveBtnText').innerText = 'Add to Team of the Week';
     }
 
-    // ── Realtime subscriptions ───────────────────────────────────────────────
+    // ── Realtime ─────────────────────────────────────────────────────────────
     function subscribeToChanges() {
         try {
-            supabaseClient.channel('players-changes')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'players_records' }, fetchPlayersFromSupabase)
-                .subscribe();
-            supabaseClient.channel('totw-changes')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'totw_players' }, fetchTotwFromSupabase)
-                .subscribe();
-        } catch (err) { console.error('Realtime subscription failed:', err); }
+            supabaseClient.channel('players-ch').on('postgres_changes', { event:'*', schema:'public', table:'players_records' }, fetchPlayersFromSupabase).subscribe();
+            supabaseClient.channel('totw-ch').on('postgres_changes', { event:'*', schema:'public', table:'totw_players' }, fetchTotwFromSupabase).subscribe();
+        } catch(e) { console.error(e); }
     }
 
     // ── Init ─────────────────────────────────────────────────────────────────
-    (async function init() {
+    (async () => {
         if (supabaseClient) {
             await Promise.all([fetchPlayersFromSupabase(), fetchTotwFromSupabase()]);
             subscribeToChanges();
         } else {
             players     = (JSON.parse(localStorage.getItem(LOCAL_KEY))      || []).map(p => ({ ...p, id: String(p.id) }));
             totwPlayers = (JSON.parse(localStorage.getItem(LOCAL_KEY_TOTW)) || []).map(p => ({ ...p, id: String(p.id) }));
-            updateDisplay();
-            updateTotwDisplay();
+            updateDisplay(); updateTotwDisplay();
         }
         updateAdminUI();
     })();
 
-    window.onclick = function(e) {
-        if (e.target === modal)      closeModal();
-        if (e.target === totwModal)  closeTotwModal();
+    window.onclick = e => {
+        if (e.target === modal) closeModal();
+        if (e.target === totwModal) closeTotwModal();
         if (e.target === loginModal) closeLoginModal();
     };
 </script>
