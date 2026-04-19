@@ -64,6 +64,30 @@ Then create the policies needed for browser access.
 4. Vercel will use `vercel.json` to deploy `index.html` as a static site and apply production security headers.
 5. After deploy, the app will load in the browser and persist data through Supabase.
 
+### Minimal `players` table for this site
+
+If you prefer the table schema used by `index.html` (text `id` and FIFA-like stats), run this SQL in your Supabase project:
+
+```sql
+create table players_records (
+  id text primary key,
+  name text not null,
+  img text,
+  pos text,
+  wf text,
+  pac int default 0,
+  sho int default 0,
+  pas int default 0,
+  dri int default 0,
+  def int default 0,
+  phy int default 0,
+  ovr int default 0,
+  created_at timestamptz default now()
+);
+```
+
+Note: this app uses the client-side `anon` key to upsert and delete rows. For production, enable Row Level Security and add appropriate policies.
+
 ## Security and repo readiness
 
 - `vercel.json` is included to enable static deployment and attach secure response headers.

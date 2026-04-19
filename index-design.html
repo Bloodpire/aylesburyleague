@@ -242,47 +242,12 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-    // Supabase config (provided by user)
-    const SUPABASE_URL = 'https://bmwiqpkgdbeohkwbqaft.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_kguMGdM9yIP_qoUdOU6x_w_4ObYO4Wt';
-    const supabaseClient = typeof window.supabase !== 'undefined'
-        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-        : null;
+    let players = JSON.parse(localStorage.getItem('neighborhoodPlayers')) || [];
+    // Ensure all IDs are strings for consistent comparison
+    players = players.map(p => ({ ...p, id: String(p.id) }));
 
-    // Local fallback storage key
-    const LOCAL_KEY = 'neighborhoodPlayers';
-
-    let players = [];
     const modal = document.getElementById('playerModal');
-
-    // Initialize: prefer Supabase, otherwise use localStorage
-    (async function init() {
-        if (supabaseClient) {
-            await fetchPlayersFromSupabase();
-            subscribeToPlayerChanges();
-        } else {
-            players = JSON.parse(localStorage.getItem(LOCAL_KEY)) || [];
-            players = players.map(p => ({ ...p, id: String(p.id) }));
-            updateDisplay();
-        }
-    })();
-
-    async function fetchPlayersFromSupabase() {
-        try {
-            const { data, error } = await supabaseClient.from('players_records').select('*').order('ovr', { ascending: false });
-            if (error) throw error;
-            players = (data || []).map(d => ({ ...d, id: String(d.id) }));
-            updateDisplay();
-        } catch (err) {
-            console.error('Error fetching players from Supabase:', err);
-            // fallback to localStorage
-            players = JSON.parse(localStorage.getItem(LOCAL_KEY)) || [];
-            players = players.map(p => ({ ...p, id: String(p.id) }));
-            updateDisplay();
-        }
-    }
 
     function openEditModal(playerId = null) {
         resetForm();
@@ -292,7 +257,7 @@
             document.getElementById('modalTitle').innerText = `Edit ${p.name}`;
             document.getElementById('edit-id').value = p.id;
             document.getElementById('name').value = p.name;
-            document.getElementById('img-url').value = p.img && p.img.includes('flaticon') ? '' : p.img;
+            document.getElementById('img-url').value = p.img.includes('flaticon') ? '' : p.img;
             document.getElementById('pos').value = p.pos;
             document.getElementById('wf').value = p.wf;
             document.getElementById('pac').value = p.pac;
@@ -310,7 +275,7 @@
         modal.style.display = "none";
     }
 
-    async function savePlayer() {
+    function savePlayer() {
         const idInput = document.getElementById('edit-id').value;
         const stats = [
             parseInt(document.getElementById('pac').value) || 0,
@@ -321,7 +286,7 @@
             parseInt(document.getElementById('phy').value) || 0
         ];
         const ovr = Math.round(stats.reduce((a, b) => a + b) / 6);
-
+        
         const playerData = {
             id: idInput ? String(idInput) : String(Date.now()),
             name: document.getElementById('name').value || "Player",
@@ -333,49 +298,20 @@
             ovr: ovr
         };
 
-        if (supabaseClient) {
-            try {
-                // Use upsert so edits create or update by primary key `id`
-                const { error } = await supabaseClient.from('players_records').upsert(playerData);
-                if (error) throw error;
-                // Supabase realtime will update the list for all clients; optionally refresh
-                // await fetchPlayersFromSupabase();
-            } catch (err) {
-                console.error('Supabase upsert error:', err);
-                alert('Failed to save to Supabase. See console.');
-            }
+        if (idInput) {
+            const index = players.findIndex(p => p.id === String(idInput));
+            players[index] = playerData;
         } else {
-            if (idInput) {
-                const index = players.findIndex(p => p.id === String(idInput));
-                players[index] = playerData;
-            } else {
-                players.push(playerData);
-            }
-            localStorage.setItem(LOCAL_KEY, JSON.stringify(players));
-            updateDisplay();
+            players.push(playerData);
         }
 
+        updateDisplay();
         closeModal();
-    }
-
-    async function deletePlayer(playerId) {
-        if (supabaseClient) {
-            try {
-                const { error } = await supabaseClient.from('players_records').delete().eq('id', playerId);
-                if (error) throw error;
-            } catch (err) {
-                console.error('Supabase delete error:', err);
-                alert('Failed to delete on Supabase. See console.');
-            }
-        } else {
-            players = players.filter(x => x.id !== String(playerId));
-            localStorage.setItem(LOCAL_KEY, JSON.stringify(players));
-            updateDisplay();
-        }
     }
 
     function updateDisplay() {
         players.sort((a, b) => b.ovr - a.ovr);
+        localStorage.setItem('neighborhoodPlayers', JSON.stringify(players));
         const container = document.getElementById('leaderboard');
         container.innerHTML = '';
 
@@ -385,7 +321,7 @@
             card.className = `card ${tier}`;
             card.dataset.id = p.id;
             card.innerHTML = `
-                    <div style="display: none;"><button class="delete-x" data-id="${p.id}">X</button></div>
+                    <button class="delete-x" data-id="${p.id}">X</button>
                     <div style="font-weight:bold; font-size: 0.8rem;">RANK #${index + 1}</div>
                     <img src="${p.img}" class="player-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
                     <div class="ovr-main">${p.ovr}</div>
@@ -405,7 +341,8 @@
             card.querySelector('.delete-x').addEventListener('click', function(e) {
                 e.stopPropagation();
                 if (confirm("Permanently delete this player?")) {
-                    deletePlayer(p.id);
+                    players = players.filter(x => x.id !== String(p.id));
+                    updateDisplay();
                 }
             });
             container.appendChild(card);
@@ -433,20 +370,7 @@
         if (event.target == modal) closeModal();
     }
 
-    // Realtime subscription
-    function subscribeToPlayerChanges() {
-        try {
-            // Subscribe to all changes on `players` table in `public` schema
-            const channel = supabaseClient.channel('table-db-changes')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'players_records' }, (payload) => {
-                    // For simplicity, just refetch current list on any change
-                    fetchPlayersFromSupabase();
-                })
-                .subscribe();
-        } catch (err) {
-            console.error('Realtime subscription failed:', err);
-        }
-    }
+    updateDisplay();
 </script>
 </body>
 </html>
