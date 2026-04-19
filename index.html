@@ -385,7 +385,7 @@
             card.className = `card ${tier}`;
             card.dataset.id = p.id;
             card.innerHTML = `
-                    <div style="display: none;"><button class="delete-x" data-id="${p.id}">X</button></div>
+                    <button class="delete-x" data-id="${p.id}">X</button>
                     <div style="font-weight:bold; font-size: 0.8rem;">RANK #${index + 1}</div>
                     <img src="${p.img}" class="player-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
                     <div class="ovr-main">${p.ovr}</div>
