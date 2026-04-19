@@ -11,8 +11,9 @@
             --gold-card: linear-gradient(160deg, #ffe359 0%, #cf9a2a 100%);
             --silver-card: linear-gradient(160deg, #e0e0e0 0%, #8e8e8e 100%);
             --bronze-card: linear-gradient(160deg, #d3915f 0%, #6e3a15 100%);
-            --totw-card: linear-gradient(160deg, #a8edea 0%, #3a7bd5 40%, #6a0dad 100%);
-            --totw-tip: #3a0080;
+            --totw-gold: #c9a84c;
+            --totw-gold-light: #f0d060;
+            --totw-gold-dark: #7a5a10;
             --off-white-overlay: rgba(255, 255, 255, 0.95);
         }
 
@@ -93,17 +94,17 @@
         .open-modal-btn:disabled { background: #aaa; cursor: not-allowed; opacity: 0.6; }
 
         .add-totw-section {
-            background: linear-gradient(90deg, rgba(58,123,213,0.18) 0%, rgba(106,13,173,0.18) 100%);
-            border: 2px solid rgba(255,255,255,0.4);
+            background: rgba(0,0,0,0.25);
+            border: 2px solid var(--totw-gold);
             padding: 10px 20px;
             border-radius: 50px;
             text-align: center;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.2);
         }
         .open-totw-btn {
-            background: linear-gradient(90deg, #3a7bd5, #6a0dad);
-            color: white;
-            border: none;
+            background: linear-gradient(135deg, #1a1a1a, #2e2200);
+            color: var(--totw-gold-light);
+            border: 1px solid var(--totw-gold);
             padding: 10px 30px;
             border-radius: 25px;
             font-size: 1.1rem;
@@ -111,8 +112,9 @@
             cursor: pointer;
             text-transform: uppercase;
             font-family: 'Oswald', sans-serif;
+            letter-spacing: 1px;
         }
-        .open-totw-btn:disabled { background: #aaa; cursor: not-allowed; opacity: 0.6; }
+        .open-totw-btn:disabled { background: #aaa; cursor: not-allowed; opacity: 0.6; border-color: #aaa; color: white; }
 
         /* ── Card Grids ── */
         #leaderboard, #totw-grid {
@@ -154,21 +156,55 @@
         .card.silver::after { background: #8e8e8e; }
         .card.bronze::after { background: #6e3a15; }
 
-        /* TOTW card */
+        /* TOTW card — FC26 style */
         .card.totw {
-            background: var(--totw-card);
-            color: white;
-            box-shadow: 0 15px 40px rgba(106,13,173,0.4), 0 0 0 2px rgba(255,255,255,0.15);
+            background: linear-gradient(170deg, #1c1408 0%, #0a0a0a 45%, #1a1000 100%);
+            color: var(--totw-gold-light);
+            box-shadow:
+                0 0 0 2px var(--totw-gold),
+                0 0 18px rgba(201,168,76,0.35),
+                0 20px 40px rgba(0,0,0,0.6);
+            border: none;
         }
-        .card.totw::after { background: var(--totw-tip); }
-        .card.totw .player-name { border-bottom-color: rgba(255,255,255,0.25); }
+        .card.totw::after {
+            background: linear-gradient(180deg, var(--totw-gold) 0%, var(--totw-gold-dark) 100%);
+            box-shadow: 0 -2px 8px rgba(201,168,76,0.3);
+        }
+        .card.totw .player-name {
+            border-bottom: 1px solid var(--totw-gold);
+            color: white;
+            letter-spacing: 0.5px;
+        }
+        .card.totw .ovr-main {
+            color: var(--totw-gold-light);
+            text-shadow: 0 0 12px rgba(240,208,96,0.5);
+        }
+        .card.totw .stats-grid {
+            color: #d4b86a;
+        }
+
+        /* Gold shimmer line under photo on TOTW */
+        .totw-gold-line {
+            width: 70%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--totw-gold), transparent);
+            margin: 4px auto 2px auto;
+        }
 
         .totw-badge {
             position: absolute;
-            top: 8px;
-            right: 14px;
-            font-size: 1.1rem;
-            filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
+            top: 7px;
+            right: 10px;
+            font-size: 0.6rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--totw-gold-light);
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--totw-gold);
+            border-radius: 3px;
+            padding: 2px 5px;
+            line-height: 1.4;
         }
 
         /* ── Shared card internals ── */
@@ -261,7 +297,7 @@
             text-transform: uppercase;
             font-family: 'Oswald', sans-serif;
         }
-        .save-btn.totw-save { background: linear-gradient(90deg, #3a7bd5, #6a0dad); }
+        .save-btn.totw-save { background: linear-gradient(135deg, #1a1a1a, #2e2200); color: var(--totw-gold-light); border: 1px solid var(--totw-gold); }
         .close-modal { position: absolute; right: 20px; top: 15px; font-size: 2rem; cursor: pointer; color: #999; }
 
         /* Login modal */
@@ -284,7 +320,7 @@
         .auth-badge { display: inline-block; background: #2ecc71; color: white; border-radius: 20px; padding: 3px 12px; font-size: 0.85rem; font-weight: bold; }
 
         /* TOTW modal accent */
-        #totwModal .modal-content { border-top: 5px solid #6a0dad; }
+        #totwModal .modal-content { border-top: 5px solid var(--totw-gold); }
 
         /* Empty state */
         .empty-totw {
@@ -568,10 +604,11 @@
         card.innerHTML = `
             <button class="delete-x" data-id="${p.id}" ${loggedIn ? '' : 'disabled title="Login as admin to delete"'}>X</button>
             ${isTotw
-                ? '<span class="totw-badge">👑</span><div style="font-weight:bold;font-size:0.72rem;letter-spacing:1px;opacity:0.85;margin-top:2px;">TEAM OF THE WEEK</div>'
+                ? '<span class="totw-badge">TOTW</span><div style="font-weight:900;font-size:0.72rem;letter-spacing:2px;color:#c9a84c;margin-top:2px;">TEAM OF THE WEEK</div>'
                 : (loggedIn ? '' : '<span class="lock-icon">🔒</span>') + `<div style="font-weight:bold;font-size:0.8rem;">RANK #${index + 1}</div>`
             }
-            <img src="${p.img}" class="player-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
+            <img src="${p.img}" class="player-img" ${isTotw ? 'style="border-color: var(--totw-gold); box-shadow: 0 0 10px rgba(201,168,76,0.4);"' : ''} onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
+            ${isTotw ? '<div class="totw-gold-line"></div>' : ''}
             <div class="ovr-main">${p.ovr}</div>
             <div class="player-name">${p.name}</div>
             <div style="font-weight:bold;opacity:0.9;">${p.pos} | ${p.wf}</div>
