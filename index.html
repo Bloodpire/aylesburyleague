@@ -11,6 +11,8 @@
             --gold-card: linear-gradient(160deg, #ffe359 0%, #cf9a2a 100%);
             --silver-card: linear-gradient(160deg, #e0e0e0 0%, #8e8e8e 100%);
             --bronze-card: linear-gradient(160deg, #d3915f 0%, #6e3a15 100%);
+            --totw-card: linear-gradient(160deg, #a8edea 0%, #3a7bd5 40%, #6a0dad 100%);
+            --totw-tip: #3a0080;
             --off-white-overlay: rgba(255, 255, 255, 0.95);
         }
 
@@ -26,7 +28,7 @@
         .container { max-width: 1200px; margin: auto; }
         h1 { text-align: center; color: white; text-shadow: 2px 2px 10px rgba(0,0,0,0.2); font-size: 3.5rem; margin-bottom: 20px; }
 
-        /* Admin bar */
+        /* ── Admin bar ── */
         .admin-bar {
             display: flex;
             justify-content: flex-end;
@@ -34,13 +36,7 @@
             gap: 12px;
             margin-bottom: 10px;
         }
-
-        .admin-status {
-            color: white;
-            font-size: 0.95rem;
-            opacity: 0.9;
-        }
-
+        .admin-status { color: white; font-size: 0.95rem; opacity: 0.9; }
         .admin-btn {
             background: rgba(255,255,255,0.2);
             color: white;
@@ -57,42 +53,75 @@
         .admin-btn.logout { border-color: #ff6b6b; color: #ff6b6b; }
         .admin-btn.logout:hover { background: rgba(255,107,107,0.15); }
 
-        /* Add Player Bar */
-        .add-player-section {
-            background: var(--off-white-overlay);
-            padding: 15px;
-            border-radius: 50px;
-            text-align: center;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        /* ── Section header row ── */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .section-title {
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 1px 1px 6px rgba(0,0,0,0.2);
+            margin: 0;
         }
 
+        /* ── Action bars ── */
+        .add-player-section {
+            background: var(--off-white-overlay);
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
         .open-modal-btn {
             background: #2ecc71;
             color: white;
             border: none;
             padding: 10px 30px;
             border-radius: 25px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             text-transform: uppercase;
             font-family: 'Oswald', sans-serif;
         }
-        .open-modal-btn:disabled {
-            background: #aaa;
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
+        .open-modal-btn:disabled { background: #aaa; cursor: not-allowed; opacity: 0.6; }
 
-        /* Card Grid */
-        #leaderboard {
+        .add-totw-section {
+            background: linear-gradient(90deg, rgba(58,123,213,0.18) 0%, rgba(106,13,173,0.18) 100%);
+            border: 2px solid rgba(255,255,255,0.4);
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-align: center;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+        }
+        .open-totw-btn {
+            background: linear-gradient(90deg, #3a7bd5, #6a0dad);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-family: 'Oswald', sans-serif;
+        }
+        .open-totw-btn:disabled { background: #aaa; cursor: not-allowed; opacity: 0.6; }
+
+        /* ── Card Grids ── */
+        #leaderboard, #totw-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 30px;
         }
 
-        /* FIFA Card */
+        /* ── Base FIFA Card ── */
         .card {
             position: relative;
             width: 100%;
@@ -106,7 +135,6 @@
             flex-direction: column;
             align-items: center;
         }
-
         .card::after {
             content: '';
             display: block;
@@ -116,16 +144,34 @@
             margin-top: 10px;
             flex-shrink: 0;
         }
+        .card:hover { transform: translateY(-10px) scale(1.02); }
 
-        .card.gold::after { background: #cf9a2a; }
+        /* Leaderboard tiers */
+        .card.gold   { background: var(--gold-card);   color: #222; }
+        .card.silver { background: var(--silver-card); color: #222; }
+        .card.bronze { background: var(--bronze-card); color: white; }
+        .card.gold::after   { background: #cf9a2a; }
         .card.silver::after { background: #8e8e8e; }
         .card.bronze::after { background: #6e3a15; }
 
-        .card:hover { transform: translateY(-10px) scale(1.02); }
-        .card.gold { background: var(--gold-card); color: #222; }
-        .card.silver { background: var(--silver-card); color: #222; }
-        .card.bronze { background: var(--bronze-card); color: white; }
+        /* TOTW card */
+        .card.totw {
+            background: var(--totw-card);
+            color: white;
+            box-shadow: 0 15px 40px rgba(106,13,173,0.4), 0 0 0 2px rgba(255,255,255,0.15);
+        }
+        .card.totw::after { background: var(--totw-tip); }
+        .card.totw .player-name { border-bottom-color: rgba(255,255,255,0.25); }
 
+        .totw-badge {
+            position: absolute;
+            top: 8px;
+            right: 14px;
+            font-size: 1.1rem;
+            filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
+        }
+
+        /* ── Shared card internals ── */
         .delete-x {
             position: absolute;
             top: 10px;
@@ -144,58 +190,42 @@
             justify-content: center;
             font-size: 14px;
         }
-
-        .delete-x:disabled {
-            background: #999;
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-
-        .lock-icon {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 14px;
-            opacity: 0.5;
-        }
+        .delete-x:disabled { background: #999; cursor: not-allowed; opacity: 0.5; }
+        .lock-icon { position: absolute; top: 10px; right: 15px; font-size: 14px; opacity: 0.5; }
 
         .player-img {
-            width: 90px;
-            height: 90px;
+            width: 90px; height: 90px;
             margin: 3px auto;
             border-radius: 50%;
             background: rgba(255,255,255,0.3);
             object-fit: cover;
             border: 3px solid rgba(255,255,255,0.5);
         }
-
         .ovr-main { font-size: 2.8rem; font-weight: 900; line-height: 1; margin: 0; }
-        .player-name { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin: 3px 0; padding-bottom: 2px; width: 100%;}
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-top: 4px;
-            gap: 0;
-            width: 100%;
-        }
+        .player-name { font-size: 1.1rem; font-weight: 700; text-transform: uppercase; border-bottom: 2px solid rgba(0,0,0,0.1); margin: 3px 0; padding-bottom: 2px; width: 100%; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; font-weight: bold; font-size: 0.9rem; margin-top: 4px; gap: 0; width: 100%; }
         .stat-item { padding: 1px 0; }
 
-        /* Modal Styles */
+        /* ── TOTW section wrapper ── */
+        .totw-section { margin-top: 60px; margin-bottom: 40px; }
+        .totw-divider {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            margin-bottom: 28px;
+            border: none;
+        }
+
+        /* ── Modals ── */
         .modal {
             display: none;
             position: fixed;
             z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.8);
             backdrop-filter: blur(5px);
         }
-
         .modal-content {
             background: white;
             margin: 5% auto;
@@ -205,17 +235,9 @@
             border-radius: 20px;
             position: relative;
         }
-
         .modal-header { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; text-align: center; color: #333; }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .full-width { grid-column: span 2; }
-
         input, select {
             padding: 12px;
             border: 1px solid #ddd;
@@ -224,9 +246,7 @@
             font-family: 'Oswald', sans-serif;
             box-sizing: border-box;
         }
-
         input { width: 100%; }
-
         .save-btn {
             grid-column: span 2;
             background: var(--sky-blue);
@@ -241,33 +261,13 @@
             text-transform: uppercase;
             font-family: 'Oswald', sans-serif;
         }
+        .save-btn.totw-save { background: linear-gradient(90deg, #3a7bd5, #6a0dad); }
+        .close-modal { position: absolute; right: 20px; top: 15px; font-size: 2rem; cursor: pointer; color: #999; }
 
-        .close-modal {
-            position: absolute;
-            right: 20px;
-            top: 15px;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #999;
-        }
-
-        /* ── Login Modal ── */
-        #loginModal .modal-content {
-            max-width: 380px;
-        }
-
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-top: 10px;
-        }
-
-        .login-form input {
-            width: 100%;
-            box-sizing: border-box;
-        }
-
+        /* Login modal */
+        #loginModal .modal-content { max-width: 380px; }
+        .login-form { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+        .login-form input { width: 100%; box-sizing: border-box; }
         .login-submit-btn {
             background: var(--sky-blue);
             color: white;
@@ -280,22 +280,19 @@
             text-transform: uppercase;
             font-family: 'Oswald', sans-serif;
         }
+        #loginError { color: #e74c3c; font-size: 0.9rem; text-align: center; min-height: 20px; }
+        .auth-badge { display: inline-block; background: #2ecc71; color: white; border-radius: 20px; padding: 3px 12px; font-size: 0.85rem; font-weight: bold; }
 
-        #loginError {
-            color: #e74c3c;
-            font-size: 0.9rem;
+        /* TOTW modal accent */
+        #totwModal .modal-content { border-top: 5px solid #6a0dad; }
+
+        /* Empty state */
+        .empty-totw {
+            grid-column: 1 / -1;
             text-align: center;
-            min-height: 20px;
-        }
-
-        .auth-badge {
-            display: inline-block;
-            background: #2ecc71;
-            color: white;
-            border-radius: 20px;
-            padding: 3px 12px;
-            font-size: 0.85rem;
-            font-weight: bold;
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+            padding: 30px;
         }
     </style>
 </head>
@@ -310,11 +307,26 @@
         <button class="admin-btn" id="adminActionBtn" onclick="handleAdminBtn()">Admin Login</button>
     </div>
 
-    <div class="add-player-section">
-        <button class="open-modal-btn" id="addPlayerBtn" onclick="requireAuth(() => openEditModal())">+ Add New Player</button>
+    <!-- Leaderboard section -->
+    <div class="section-header">
+        <h2 class="section-title">🏆 Leaderboard</h2>
+        <div class="add-player-section">
+            <button class="open-modal-btn" id="addPlayerBtn" onclick="requireAuth(() => openEditModal())">+ Add Player</button>
+        </div>
     </div>
-
     <div id="leaderboard"></div>
+
+    <!-- TOTW section -->
+    <div class="totw-section">
+        <hr class="totw-divider">
+        <div class="section-header">
+            <h2 class="section-title">👑 Team of the Week</h2>
+            <div class="add-totw-section">
+                <button class="open-totw-btn" id="addTotwBtn" onclick="requireAuth(() => openTotwModal())">+ Add TOTW Player</button>
+            </div>
+        </div>
+        <div id="totw-grid"></div>
+    </div>
 </div>
 
 <!-- Player Edit Modal -->
@@ -322,7 +334,6 @@
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal()">&times;</span>
         <div class="modal-header" id="modalTitle">Add Player</div>
-        
         <div class="form-grid">
             <input type="hidden" id="edit-id">
             <input type="text" id="name" placeholder="Full Name" class="full-width">
@@ -341,8 +352,35 @@
             <input type="number" id="dri" placeholder="DRI" max="99">
             <input type="number" id="def" placeholder="DEF" max="99">
             <input type="number" id="phy" placeholder="PHY" max="99">
-            
             <button class="save-btn" onclick="savePlayer()" id="saveBtnText">Save Player Data</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOTW Modal -->
+<div id="totwModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeTotwModal()">&times;</span>
+        <div class="modal-header" id="totwModalTitle">👑 Add TOTW Player</div>
+        <div class="form-grid">
+            <input type="hidden" id="totw-edit-id">
+            <input type="text" id="totw-name" placeholder="Full Name" class="full-width">
+            <input type="text" id="totw-img-url" placeholder="Photo URL (Optional)" class="full-width">
+            <input type="text" id="totw-pos" placeholder="POS (ST, CM, etc.)">
+            <select id="totw-wf">
+                <option value="⭐">1★ WF</option>
+                <option value="⭐⭐">2★ WF</option>
+                <option value="⭐⭐⭐">3★ WF</option>
+                <option value="⭐⭐⭐⭐" selected>4★ WF</option>
+                <option value="⭐⭐⭐⭐⭐">5★ WF</option>
+            </select>
+            <input type="number" id="totw-pac" placeholder="PAC" max="99">
+            <input type="number" id="totw-sho" placeholder="SHO" max="99">
+            <input type="number" id="totw-pas" placeholder="PAS" max="99">
+            <input type="number" id="totw-dri" placeholder="DRI" max="99">
+            <input type="number" id="totw-def" placeholder="DEF" max="99">
+            <input type="number" id="totw-phy" placeholder="PHY" max="99">
+            <button class="save-btn totw-save" onclick="saveTotwPlayer()" id="totwSaveBtnText">Add to Team of the Week</button>
         </div>
     </div>
 </div>
@@ -365,64 +403,49 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
     // ── Supabase config ──────────────────────────────────────────────────────
-    const SUPABASE_URL = 'https://bmwiqpkgdbeohkwbqaft.supabase.co';
+    const SUPABASE_URL      = 'https://bmwiqpkgdbeohkwbqaft.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_kguMGdM9yIP_qoUdOU6x_w_4ObYO4Wt';
-    const supabaseClient = typeof window.supabase !== 'undefined'
+    const supabaseClient    = typeof window.supabase !== 'undefined'
         ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
         : null;
 
-    const LOCAL_KEY = 'neighborhoodPlayers';
+    const LOCAL_KEY      = 'neighborhoodPlayers';
+    const LOCAL_KEY_TOTW = 'totwPlayers';
 
-    // ── Auth state (in-memory only, never persisted) ─────────────────────────
-    let currentAdmin = null; // { id, username } when logged in
-
+    // ── Auth state (in-memory only) ──────────────────────────────────────────
+    let currentAdmin = null;
     function isLoggedIn() { return currentAdmin !== null; }
 
     function updateAdminUI() {
-        const statusEl = document.getElementById('adminStatus');
-        const btnEl    = document.getElementById('adminActionBtn');
-        const addBtn   = document.getElementById('addPlayerBtn');
-
+        const statusEl   = document.getElementById('adminStatus');
+        const btnEl      = document.getElementById('adminActionBtn');
+        const addBtn     = document.getElementById('addPlayerBtn');
+        const addTotwBtn = document.getElementById('addTotwBtn');
         if (isLoggedIn()) {
             statusEl.innerHTML = `✅ Logged in as <span class="auth-badge">${currentAdmin.username}</span>`;
             btnEl.textContent = 'Logout';
             btnEl.classList.add('logout');
             addBtn.disabled = false;
+            addTotwBtn.disabled = false;
         } else {
             statusEl.textContent = '🔒 Not logged in';
             btnEl.textContent = 'Admin Login';
             btnEl.classList.remove('logout');
             addBtn.disabled = true;
+            addTotwBtn.disabled = true;
         }
-        // Re-render cards to update lock/delete states
         updateDisplay();
+        updateTotwDisplay();
     }
 
-    function handleAdminBtn() {
-        if (isLoggedIn()) {
-            logout();
-        } else {
-            openLoginModal();
-        }
-    }
-
-    function logout() {
-        currentAdmin = null;
-        updateAdminUI();
-    }
-
-    // Guard: run callback only if admin is logged in, else prompt login
-    function requireAuth(callback) {
-        if (isLoggedIn()) {
-            callback();
-        } else {
-            // After login, run the callback automatically
-            pendingAuthCallback = callback;
-            openLoginModal();
-        }
-    }
+    function handleAdminBtn() { isLoggedIn() ? logout() : openLoginModal(); }
+    function logout() { currentAdmin = null; updateAdminUI(); }
 
     let pendingAuthCallback = null;
+    function requireAuth(cb) {
+        if (isLoggedIn()) { cb(); }
+        else { pendingAuthCallback = cb; openLoginModal(); }
+    }
 
     // ── Login Modal ──────────────────────────────────────────────────────────
     const loginModal = document.getElementById('loginModal');
@@ -434,84 +457,44 @@
         loginModal.style.display = 'block';
         setTimeout(() => document.getElementById('loginUsername').focus(), 100);
     }
-
-    function closeLoginModal() {
-        loginModal.style.display = 'none';
-        pendingAuthCallback = null;
-    }
+    function closeLoginModal() { loginModal.style.display = 'none'; pendingAuthCallback = null; }
 
     async function submitLogin() {
         const username = document.getElementById('loginUsername').value.trim();
         const password = document.getElementById('loginPassword').value;
         const errorEl  = document.getElementById('loginError');
-
-        if (!username || !password) {
-            errorEl.textContent = 'Please enter username and password.';
-            return;
-        }
-
+        if (!username || !password) { errorEl.textContent = 'Please enter username and password.'; return; }
         errorEl.textContent = '⏳ Checking credentials…';
-
         try {
-            // Query the admins table for matching credentials
             const { data, error } = await supabaseClient
-                .from('admins')
-                .select('id, username')
-                .eq('username', username)
-                .eq('password', password)
-                .maybeSingle();
-
+                .from('admins').select('id, username')
+                .eq('username', username).eq('password', password).maybeSingle();
             if (error) throw error;
-
             if (data) {
                 currentAdmin = { id: data.id, username: data.username };
                 closeLoginModal();
                 updateAdminUI();
-
-                // Run deferred action if any (e.g. edit / delete that triggered login)
-                if (pendingAuthCallback) {
-                    const cb = pendingAuthCallback;
-                    pendingAuthCallback = null;
-                    cb();
-                }
+                if (pendingAuthCallback) { const cb = pendingAuthCallback; pendingAuthCallback = null; cb(); }
             } else {
                 errorEl.textContent = '❌ Invalid username or password.';
             }
-        } catch (err) {
-            console.error('Login error:', err);
-            errorEl.textContent = '⚠️ Login failed. Try again.';
-        }
+        } catch (err) { console.error('Login error:', err); errorEl.textContent = '⚠️ Login failed. Try again.'; }
     }
 
-    // ── Players ──────────────────────────────────────────────────────────────
+    // ── Leaderboard Players ──────────────────────────────────────────────────
     let players = [];
     const modal = document.getElementById('playerModal');
-
-    (async function init() {
-        if (supabaseClient) {
-            await fetchPlayersFromSupabase();
-            subscribeToPlayerChanges();
-        } else {
-            players = JSON.parse(localStorage.getItem(LOCAL_KEY)) || [];
-            players = players.map(p => ({ ...p, id: String(p.id) }));
-            updateDisplay();
-        }
-        updateAdminUI();
-    })();
 
     async function fetchPlayersFromSupabase() {
         try {
             const { data, error } = await supabaseClient
-                .from('players_records')
-                .select('*')
-                .order('ovr', { ascending: false });
+                .from('players_records').select('*').order('ovr', { ascending: false });
             if (error) throw error;
             players = (data || []).map(d => ({ ...d, id: String(d.id) }));
             updateDisplay();
         } catch (err) {
-            console.error('Error fetching players from Supabase:', err);
-            players = JSON.parse(localStorage.getItem(LOCAL_KEY)) || [];
-            players = players.map(p => ({ ...p, id: String(p.id) }));
+            console.error('Players fetch error:', err);
+            players = (JSON.parse(localStorage.getItem(LOCAL_KEY)) || []).map(p => ({ ...p, id: String(p.id) }));
             updateDisplay();
         }
     }
@@ -520,92 +503,55 @@
         resetForm();
         if (playerId !== null) {
             const p = players.find(x => x.id === String(playerId));
-            if (!p) { console.warn('Player not found:', playerId); return; }
+            if (!p) return;
             document.getElementById('modalTitle').innerText = `Edit ${p.name}`;
-            document.getElementById('edit-id').value = p.id;
-            document.getElementById('name').value = p.name;
-            document.getElementById('img-url').value = p.img && p.img.includes('flaticon') ? '' : p.img;
-            document.getElementById('pos').value = p.pos;
-            document.getElementById('wf').value = p.wf;
-            document.getElementById('pac').value = p.pac;
-            document.getElementById('sho').value = p.sho;
-            document.getElementById('pas').value = p.pas;
-            document.getElementById('dri').value = p.dri;
-            document.getElementById('def').value = p.def;
-            document.getElementById('phy').value = p.phy;
-            document.getElementById('saveBtnText').innerText = "Update Player Info";
+            document.getElementById('edit-id').value  = p.id;
+            document.getElementById('name').value     = p.name;
+            document.getElementById('img-url').value  = p.img && p.img.includes('flaticon') ? '' : p.img;
+            document.getElementById('pos').value      = p.pos;
+            document.getElementById('wf').value       = p.wf;
+            document.getElementById('pac').value      = p.pac;
+            document.getElementById('sho').value      = p.sho;
+            document.getElementById('pas').value      = p.pas;
+            document.getElementById('dri').value      = p.dri;
+            document.getElementById('def').value      = p.def;
+            document.getElementById('phy').value      = p.phy;
+            document.getElementById('saveBtnText').innerText = 'Update Player Info';
         }
-        modal.style.display = "block";
+        modal.style.display = 'block';
     }
-
-    function closeModal() {
-        modal.style.display = "none";
-    }
+    function closeModal() { modal.style.display = 'none'; }
 
     async function savePlayer() {
-        if (!isLoggedIn()) {
-            alert('You must be logged in as an admin to save changes.');
-            return;
-        }
-
+        if (!isLoggedIn()) { alert('Admin login required.'); return; }
         const idInput = document.getElementById('edit-id').value;
-        const stats = [
-            parseInt(document.getElementById('pac').value) || 0,
-            parseInt(document.getElementById('sho').value) || 0,
-            parseInt(document.getElementById('pas').value) || 0,
-            parseInt(document.getElementById('dri').value) || 0,
-            parseInt(document.getElementById('def').value) || 0,
-            parseInt(document.getElementById('phy').value) || 0
-        ];
-        const ovr = Math.round(stats.reduce((a, b) => a + b) / 6);
-
+        const stats   = ['pac','sho','pas','dri','def','phy'].map(s => parseInt(document.getElementById(s).value) || 0);
+        const ovr     = Math.round(stats.reduce((a,b) => a+b) / 6);
         const playerData = {
             id: idInput ? String(idInput) : String(Date.now()),
-            name: document.getElementById('name').value || "Player",
-            img: document.getElementById('img-url').value || "https://cdn-icons-png.flaticon.com/512/1163/1163481.png",
-            pos: (document.getElementById('pos').value || "ST").toUpperCase(),
-            wf: document.getElementById('wf').value,
-            pac: stats[0], sho: stats[1], pas: stats[2],
-            dri: stats[3], def: stats[4], phy: stats[5],
-            ovr: ovr
+            name: document.getElementById('name').value || 'Player',
+            img:  document.getElementById('img-url').value || 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',
+            pos:  (document.getElementById('pos').value || 'ST').toUpperCase(),
+            wf:   document.getElementById('wf').value,
+            pac: stats[0], sho: stats[1], pas: stats[2], dri: stats[3], def: stats[4], phy: stats[5], ovr
         };
-
         if (supabaseClient) {
-            try {
-                const { error } = await supabaseClient.from('players_records').upsert(playerData);
-                if (error) throw error;
-            } catch (err) {
-                console.error('Supabase upsert error:', err);
-                alert('Failed to save to Supabase. See console.');
-            }
+            try { const { error } = await supabaseClient.from('players_records').upsert(playerData); if (error) throw error; }
+            catch (err) { console.error('Upsert error:', err); alert('Failed to save. See console.'); }
         } else {
-            if (idInput) {
-                const index = players.findIndex(p => p.id === String(idInput));
-                players[index] = playerData;
-            } else {
-                players.push(playerData);
-            }
+            if (idInput) players[players.findIndex(p => p.id === String(idInput))] = playerData;
+            else players.push(playerData);
             localStorage.setItem(LOCAL_KEY, JSON.stringify(players));
             updateDisplay();
         }
-
         closeModal();
     }
 
     async function deletePlayer(playerId) {
-        if (!isLoggedIn()) {
-            alert('You must be logged in as an admin to delete players.');
-            return;
-        }
-
+        if (!isLoggedIn()) { alert('Admin login required.'); return; }
         if (supabaseClient) {
-            try {
-                const { error } = await supabaseClient.from('players_records').delete().eq('id', playerId);
-                if (error) throw error;
-            } catch (err) {
-                console.error('Supabase delete error:', err);
-                alert('Failed to delete on Supabase. See console.');
-            }
+            try { const { error } = await supabaseClient.from('players_records').delete().eq('id', playerId); if (error) throw error; }
+            catch (err) { console.error('Delete error:', err); alert('Failed to delete. See console.'); }
         } else {
             players = players.filter(x => x.id !== String(playerId));
             localStorage.setItem(LOCAL_KEY, JSON.stringify(players));
@@ -613,90 +559,192 @@
         }
     }
 
+    function buildCard(p, index, isTotw) {
+        const loggedIn = isLoggedIn();
+        const card = document.createElement('div');
+        const tier = isTotw ? 'totw' : (p.ovr >= 80 ? 'gold' : (p.ovr >= 70 ? 'silver' : 'bronze'));
+        card.className = `card ${tier}`;
+        card.dataset.id = p.id;
+        card.innerHTML = `
+            <button class="delete-x" data-id="${p.id}" ${loggedIn ? '' : 'disabled title="Login as admin to delete"'}>X</button>
+            ${isTotw
+                ? '<span class="totw-badge">👑</span><div style="font-weight:bold;font-size:0.72rem;letter-spacing:1px;opacity:0.85;margin-top:2px;">TEAM OF THE WEEK</div>'
+                : (loggedIn ? '' : '<span class="lock-icon">🔒</span>') + `<div style="font-weight:bold;font-size:0.8rem;">RANK #${index + 1}</div>`
+            }
+            <img src="${p.img}" class="player-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
+            <div class="ovr-main">${p.ovr}</div>
+            <div class="player-name">${p.name}</div>
+            <div style="font-weight:bold;opacity:0.9;">${p.pos} | ${p.wf}</div>
+            <div class="stats-grid">
+                <div class="stat-item">PAC ${p.pac}</div><div class="stat-item">SHO ${p.sho}</div>
+                <div class="stat-item">PAS ${p.pas}</div><div class="stat-item">DRI ${p.dri}</div>
+                <div class="stat-item">DEF ${p.def}</div><div class="stat-item">PHY ${p.phy}</div>
+            </div>`;
+        return card;
+    }
+
     function updateDisplay() {
         players.sort((a, b) => b.ovr - a.ovr);
         const container = document.getElementById('leaderboard');
         container.innerHTML = '';
-
         const loggedIn = isLoggedIn();
-
         players.forEach((p, index) => {
-            let tier = p.ovr >= 80 ? 'gold' : (p.ovr >= 70 ? 'silver' : 'bronze');
-            const card = document.createElement('div');
-            card.className = `card ${tier}`;
-            card.dataset.id = p.id;
-            card.innerHTML = `
-                <button class="delete-x" data-id="${p.id}" ${loggedIn ? '' : 'disabled title="Login as admin to delete"'}>X</button>
-                ${loggedIn ? '' : '<span class="lock-icon">🔒</span>'}
-                <div style="font-weight:bold; font-size: 0.8rem;">RANK #${index + 1}</div>
-                <img src="${p.img}" class="player-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
-                <div class="ovr-main">${p.ovr}</div>
-                <div class="player-name">${p.name}</div>
-                <div style="font-weight:bold; opacity: 0.9;">${p.pos} | ${p.wf}</div>
-                <div class="stats-grid">
-                    <div class="stat-item">PAC ${p.pac}</div><div class="stat-item">SHO ${p.sho}</div>
-                    <div class="stat-item">PAS ${p.pas}</div><div class="stat-item">DRI ${p.dri}</div>
-                    <div class="stat-item">DEF ${p.def}</div><div class="stat-item">PHY ${p.phy}</div>
-                </div>
-            `;
-
-            // Edit on card click — requires auth
-            card.addEventListener('click', function() {
-                requireAuth(() => openEditModal(String(p.id)));
-            });
-
-            // Delete on X click — requires auth
-            card.querySelector('.delete-x').addEventListener('click', function(e) {
+            const card = buildCard(p, index, false);
+            card.addEventListener('click', () => requireAuth(() => openEditModal(String(p.id))));
+            card.querySelector('.delete-x').addEventListener('click', e => {
                 e.stopPropagation();
-                if (!loggedIn) {
-                    requireAuth(() => {
-                        if (confirm("Permanently delete this player?")) {
-                            deletePlayer(p.id);
-                        }
-                    });
-                    return;
-                }
-                if (confirm("Permanently delete this player?")) {
-                    deletePlayer(p.id);
-                }
+                const act = () => { if (confirm('Permanently delete this player?')) deletePlayer(p.id); };
+                loggedIn ? act() : requireAuth(act);
             });
-
             container.appendChild(card);
         });
     }
 
     function resetForm() {
-        document.getElementById('edit-id').value = '';
-        document.getElementById('name').value = '';
-        document.getElementById('img-url').value = '';
-        document.getElementById('pos').value = '';
-        document.getElementById('pac').value = '';
-        document.getElementById('sho').value = '';
-        document.getElementById('pas').value = '';
-        document.getElementById('dri').value = '';
-        document.getElementById('def').value = '';
-        document.getElementById('phy').value = '';
+        ['edit-id','name','img-url','pos','pac','sho','pas','dri','def','phy'].forEach(id => document.getElementById(id).value = '');
         document.getElementById('wf').value = '⭐⭐⭐⭐';
         document.getElementById('modalTitle').innerText = 'Add New Player';
         document.getElementById('saveBtnText').innerText = 'Add to League';
     }
 
-    window.onclick = function(event) {
-        if (event.target == modal) closeModal();
-        if (event.target == loginModal) closeLoginModal();
-    }
+    // ── TOTW Players ─────────────────────────────────────────────────────────
+    let totwPlayers = [];
+    const totwModal = document.getElementById('totwModal');
 
-    function subscribeToPlayerChanges() {
+    async function fetchTotwFromSupabase() {
         try {
-            supabaseClient.channel('table-db-changes')
-                .on('postgres_changes', { event: '*', schema: 'public', table: 'players_records' }, () => {
-                    fetchPlayersFromSupabase();
-                })
-                .subscribe();
+            const { data, error } = await supabaseClient
+                .from('totw_players').select('*').order('ovr', { ascending: false });
+            if (error) throw error;
+            totwPlayers = (data || []).map(d => ({ ...d, id: String(d.id) }));
+            updateTotwDisplay();
         } catch (err) {
-            console.error('Realtime subscription failed:', err);
+            console.error('TOTW fetch error:', err);
+            totwPlayers = (JSON.parse(localStorage.getItem(LOCAL_KEY_TOTW)) || []).map(p => ({ ...p, id: String(p.id) }));
+            updateTotwDisplay();
         }
     }
+
+    function openTotwModal(playerId = null) {
+        resetTotwForm();
+        if (playerId !== null) {
+            const p = totwPlayers.find(x => x.id === String(playerId));
+            if (!p) return;
+            document.getElementById('totwModalTitle').innerText = `Edit ${p.name}`;
+            document.getElementById('totw-edit-id').value  = p.id;
+            document.getElementById('totw-name').value     = p.name;
+            document.getElementById('totw-img-url').value  = p.img && p.img.includes('flaticon') ? '' : p.img;
+            document.getElementById('totw-pos').value      = p.pos;
+            document.getElementById('totw-wf').value       = p.wf;
+            document.getElementById('totw-pac').value      = p.pac;
+            document.getElementById('totw-sho').value      = p.sho;
+            document.getElementById('totw-pas').value      = p.pas;
+            document.getElementById('totw-dri').value      = p.dri;
+            document.getElementById('totw-def').value      = p.def;
+            document.getElementById('totw-phy').value      = p.phy;
+            document.getElementById('totwSaveBtnText').innerText = 'Update TOTW Player';
+        }
+        totwModal.style.display = 'block';
+    }
+    function closeTotwModal() { totwModal.style.display = 'none'; }
+
+    async function saveTotwPlayer() {
+        if (!isLoggedIn()) { alert('Admin login required.'); return; }
+        const idInput = document.getElementById('totw-edit-id').value;
+        const stats   = ['totw-pac','totw-sho','totw-pas','totw-dri','totw-def','totw-phy'].map(s => parseInt(document.getElementById(s).value) || 0);
+        const ovr     = Math.round(stats.reduce((a,b) => a+b) / 6);
+        const playerData = {
+            id:   idInput ? String(idInput) : String(Date.now()),
+            name: document.getElementById('totw-name').value || 'Player',
+            img:  document.getElementById('totw-img-url').value || 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',
+            pos:  (document.getElementById('totw-pos').value || 'ST').toUpperCase(),
+            wf:   document.getElementById('totw-wf').value,
+            pac: stats[0], sho: stats[1], pas: stats[2], dri: stats[3], def: stats[4], phy: stats[5], ovr
+        };
+        if (supabaseClient) {
+            try { const { error } = await supabaseClient.from('totw_players').upsert(playerData); if (error) throw error; }
+            catch (err) { console.error('TOTW upsert error:', err); alert('Failed to save TOTW player. See console.'); }
+        } else {
+            if (idInput) totwPlayers[totwPlayers.findIndex(p => p.id === String(idInput))] = playerData;
+            else totwPlayers.push(playerData);
+            localStorage.setItem(LOCAL_KEY_TOTW, JSON.stringify(totwPlayers));
+            updateTotwDisplay();
+        }
+        closeTotwModal();
+    }
+
+    async function deleteTotwPlayer(playerId) {
+        if (!isLoggedIn()) { alert('Admin login required.'); return; }
+        if (supabaseClient) {
+            try { const { error } = await supabaseClient.from('totw_players').delete().eq('id', playerId); if (error) throw error; }
+            catch (err) { console.error('TOTW delete error:', err); alert('Failed to delete. See console.'); }
+        } else {
+            totwPlayers = totwPlayers.filter(x => x.id !== String(playerId));
+            localStorage.setItem(LOCAL_KEY_TOTW, JSON.stringify(totwPlayers));
+            updateTotwDisplay();
+        }
+    }
+
+    function updateTotwDisplay() {
+        totwPlayers.sort((a, b) => b.ovr - a.ovr);
+        const container = document.getElementById('totw-grid');
+        container.innerHTML = '';
+        const loggedIn = isLoggedIn();
+        if (totwPlayers.length === 0) {
+            container.innerHTML = '<div class="empty-totw">No players selected yet — admins can add the Team of the Week above.</div>';
+            return;
+        }
+        totwPlayers.forEach(p => {
+            const card = buildCard(p, 0, true);
+            card.addEventListener('click', () => requireAuth(() => openTotwModal(String(p.id))));
+            card.querySelector('.delete-x').addEventListener('click', e => {
+                e.stopPropagation();
+                const act = () => { if (confirm('Remove from Team of the Week?')) deleteTotwPlayer(p.id); };
+                loggedIn ? act() : requireAuth(act);
+            });
+            container.appendChild(card);
+        });
+    }
+
+    function resetTotwForm() {
+        ['totw-edit-id','totw-name','totw-img-url','totw-pos','totw-pac','totw-sho','totw-pas','totw-dri','totw-def','totw-phy']
+            .forEach(id => document.getElementById(id).value = '');
+        document.getElementById('totw-wf').value = '⭐⭐⭐⭐';
+        document.getElementById('totwModalTitle').innerText = '👑 Add TOTW Player';
+        document.getElementById('totwSaveBtnText').innerText = 'Add to Team of the Week';
+    }
+
+    // ── Realtime subscriptions ───────────────────────────────────────────────
+    function subscribeToChanges() {
+        try {
+            supabaseClient.channel('players-changes')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'players_records' }, fetchPlayersFromSupabase)
+                .subscribe();
+            supabaseClient.channel('totw-changes')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'totw_players' }, fetchTotwFromSupabase)
+                .subscribe();
+        } catch (err) { console.error('Realtime subscription failed:', err); }
+    }
+
+    // ── Init ─────────────────────────────────────────────────────────────────
+    (async function init() {
+        if (supabaseClient) {
+            await Promise.all([fetchPlayersFromSupabase(), fetchTotwFromSupabase()]);
+            subscribeToChanges();
+        } else {
+            players     = (JSON.parse(localStorage.getItem(LOCAL_KEY))      || []).map(p => ({ ...p, id: String(p.id) }));
+            totwPlayers = (JSON.parse(localStorage.getItem(LOCAL_KEY_TOTW)) || []).map(p => ({ ...p, id: String(p.id) }));
+            updateDisplay();
+            updateTotwDisplay();
+        }
+        updateAdminUI();
+    })();
+
+    window.onclick = function(e) {
+        if (e.target === modal)      closeModal();
+        if (e.target === totwModal)  closeTotwModal();
+        if (e.target === loginModal) closeLoginModal();
+    };
 </script>
 </body>
 </html>
