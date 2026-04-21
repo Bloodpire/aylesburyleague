@@ -47,9 +47,9 @@
         .card-wrap:hover { transform: translateY(-10px) scale(1.03); filter: brightness(1.07); }
         .card-wrap svg { width: 100%; height: auto; display: block; }
 
-        /* Delete / lock buttons sit above the SVG */
+        /* FIX: Move delete player button to the right notch */
         .del-btn {
-            position: absolute; top: 9px; left: 9px;
+            position: absolute; top: 12px; right: 12px; /* Changed from top: 9px; left: 9px; */
             width: 24px; height: 24px; border-radius: 50%;
             background: #ff3333; color: white; border: none;
             font-size: 12px; font-weight: 900; cursor: pointer;
@@ -57,7 +57,7 @@
             z-index: 10; font-family: sans-serif; line-height: 1;
         }
         .del-btn:disabled { background: #888; cursor: not-allowed; opacity: 0.55; }
-        .lock-ico { position: absolute; top: 9px; right: 9px; font-size: 13px; opacity: 0.6; z-index: 10; pointer-events: none; }
+        .lock-ico { position: absolute; top: 9px; left: 9px; font-size: 13px; opacity: 0.6; z-index: 10; pointer-events: none; } /* LOCK stays left */
 
         /* Section dividers */
         .section-gap { margin-top: 55px; margin-bottom: 22px; }
@@ -269,7 +269,6 @@ function buildCard(p, rank, type) {
 
     let label = isTotw ? 'TEAM OF THE WEEK' : isAllstar ? 'TOURNAMENT ALL STAR' : '';
     const labelColor = isTotw ? '#c9a84c' : darkText ? '#3a2000' : 'rgba(255,255,255,0.85)';
-    const labelBorder = isTotw ? '#c9a84c' : darkText ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.5)';
     const dividerColor = isTotw ? '#c9a84c' : darkText ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.55)';
 
     const gradId = `g_${p.id}_${type}`;
@@ -307,12 +306,14 @@ function buildCard(p, rank, type) {
       <path d="${makePath()}" fill="none" stroke="${pal.border}" stroke-width="2.5" opacity="0.7"/>
       <path d="${makeNotchPath()}" fill="${pal.g3}" opacity="0.55"/>
 
-      <text x="22" y="48" font-family="Oswald,sans-serif" font-size="36" font-weight="900" fill="${pal.text}" opacity="0.95">${p.ovr}</text>
-      <text x="22" y="64" font-family="Oswald,sans-serif" font-size="13" font-weight="700" fill="${pal.subtext}">${p.pos}</text>
-      <text x="22" y="78" font-family="Oswald,sans-serif" font-size="10" font-weight="600" fill="${pal.subtext}">${p.wf}</text>
+      <g transform="translate(30,0)">
+          <text y="48" font-family="Oswald,sans-serif" font-size="36" font-weight="900" fill="${pal.text}" opacity="0.95">${p.ovr}</text>
+          <text y="64" font-family="Oswald,sans-serif" font-size="13" font-weight="700" fill="${pal.subtext}">${p.pos}</text>
+          <text y="78" font-family="Oswald,sans-serif" font-size="10" font-weight="600" fill="${pal.subtext}">${p.wf}</text>
+      </g>
 
       ${label
-        ? `<rect x="${W/2 - 72}" y="8" width="144" height="18" rx="3" fill="rgba(0,0,0,0.35)" stroke="${labelBorder}" stroke-width="1"/>
+        ? `<rect x="${W/2 - 72}" y="8" width="144" height="18" rx="3" fill="rgba(0,0,0,0.35)" stroke="${pal.border}" stroke-width="1"/>
            <text x="${W/2}" y="21" font-family="Oswald,sans-serif" font-size="9" font-weight="900" letter-spacing="1.5" text-anchor="middle" fill="${labelColor}">${label}</text>`
         : `<text x="${W/2}" y="20" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}" opacity="0.8">RANK #${rank + 1}</text>`
       }
@@ -326,28 +327,28 @@ function buildCard(p, rank, type) {
       <text x="${W/2}" y="268" font-family="Oswald,sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="${pal.text}" letter-spacing="0.5">${p.name.toUpperCase()}</text>
 
       <g transform="translate(140, 312)" font-family="Oswald,sans-serif" text-anchor="middle" fill="${pal.text}">
-        <g transform="translate(-95, 0)">
-          <text font-size="11" font-weight="700" fill="${pal.subtext}">PAC</text>
+        <g transform="translate(-80, 0)">
+          <text font-size="12" font-weight="700" fill="${pal.subtext}">PAC</text>
           <text y="24" font-size="21" font-weight="900">${p.pac}</text>
         </g>
-        <g transform="translate(-57, 0)">
-          <text font-size="11" font-weight="700" fill="${pal.subtext}">SHO</text>
+        <g transform="translate(-48, 0)">
+          <text font-size="12" font-weight="700" fill="${pal.subtext}">SHO</text>
           <text y="24" font-size="21" font-weight="900">${p.sho}</text>
         </g>
-        <g transform="translate(-19, 0)">
-          <text font-size="11" font-weight="700" fill="${pal.subtext}">PAS</text>
+        <g transform="translate(-16, 0)">
+          <text font-size="12" font-weight="700" fill="${pal.subtext}">PAS</text>
           <text y="24" font-size="21" font-weight="900">${p.pas}</text>
         </g>
-        <g transform="translate(19, 0)">
-          <text font-size="11" font-weight="700" fill="${pal.subtext}">DRI</text>
+        <g transform="translate(16, 0)">
+          <text font-size="12" font-weight="700" fill="${pal.subtext}">DRI</text>
           <text y="24" font-size="21" font-weight="900">${p.dri}</text>
         </g>
-        <g transform="translate(57, 0)">
-          <text font-size="11" font-weight="700" fill="${pal.subtext}">DEF</text>
+        <g transform="translate(48, 0)">
+          <text font-size="12" font-weight="700" fill="${pal.subtext}">DEF</text>
           <text y="24" font-size="21" font-weight="900">${p.def}</text>
         </g>
-        <g transform="translate(95, 0)">
-          <text font-size="11" font-weight="700" fill="${pal.subtext}">PHY</text>
+        <g transform="translate(80, 0)">
+          <text font-size="12" font-weight="700" fill="${pal.subtext}">PHY</text>
           <text y="24" font-size="21" font-weight="900">${p.phy}</text>
         </g>
       </g>
@@ -373,220 +374,100 @@ function buildCard(p, rank, type) {
     return wrap;
 }
 
-// ── Auth ──────────────────────────────────────────────────────────────────────
-let currentAdmin = null;
+// ── Shared Logic & Auth ──────────────────────────────────────────────────────
+let players=[], totwPlayers=[], allstarPlayers=[], currentAdmin=null, pendingCb=null;
 const isLoggedIn = () => currentAdmin !== null;
-let pendingCb = null;
-function requireAuth(cb) { if (isLoggedIn()) cb(); else { pendingCb = cb; openLoginModal(); } }
 
 function updateAdminUI() {
-    const loggedIn = isLoggedIn();
-    document.getElementById('adminStatus').innerHTML = loggedIn
-        ? `✅ Logged in as <span class="auth-badge">${currentAdmin.username}</span>`
-        : '🔒 Not logged in';
-    const btn = document.getElementById('adminActionBtn');
-    btn.textContent = loggedIn ? 'Logout' : 'Admin Login';
-    btn.className = loggedIn ? 'admin-btn logout' : 'admin-btn';
-    ['addPlayerBtn','addTotwBtn','addAllstarsBtn'].forEach(id => document.getElementById(id).disabled = !loggedIn);
+    const logged = isLoggedIn();
+    document.getElementById('adminStatus').innerHTML = logged ? `✅ Logged in as ${currentAdmin.username}` : '🔒 Not logged in';
+    document.getElementById('adminActionBtn').textContent = logged ? 'Logout' : 'Admin Login';
+    document.getElementById('adminActionBtn').className = logged ? 'admin-btn logout' : 'admin-btn';
+    ['addPlayerBtn','addTotwBtn','addAllstarsBtn'].forEach(id => document.getElementById(id).disabled = !logged);
     renderAll();
 }
 
-function handleAdminBtn() { isLoggedIn() ? (currentAdmin=null, updateAdminUI()) : openLoginModal(); }
+function handleAdminBtn() { if(isLoggedIn()){ currentAdmin=null; updateAdminUI(); } else openLoginModal(); }
+function requireAuth(cb) { if(isLoggedIn()) cb(); else { pendingCb=cb; openLoginModal(); } }
 
-const loginModal = document.getElementById('loginModal');
-function openLoginModal() {
-    ['loginUser','loginPass'].forEach(id => document.getElementById(id).value='');
+function openLoginModal() { 
+    ['loginUser','loginPass'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('loginError').textContent='';
-    loginModal.style.display='block';
-    setTimeout(()=>document.getElementById('loginUser').focus(),80);
+    document.getElementById('loginModal').style.display='block'; 
 }
-function closeLoginModal() { loginModal.style.display='none'; pendingCb=null; }
+function closeLoginModal() { document.getElementById('loginModal').style.display='none'; }
 async function submitLogin() {
-    const u=document.getElementById('loginUser').value.trim(), p=document.getElementById('loginPass').value;
-    const e=document.getElementById('loginError');
-    if(!u||!p){e.textContent='Enter credentials.';return;}
-    e.textContent='⏳ Checking…';
-    try {
-        const {data,error}=await sb.from('admins').select('id,username').eq('username',u).eq('password',p).maybeSingle();
-        if(error)throw error;
-        if(data){
-            currentAdmin={id:data.id,username:data.username};
-            closeLoginModal(); updateAdminUI();
-            if(pendingCb){const cb=pendingCb;pendingCb=null;cb();}
-        } else e.textContent='❌ Invalid credentials.';
-    } catch(err){e.textContent='⚠️ Login failed.';}
+    const u=document.getElementById('loginUser').value, p=document.getElementById('loginPass').value;
+    if(!u||!p)return;
+    const {data}=await sb.from('admins').select('*').eq('username',u).eq('password',p).maybeSingle();
+    if(data){ currentAdmin=data; closeLoginModal(); updateAdminUI(); if(pendingCb){pendingCb(); pendingCb=null;} }
+    else document.getElementById('loginError').textContent='Invalid Login';
 }
 
-// ── Data & render ─────────────────────────────────────────────────────────────
-let players=[], totwPlayers=[], allstarPlayers=[];
-
-function renderAll() { renderLeaderboard(); renderTotw(); renderAllstars(); }
-
-function renderLeaderboard() {
-    players.sort((a,b)=>b.ovr-a.ovr);
-    const c=document.getElementById('leaderboard'); c.innerHTML='';
-    if(!players.length){c.innerHTML='<div class="empty-msg">No players yet.</div>';return;}
-    players.forEach((p,i)=>c.appendChild(buildCard(p,i,'leaderboard')));
-}
-function renderTotw() {
-    totwPlayers.sort((a,b)=>b.ovr-a.ovr);
-    const c=document.getElementById('totw-grid'); c.innerHTML='';
-    if(!totwPlayers.length){c.innerHTML='<div class="empty-msg">No TOTW players yet — admins can add them above.</div>';return;}
-    totwPlayers.forEach((p,i)=>c.appendChild(buildCard(p,i,'totw')));
-}
-function renderAllstars() {
-    allstarPlayers.sort((a,b)=>b.ovr-a.ovr);
-    const c=document.getElementById('allstars-grid'); c.innerHTML='';
-    if(!allstarPlayers.length){c.innerHTML='<div class="empty-msg">No All Stars yet — admins can add them above.</div>';return;}
-    allstarPlayers.forEach((p,i)=>c.appendChild(buildCard(p,i,'allstar')));
+function renderAll() { renderGrid('leaderboard', players, 'leaderboard'); renderGrid('totw-grid', totwPlayers, 'totw'); renderGrid('allstars-grid', allstarPlayers, 'allstar'); }
+function renderGrid(id, list, type) {
+    const c=document.getElementById(id); c.innerHTML='';
+    list.sort((a,b)=>b.ovr-a.ovr);
+    list.length ? list.forEach(p=>c.appendChild(buildCard(p,0,type))) : c.innerHTML='<div class="empty-msg">No entries yet.</div>';
 }
 
-async function fetchPlayers() {
-    try { const {data,error}=await sb.from('players_records').select('*').order('ovr',{ascending:false}); if(error)throw error; players=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ players=(JSON.parse(localStorage.getItem('players'))||[]).map(d=>({...d,id:String(d.id)})); }
-    renderLeaderboard();
+async function fetchPlayers() { const {data}=await sb.from('players_records').select('*'); players=data||[]; renderAll(); }
+async function fetchTotw() { const {data}=await sb.from('totw_players').select('*'); totwPlayers=data||[]; renderAll(); }
+async function fetchAllstars() { const {data}=await sb.from('allstars_players').select('*'); allstarPlayers=data||[]; renderAll(); }
+
+// ── Modals & CRUD ────────────────────────────────────────────────────────────
+function closePlayerModal(){ document.getElementById('playerModal').style.display='none'; }
+function closeTotwModal(){ document.getElementById('totwModal').style.display='none'; }
+function closeAllstarsModal(){ document.getElementById('allstarsModal').style.display='none'; }
+
+function openPlayerModal(id=null) { 
+    resetForm('p'); if(id){ const p=players.find(x=>x.id==id); fillForm('p',p); }
+    document.getElementById('playerModal').style.display='block'; 
 }
-async function fetchTotw() {
-    try { const {data,error}=await sb.from('totw_players').select('*').order('ovr',{ascending:false}); if(error)throw error; totwPlayers=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ totwPlayers=(JSON.parse(localStorage.getItem('totw'))||[]).map(d=>({...d,id:String(d.id)})); }
-    renderTotw();
+function openTotwModal(id=null) { 
+    resetForm('t'); if(id){ const p=totwPlayers.find(x=>x.id==id); fillForm('t',p); }
+    document.getElementById('totwModal').style.display='block'; 
 }
-async function fetchAllstars() {
-    try { const {data,error}=await sb.from('allstars_players').select('*').order('ovr',{ascending:false}); if(error)throw error; allstarPlayers=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ allstarPlayers=(JSON.parse(localStorage.getItem('allstars'))||[]).map(d=>({...d,id:String(d.id)})); }
-    renderAllstars();
+function openAllstarsModal(id=null) { 
+    resetForm('a'); if(id){ const p=allstarPlayers.find(x=>x.id==id); fillForm('a',p); if(p.color)document.getElementById('a-color').value=p.color; }
+    document.getElementById('allstarsModal').style.display='block'; 
 }
 
-// ── Player CRUD ───────────────────────────────────────────────────────────────
-const playerModal = document.getElementById('playerModal');
-function openPlayerModal(id=null) {
-    resetForm(['p-id','p-name','p-img','p-pos','p-pac','p-sho','p-pas','p-dri','p-def','p-phy'],'p-wf');
-    document.getElementById('playerModalTitle').textContent='Add Player';
-    document.getElementById('playerSaveBtn').textContent='Add to League';
-    if(id){
-        const p=players.find(x=>x.id===String(id)); if(!p)return;
-        document.getElementById('playerModalTitle').textContent=`Edit ${p.name}`;
-        document.getElementById('p-id').value=p.id;
-        document.getElementById('p-name').value=p.name;
-        document.getElementById('p-img').value=p.img?.includes('flaticon')?'':p.img||'';
-        document.getElementById('p-pos').value=p.pos;
-        document.getElementById('p-wf').value=p.wf;
-        ['pac','sho','pas','dri','def','phy'].forEach(s=>document.getElementById(`p-${s}`).value=p[s]);
-        document.getElementById('playerSaveBtn').textContent='Update Player';
-    }
-    playerModal.style.display='block';
+function resetForm(pre) { 
+    ['id','name','img','pos','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value='');
+    document.getElementById(`${pre}-wf`).value='⭐⭐⭐⭐';
 }
-function closePlayerModal(){playerModal.style.display='none';}
-async function savePlayer(){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
-    const id=document.getElementById('p-id').value;
-    const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`p-${s}`).value)||0);
-    const d={id:id||String(Date.now()),name:document.getElementById('p-name').value||'Player',img:document.getElementById('p-img').value||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',pos:(document.getElementById('p-pos').value||'ST').toUpperCase(),wf:document.getElementById('p-wf').value,pac:stats[0],sho:stats[1],pas:stats[2],dri:stats[3],def:stats[4],phy:stats[5],ovr:Math.round(stats.reduce((a,b)=>a+b)/6)};
-    if(sb){try{const{error}=await sb.from('players_records').upsert(d);if(error)throw error;}catch(e){alert('Save failed.');console.error(e);}}
-    else{if(id)players[players.findIndex(p=>p.id===String(id))]=d;else players.push(d);localStorage.setItem('players',JSON.stringify(players));renderLeaderboard();}
-    closePlayerModal();
-}
-async function deletePlayer(id){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
-    if(sb){try{const{error}=await sb.from('players_records').delete().eq('id',id);if(error)throw error;}catch(e){alert('Delete failed.');}}
-    else{players=players.filter(p=>p.id!==String(id));localStorage.setItem('players',JSON.stringify(players));renderLeaderboard();}
+function fillForm(pre, p) {
+    ['id','name','img','pos','wf','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value=p[f]||'');
 }
 
-// ── TOTW CRUD ─────────────────────────────────────────────────────────────────
-const totwModal2 = document.getElementById('totwModal');
-function openTotwModal(id=null){
-    resetForm(['t-id','t-name','t-img','t-pos','t-pac','t-sho','t-pas','t-dri','t-def','t-phy'],'t-wf');
-    document.getElementById('totwModalTitle').textContent='👑 Add TOTW Player';
-    document.getElementById('totwSaveBtn').textContent='Add to TOTW';
-    if(id){
-        const p=totwPlayers.find(x=>x.id===String(id)); if(!p)return;
-        document.getElementById('totwModalTitle').textContent=`Edit ${p.name}`;
-        document.getElementById('t-id').value=p.id;
-        document.getElementById('t-name').value=p.name;
-        document.getElementById('t-img').value=p.img?.includes('flaticon')?'':p.img||'';
-        document.getElementById('t-pos').value=p.pos;
-        document.getElementById('t-wf').value=p.wf;
-        ['pac','sho','pas','dri','def','phy'].forEach(s=>document.getElementById(`t-${s}`).value=p[s]);
-        document.getElementById('totwSaveBtn').textContent='Update TOTW Player';
-    }
-    totwModal2.style.display='block';
-}
-function closeTotwModal(){totwModal2.style.display='none';}
-async function saveTotwPlayer(){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
-    const id=document.getElementById('t-id').value;
-    const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`t-${s}`).value)||0);
-    const d={id:id||String(Date.now()),name:document.getElementById('t-name').value||'Player',img:document.getElementById('t-img').value||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',pos:(document.getElementById('t-pos').value||'ST').toUpperCase(),wf:document.getElementById('t-wf').value,pac:stats[0],sho:stats[1],pas:stats[2],dri:stats[3],def:stats[4],phy:stats[5],ovr:Math.round(stats.reduce((a,b)=>a+b)/6)};
-    if(sb){try{const{error}=await sb.from('totw_players').upsert(d);if(error)throw error;}catch(e){alert('Save failed.');console.error(e);}}
-    else{if(id)totwPlayers[totwPlayers.findIndex(p=>p.id===String(id))]=d;else totwPlayers.push(d);localStorage.setItem('totw',JSON.stringify(totwPlayers));renderTotw();}
-    closeTotwModal();
-}
-async function deleteTotwPlayer(id){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
-    if(sb){try{const{error}=await sb.from('totw_players').delete().eq('id',id);if(error)throw error;}catch(e){alert('Delete failed.');}}
-    else{totwPlayers=totwPlayers.filter(p=>p.id!==String(id));localStorage.setItem('totw',JSON.stringify(totwPlayers));renderTotw();}
+async function savePlayer() { await sb.from('players_records').upsert(getFormData('p')); closePlayerModal(); fetchPlayers(); }
+async function saveTotwPlayer() { await sb.from('totw_players').upsert(getFormData('t')); closeTotwModal(); fetchTotw(); }
+async function saveAllstar() { const d=getFormData('a'); d.color=document.getElementById('a-color').value; await sb.from('allstars_players').upsert(d); closeAllstarsModal(); fetchAllstars(); }
+
+function getFormData(pre) {
+    const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`${pre}-${s}`).value)||0);
+    return {
+        id: document.getElementById(`${pre}-id`).value || undefined,
+        name: document.getElementById(`${pre}-name`).value,
+        img: document.getElementById(`${pre}-img`).value || 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',
+        pos: document.getElementById(`${pre}-pos`).value.toUpperCase(),
+        wf: document.getElementById(`${pre}-wf`).value,
+        pac:stats[0], sho:stats[1], pas:stats[2], dri:stats[3], def:stats[4], phy:stats[5],
+        ovr: Math.round(stats.reduce((a,b)=>a+b)/6)
+    };
 }
 
-// ── All Stars CRUD ────────────────────────────────────────────────────────────
-const allstarsModal2 = document.getElementById('allstarsModal');
-function openAllstarsModal(id=null){
-    resetForm(['a-id','a-name','a-img','a-pos','a-pac','a-sho','a-pas','a-dri','a-def','a-phy'],'a-wf');
-    document.getElementById('a-color').value='pink';
-    document.getElementById('allstarsModalTitle').textContent='🌟 Add All Star';
-    document.getElementById('allstarsSaveBtn').textContent='Add All Star';
-    if(id){
-        const p=allstarPlayers.find(x=>x.id===String(id)); if(!p)return;
-        document.getElementById('allstarsModalTitle').textContent=`Edit ${p.name}`;
-        document.getElementById('a-id').value=p.id;
-        document.getElementById('a-name').value=p.name;
-        document.getElementById('a-img').value=p.img?.includes('flaticon')?'':p.img||'';
-        document.getElementById('a-pos').value=p.pos;
-        document.getElementById('a-wf').value=p.wf;
-        document.getElementById('a-color').value=p.color||'pink';
-        ['pac','sho','pas','dri','def','phy'].forEach(s=>document.getElementById(`a-${s}`).value=p[s]);
-        document.getElementById('allstarsSaveBtn').textContent='Update All Star';
-    }
-    allstarsModal2.style.display='block';
-}
-function closeAllstarsModal(){allstarsModal2.style.display='none';}
-async function saveAllstar(){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
-    const id=document.getElementById('a-id').value;
-    const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`a-${s}`).value)||0);
-    const d={id:id||String(Date.now()),name:document.getElementById('a-name').value||'Player',img:document.getElementById('a-img').value||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',pos:(document.getElementById('a-pos').value||'ST').toUpperCase(),wf:document.getElementById('a-wf').value,color:document.getElementById('a-color').value,pac:stats[0],sho:stats[1],pas:stats[2],dri:stats[3],def:stats[4],phy:stats[5],ovr:Math.round(stats.reduce((a,b)=>a+b)/6)};
-    if(sb){try{const{error}=await sb.from('allstars_players').upsert(d);if(error)throw error;}catch(e){alert('Save failed.');console.error(e);}}
-    else{if(id)allstarPlayers[allstarPlayers.findIndex(p=>p.id===String(id))]=d;else allstarPlayers.push(d);localStorage.setItem('allstars',JSON.stringify(allstarPlayers));renderAllstars();}
-    closeAllstarsModal();
-}
-async function deleteAllstar(id){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
-    if(sb){try{const{error}=await sb.from('allstars_players').delete().eq('id',id);if(error)throw error;}catch(e){alert('Delete failed.');}}
-    else{allstarPlayers=allstarPlayers.filter(p=>p.id!==String(id));localStorage.setItem('allstars',JSON.stringify(allstarPlayers));renderAllstars();}
-}
-
-function resetForm(ids, wfId) {
-    ids.forEach(id=>document.getElementById(id).value='');
-    document.getElementById(wfId).value='⭐⭐⭐⭐';
-}
-
-function subscribeRealtime(){
-    if(!sb)return;
-    try{
-        sb.channel('pl').on('postgres_changes',{event:'*',schema:'public',table:'players_records'},fetchPlayers).subscribe();
-        sb.channel('tw').on('postgres_changes',{event:'*',schema:'public',table:'totw_players'},fetchTotw).subscribe();
-        sb.channel('as').on('postgres_changes',{event:'*',schema:'public',table:'allstars_players'},fetchAllstars).subscribe();
-    }catch(e){console.error(e);}
-}
+async function deletePlayer(id){ await sb.from('players_records').delete().eq('id',id); fetchPlayers(); }
+async function deleteTotwPlayer(id){ await sb.from('totw_players').delete().eq('id',id); fetchTotw(); }
+async function deleteAllstar(id){ await sb.from('allstars_players').delete().eq('id',id); fetchAllstars(); }
 
 (async()=>{
-    if(sb){ await Promise.all([fetchPlayers(),fetchTotw(),fetchAllstars()]); subscribeRealtime(); }
-    else { players=(JSON.parse(localStorage.getItem('players'))||[]).map(d=>({...d,id:String(d.id)})); totwPlayers=(JSON.parse(localStorage.getItem('totw'))||[]).map(d=>({...d,id:String(d.id)})); allstarPlayers=(JSON.parse(localStorage.getItem('allstars'))||[]).map(d=>({...d,id:String(d.id)})); renderAll(); }
+    if(sb){ await Promise.all([fetchPlayers(),fetchTotw(),fetchAllstars()]); }
     updateAdminUI();
 })();
 
-window.onclick=e=>{
-    if(e.target===playerModal)closePlayerModal();
-    if(e.target===totwModal2)closeTotwModal();
-    if(e.target===allstarsModal2)closeAllstarsModal();
-    if(e.target===loginModal)closeLoginModal();
-};
+window.onclick=e=>{ if(e.target.className==='modal') e.target.style.display='none'; };
 </script>
 </body>
 </html>
