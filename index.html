@@ -226,14 +226,14 @@ const sb = typeof window.supabase !== 'undefined' ? window.supabase.createClient
 
 // ── Card colour palettes ──────────────────────────────────────────────────────
 const PALETTES = {
-    gold:   { g1:'#ffe97a', g2:'#d4a82a', g3:'#7a5000', ray:'rgba(255,255,255,0.07)', text:'#1a0e00', subtext:'#3a2000', border:'#b8860b', glow:'rgba(180,130,0,0.55)' },
-    silver: { g1:'#f2f2f2', g2:'#a8a8a8', g3:'#505050', ray:'rgba(255,255,255,0.09)', text:'#111', subtext:'#333', border:'#909090', glow:'rgba(100,100,100,0.4)' },
-    bronze: { g1:'#e8a878', g2:'#a85828', g3:'#502008', ray:'rgba(255,255,255,0.07)', text:'#fff', subtext:'rgba(255,255,255,0.8)', border:'#8b4513', glow:'rgba(120,60,0,0.5)' },
+    gold:   { g1:'#fff5b0', g2:'#f0c030', g3:'#b8860b', ray:'rgba(255,255,255,0.12)', text:'#2a1800', subtext:'#5a3a00', border:'#d4a017', glow:'rgba(220,170,0,0.5)' },
+    silver: { g1:'#f8f8f8', g2:'#c0c0c0', g3:'#707070', ray:'rgba(255,255,255,0.11)', text:'#111', subtext:'#444', border:'#aaa', glow:'rgba(120,120,120,0.4)' },
+    bronze: { g1:'#f0b888', g2:'#c06838', g3:'#602810', ray:'rgba(255,255,255,0.08)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#a0521a', glow:'rgba(140,70,0,0.5)' },
     totw:   { g1:'#2a1e00', g2:'#090909', g3:'#140e00', ray:'rgba(201,168,76,0.06)', text:'#f0d060', subtext:'#c9a84c', border:'#c9a84c', glow:'rgba(200,165,70,0.5)', shine:'rgba(201,168,76,0.13)' },
-    pink:   { g1:'#ff90cc', g2:'#cc0066', g3:'#700038', ray:'rgba(255,255,255,0.08)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#ff60b0', glow:'rgba(220,0,100,0.5)', shine:'rgba(255,180,220,0.14)' },
-    purple: { g1:'#c878ff', g2:'#6800cc', g3:'#320060', ray:'rgba(255,255,255,0.08)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#a040ee', glow:'rgba(120,0,200,0.5)', shine:'rgba(200,150,255,0.14)' },
-    sky:    { g1:'#70e8ff', g2:'#0090cc', g3:'#003c60', ray:'rgba(255,255,255,0.09)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#40d0ff', glow:'rgba(0,160,220,0.5)', shine:'rgba(150,230,255,0.14)' },
-    asgold: { g1:'#ffe878', g2:'#c88800', g3:'#604000', ray:'rgba(255,255,255,0.07)', text:'#1a0e00', subtext:'#3a2000', border:'#e0c040', glow:'rgba(200,150,0,0.5)', shine:'rgba(255,240,150,0.14)' },
+    pink:   { g1:'#ffb0d8', g2:'#e0107a', g3:'#780040', ray:'rgba(255,255,255,0.09)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#ff70c0', glow:'rgba(220,0,110,0.5)', shine:'rgba(255,180,220,0.14)' },
+    purple: { g1:'#d898ff', g2:'#7800e0', g3:'#3a0068', ray:'rgba(255,255,255,0.09)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#b050ff', glow:'rgba(130,0,220,0.5)', shine:'rgba(210,160,255,0.14)' },
+    sky:    { g1:'#90eeff', g2:'#00a8e0', g3:'#004870', ray:'rgba(255,255,255,0.10)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#50d8ff', glow:'rgba(0,170,230,0.5)', shine:'rgba(160,238,255,0.14)' },
+    asgold: { g1:'#fff5b0', g2:'#f0c030', g3:'#806000', ray:'rgba(255,255,255,0.12)', text:'#2a1800', subtext:'#5a3a00', border:'#d4a017', glow:'rgba(220,170,0,0.5)', shine:'rgba(255,245,160,0.15)' },
 };
 
 // ── SVG card builder ──────────────────────────────────────────────────────────
@@ -345,55 +345,55 @@ function buildCard(p, rank, type) {
       <path d="${makeNotchPath()}" fill="${pal.g3}" opacity="0.55"/>
 
       <!-- ── CONTENT ── -->
-      <!-- OVR number top-left -->
-      <text x="18" y="56" font-family="Oswald,sans-serif" font-size="46" font-weight="900" fill="${pal.text}" opacity="0.95">${p.ovr}</text>
+      <!-- OVR number top-left — contained inside card -->
+      <text x="22" y="48" font-family="Oswald,sans-serif" font-size="36" font-weight="900" fill="${pal.text}" opacity="0.95">${p.ovr}</text>
 
       <!-- POS top-left below OVR -->
-      <text x="18" y="76" font-family="Oswald,sans-serif" font-size="14" font-weight="700" fill="${pal.subtext}">${p.pos}</text>
+      <text x="22" y="64" font-family="Oswald,sans-serif" font-size="13" font-weight="700" fill="${pal.subtext}">${p.pos}</text>
 
       <!-- WF top-left below POS -->
-      <text x="18" y="92" font-family="Oswald,sans-serif" font-size="11" font-weight="600" fill="${pal.subtext}">${p.wf}</text>
+      <text x="22" y="78" font-family="Oswald,sans-serif" font-size="10" font-weight="600" fill="${pal.subtext}">${p.wf}</text>
 
       <!-- Label badge top-centre (TOTW / ALL STAR / RANK) -->
       ${label
-        ? `<rect x="${W/2 - 70}" y="8" width="140" height="18" rx="3" fill="rgba(0,0,0,0.35)" stroke="${labelBorder}" stroke-width="1"/>
+        ? `<rect x="${W/2 - 72}" y="8" width="144" height="18" rx="3" fill="rgba(0,0,0,0.35)" stroke="${labelBorder}" stroke-width="1"/>
            <text x="${W/2}" y="21" font-family="Oswald,sans-serif" font-size="9" font-weight="900" letter-spacing="1.5" text-anchor="middle" fill="${labelColor}">${label}</text>`
         : `<text x="${W/2}" y="20" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}" opacity="0.8">RANK #${rank + 1}</text>`
       }
 
       <!-- Player image circle -->
       <defs>
-        <clipPath id="${imgId}"><circle cx="${W/2}" cy="168" r="68"/></clipPath>
+        <clipPath id="${imgId}"><circle cx="${W/2}" cy="165" r="68"/></clipPath>
       </defs>
-      <circle cx="${W/2}" cy="168" r="70" fill="${pal.g3}" opacity="0.5"/>
-      <circle cx="${W/2}" cy="168" r="70" fill="none" stroke="${pal.border}" stroke-width="2.5"/>
-      <image href="${p.img}" x="${W/2-68}" y="100" width="136" height="136" clip-path="url(#${imgId})" preserveAspectRatio="xMidYMid slice"
+      <circle cx="${W/2}" cy="165" r="70" fill="${pal.g3}" opacity="0.5"/>
+      <circle cx="${W/2}" cy="165" r="70" fill="none" stroke="${pal.border}" stroke-width="2.5"/>
+      <image href="${p.img}" x="${W/2-68}" y="97" width="136" height="136" clip-path="url(#${imgId})" preserveAspectRatio="xMidYMid slice"
         onerror="this.setAttribute('href','https://cdn-icons-png.flaticon.com/512/1163/1163481.png')"/>
 
       <!-- Divider line -->
-      <line x1="40" y1="248" x2="${W-40}" y2="248" stroke="${dividerColor}" stroke-width="1.2"/>
+      <line x1="30" y1="248" x2="${W-30}" y2="248" stroke="${dividerColor}" stroke-width="1.2"/>
 
       <!-- Player name -->
-      <text x="${W/2}" y="268" font-family="Oswald,sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="${pal.text}" letter-spacing="0.5">${p.name.toUpperCase()}</text>
+      <text x="${W/2}" y="268" font-family="Oswald,sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="${pal.text}" letter-spacing="0.5">${p.name.toUpperCase()}</text>
 
-      <!-- Stats (2 columns) -->
-      <text x="52"     y="293" font-family="Oswald,sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="${pal.subtext}">PAC</text>
-      <text x="52"     y="308" font-family="Oswald,sans-serif" font-size="16" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.pac}</text>
+      <!-- Stats — all 6 evenly spaced in ONE row. W=280, 6 cols, spacing=280/6=46.7, centres at 23,70,117,163,210,257 -->
+      <text x="23"  y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">PAC</text>
+      <text x="23"  y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.pac}</text>
 
-      <text x="107"    y="293" font-family="Oswald,sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="${pal.subtext}">SHO</text>
-      <text x="107"    y="308" font-family="Oswald,sans-serif" font-size="16" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.sho}</text>
+      <text x="70"  y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">SHO</text>
+      <text x="70"  y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.sho}</text>
 
-      <text x="140"    y="293" font-family="Oswald,sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="${pal.subtext}">PAS</text>
-      <text x="140"    y="308" font-family="Oswald,sans-serif" font-size="16" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.pas}</text>
+      <text x="117" y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">PAS</text>
+      <text x="117" y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.pas}</text>
 
-      <text x="175"    y="293" font-family="Oswald,sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="${pal.subtext}">DRI</text>
-      <text x="175"    y="308" font-family="Oswald,sans-serif" font-size="16" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.dri}</text>
+      <text x="163" y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">DRI</text>
+      <text x="163" y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.dri}</text>
 
-      <text x="228"    y="293" font-family="Oswald,sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="${pal.subtext}">DEF</text>
-      <text x="228"    y="308" font-family="Oswald,sans-serif" font-size="16" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.def}</text>
+      <text x="210" y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">DEF</text>
+      <text x="210" y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.def}</text>
 
-      <text x="52"     y="330" font-family="Oswald,sans-serif" font-size="13" font-weight="700" text-anchor="middle" fill="${pal.subtext}">PHY</text>
-      <text x="52"     y="345" font-family="Oswald,sans-serif" font-size="16" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.phy}</text>
+      <text x="257" y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">PHY</text>
+      <text x="257" y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.phy}</text>
     `;
 
     // Wrapper div
