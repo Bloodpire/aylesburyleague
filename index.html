@@ -29,10 +29,6 @@
         .section-title { color: white; font-size: 2rem; font-weight: 700; text-shadow: 1px 1px 6px rgba(0,0,0,0.2); }
 
         .add-btn-wrap { background: rgba(255,255,255,0.95); padding: 8px 18px; border-radius: 50px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        .add-btn-wrap.dark { background: rgba(0,0,0,0.35); border: 2px solid rgba(255,255,255,0.3); }
-        .add-btn-wrap.totw-wrap { background: rgba(0,0,0,0.35); border: 2px solid #c9a84c; }
-        .add-btn-wrap.allstars-wrap { background: rgba(0,0,0,0.3); border: 2px solid rgba(255,100,180,0.7); }
-
         .section-btn { border: none; padding: 9px 28px; border-radius: 25px; font-size: 1rem; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Oswald', sans-serif; letter-spacing: 0.5px; }
         .section-btn:disabled { opacity: 0.45; cursor: not-allowed; }
         .section-btn.green { background: #2ecc71; color: white; }
@@ -47,9 +43,9 @@
         .card-wrap:hover { transform: translateY(-10px) scale(1.03); filter: brightness(1.07); }
         .card-wrap svg { width: 100%; height: auto; display: block; }
 
-        /* FIX: Move delete player button to the right notch */
+        /* Delete button top right */
         .del-btn {
-            position: absolute; top: 12px; right: 12px; /* Changed from top: 9px; left: 9px; */
+            position: absolute; top: 12px; right: 12px;
             width: 24px; height: 24px; border-radius: 50%;
             background: #ff3333; color: white; border: none;
             font-size: 12px; font-weight: 900; cursor: pointer;
@@ -57,7 +53,7 @@
             z-index: 10; font-family: sans-serif; line-height: 1;
         }
         .del-btn:disabled { background: #888; cursor: not-allowed; opacity: 0.55; }
-        .lock-ico { position: absolute; top: 9px; left: 9px; font-size: 13px; opacity: 0.6; z-index: 10; pointer-events: none; } /* LOCK stays left */
+        .lock-ico { position: absolute; top: 9px; left: 9px; font-size: 13px; opacity: 0.6; z-index: 10; pointer-events: none; }
 
         /* Section dividers */
         .section-gap { margin-top: 55px; margin-bottom: 22px; }
@@ -67,8 +63,6 @@
         /* Modals */
         .modal { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
         .modal-box { background: white; margin: 4% auto; padding: 28px; width: 90%; max-width: 480px; border-radius: 18px; position: relative; }
-        .modal-box.totw-box { border-top: 4px solid #c9a84c; }
-        .modal-box.allstars-box { border-top: 4px solid #e040c0; }
         .modal-title { font-size: 1.7rem; font-weight: bold; text-align: center; color: #222; margin-bottom: 18px; }
         .close-x { position: absolute; right: 18px; top: 12px; font-size: 1.9rem; cursor: pointer; color: #aaa; line-height: 1; }
         .fg { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
@@ -79,12 +73,8 @@
         .fg .sbtn.totw-s { background: linear-gradient(135deg,#1a1200,#2e2000); color: #f0d060; border: 1px solid #c9a84c; }
         .fg .sbtn.as-s { background: linear-gradient(135deg,#c2006a,#6800bb,#0088c0); }
 
-        /* Login modal */
         .login-form { display: flex; flex-direction: column; gap: 13px; margin-top: 8px; }
-        .login-form input { padding: 11px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; font-family: 'Oswald', sans-serif; }
-        .login-submit { background: #00BFFF; color: white; border: none; padding: 12px; border-radius: 9px; font-size: 1.05rem; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Oswald', sans-serif; }
         #loginError { color: #e74c3c; font-size: 0.88rem; text-align: center; min-height: 18px; }
-        .auth-badge { background: #2ecc71; color: white; border-radius: 20px; padding: 2px 11px; font-size: 0.82rem; font-weight: bold; }
         .empty-msg { grid-column: 1/-1; text-align: center; color: rgba(255,255,255,0.7); font-size: 1rem; padding: 28px; }
     </style>
 </head>
@@ -109,7 +99,7 @@
         <hr class="divider-gold">
         <div class="section-header">
             <h2 class="section-title">👑 Team of the Week</h2>
-            <div class="add-btn-wrap totw-wrap">
+            <div class="add-btn-wrap" style="background: rgba(0,0,0,0.35); border: 2px solid #c9a84c;">
                 <button class="section-btn totw" id="addTotwBtn" disabled onclick="requireAuth(()=>openTotwModal())">+ Add TOTW</button>
             </div>
         </div>
@@ -120,7 +110,7 @@
         <hr class="divider-rainbow">
         <div class="section-header">
             <h2 class="section-title">🌟 Tournament All Stars</h2>
-            <div class="add-btn-wrap allstars-wrap">
+            <div class="add-btn-wrap" style="background: rgba(0,0,0,0.3); border: 2px solid rgba(255,100,180,0.7);">
                 <button class="section-btn allstars" id="addAllstarsBtn" disabled onclick="requireAuth(()=>openAllstarsModal())">+ Add All Star</button>
             </div>
         </div>
@@ -133,66 +123,29 @@
         <span class="close-x" onclick="closePlayerModal()">&times;</span>
         <div class="modal-title" id="playerModalTitle">Add Player</div>
         <div class="fg">
-            <input type="hidden" id="p-id">
-            <input class="fw" type="text" id="p-name" placeholder="Full Name">
-            <input class="fw" type="text" id="p-img" placeholder="Photo URL (optional)">
-            <input type="text" id="p-pos" placeholder="POS (ST, CM…)">
-            <select id="p-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select>
-            <input type="number" id="p-pac" placeholder="PAC" max="99">
-            <input type="number" id="p-sho" placeholder="SHO" max="99">
-            <input type="number" id="p-pas" placeholder="PAS" max="99">
-            <input type="number" id="p-dri" placeholder="DRI" max="99">
-            <input type="number" id="p-def" placeholder="DEF" max="99">
-            <input type="number" id="p-phy" placeholder="PHY" max="99">
-            <button class="sbtn blue" id="playerSaveBtn" onclick="savePlayer()">Add to League</button>
+            <input type="hidden" id="p-id"><input class="fw" type="text" id="p-name" placeholder="Full Name"><input class="fw" type="text" id="p-img" placeholder="Photo URL"><input type="text" id="p-pos" placeholder="POS"><select id="p-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select><input type="number" id="p-pac" placeholder="PAC"><input type="number" id="p-sho" placeholder="SHO"><input type="number" id="p-pas" placeholder="PAS"><input type="number" id="p-dri" placeholder="DRI"><input type="number" id="p-def" placeholder="DEF"><input type="number" id="p-phy" placeholder="PHY"><button class="sbtn blue" onclick="savePlayer()">Save</button>
         </div>
     </div>
 </div>
 
 <div class="modal" id="totwModal">
-    <div class="modal-box totw-box">
+    <div class="modal-box" style="border-top: 4px solid #c9a84c;">
         <span class="close-x" onclick="closeTotwModal()">&times;</span>
-        <div class="modal-title" id="totwModalTitle">👑 Add TOTW Player</div>
+        <div class="modal-title">👑 Add TOTW Player</div>
         <div class="fg">
-            <input type="hidden" id="t-id">
-            <input class="fw" type="text" id="t-name" placeholder="Full Name">
-            <input class="fw" type="text" id="t-img" placeholder="Photo URL (optional)">
-            <input type="text" id="t-pos" placeholder="POS (ST, CM…)">
-            <select id="t-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select>
-            <input type="number" id="t-pac" placeholder="PAC" max="99">
-            <input type="number" id="t-sho" placeholder="SHO" max="99">
-            <input type="number" id="t-pas" placeholder="PAS" max="99">
-            <input type="number" id="t-dri" placeholder="DRI" max="99">
-            <input type="number" id="t-def" placeholder="DEF" max="99">
-            <input type="number" id="t-phy" placeholder="PHY" max="99">
-            <button class="sbtn totw-s" id="totwSaveBtn" onclick="saveTotwPlayer()">Add to TOTW</button>
+            <input type="hidden" id="t-id"><input class="fw" type="text" id="t-name" placeholder="Full Name"><input class="fw" type="text" id="t-img" placeholder="Photo URL"><input type="text" id="t-pos" placeholder="POS"><select id="t-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select><input type="number" id="t-pac" placeholder="PAC"><input type="number" id="t-sho" placeholder="SHO"><input type="number" id="t-pas" placeholder="PAS"><input type="number" id="t-dri" placeholder="DRI"><input type="number" id="t-def" placeholder="DEF"><input type="number" id="t-phy" placeholder="PHY"><button class="sbtn totw-s" onclick="saveTotwPlayer()">Save</button>
         </div>
     </div>
 </div>
 
 <div class="modal" id="allstarsModal">
-    <div class="modal-box allstars-box">
+    <div class="modal-box" style="border-top: 4px solid #e040c0;">
         <span class="close-x" onclick="closeAllstarsModal()">&times;</span>
-        <div class="modal-title" id="allstarsModalTitle">🌟 Add All Star</div>
+        <div class="modal-title">🌟 Add All Star</div>
         <div class="fg">
-            <input type="hidden" id="a-id">
-            <input class="fw" type="text" id="a-name" placeholder="Full Name">
-            <input class="fw" type="text" id="a-img" placeholder="Photo URL (optional)">
-            <input type="text" id="a-pos" placeholder="POS (ST, CM…)">
-            <select id="a-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select>
-            <select class="fw" id="a-color">
-                <option value="pink">🩷 Pink</option>
-                <option value="purple">💜 Purple</option>
-                <option value="sky">🩵 Sky Blue</option>
-                <option value="gold">🌟 Gold</option>
-            </select>
-            <input type="number" id="a-pac" placeholder="PAC" max="99">
-            <input type="number" id="a-sho" placeholder="SHO" max="99">
-            <input type="number" id="a-pas" placeholder="PAS" max="99">
-            <input type="number" id="a-dri" placeholder="DRI" max="99">
-            <input type="number" id="a-def" placeholder="DEF" max="99">
-            <input type="number" id="a-phy" placeholder="PHY" max="99">
-            <button class="sbtn as-s" id="allstarsSaveBtn" onclick="saveAllstar()">Add All Star</button>
+            <input type="hidden" id="a-id"><input class="fw" type="text" id="a-name" placeholder="Full Name"><input class="fw" type="text" id="a-img" placeholder="Photo URL"><input type="text" id="a-pos" placeholder="POS"><select id="a-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select>
+            <select class="fw" id="a-color"><option value="pink">Pink</option><option value="purple">Purple</option><option value="sky">Sky Blue</option><option value="gold">Gold</option></select>
+            <input type="number" id="a-pac" placeholder="PAC"><input type="number" id="a-sho" placeholder="SHO"><input type="number" id="a-pas" placeholder="PAS"><input type="number" id="a-dri" placeholder="DRI"><input type="number" id="a-def" placeholder="DEF"><input type="number" id="a-phy" placeholder="PHY"><button class="sbtn as-s" onclick="saveAllstar()">Save</button>
         </div>
     </div>
 </div>
@@ -202,272 +155,157 @@
         <span class="close-x" onclick="closeLoginModal()">&times;</span>
         <div class="modal-title">🔐 Admin Login</div>
         <div class="login-form">
-            <input type="text" id="loginUser" placeholder="Username" autocomplete="username">
-            <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')submitLogin()">
-            <div id="loginError"></div>
-            <button class="login-submit" onclick="submitLogin()">Login</button>
+            <input type="text" id="loginUser" placeholder="Username"><input type="password" id="loginPass" placeholder="Password"><div id="loginError"></div><button class="sbtn blue" onclick="submitLogin()">Login</button>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-// ── Supabase ──────────────────────────────────────────────────────────────────
 const SUPABASE_URL = 'https://bmwiqpkgdbeohkwbqaft.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_kguMGdM9yIP_qoUdOU6x_w_4ObYO4Wt';
-const sb = typeof window.supabase !== 'undefined' ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ── Card colour palettes ──────────────────────────────────────────────────────
 const PALETTES = {
-    gold:   { g1:'#fff5b0', g2:'#f0c030', g3:'#b8860b', ray:'rgba(255,255,255,0.12)', text:'#2a1800', subtext:'#5a3a00', border:'#d4a017', glow:'rgba(220,170,0,0.5)' },
-    silver: { g1:'#f8f8f8', g2:'#c0c0c0', g3:'#707070', ray:'rgba(255,255,255,0.11)', text:'#111', subtext:'#444', border:'#aaa', glow:'rgba(120,120,120,0.4)' },
-    bronze: { g1:'#f0b888', g2:'#c06838', g3:'#602810', ray:'rgba(255,255,255,0.08)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#a0521a', glow:'rgba(140,70,0,0.5)' },
-    totw:   { g1:'#2a1e00', g2:'#090909', g3:'#140e00', ray:'rgba(201,168,76,0.06)', text:'#f0d060', subtext:'#c9a84c', border:'#c9a84c', glow:'rgba(200,165,70,0.5)', shine:'rgba(201,168,76,0.13)' },
-    pink:   { g1:'#ffb0d8', g2:'#e0107a', g3:'#780040', ray:'rgba(255,255,255,0.09)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#ff70c0', glow:'rgba(220,0,110,0.5)', shine:'rgba(255,180,220,0.14)' },
-    purple: { g1:'#d898ff', g2:'#7800e0', g3:'#3a0068', ray:'rgba(255,255,255,0.09)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#b050ff', glow:'rgba(130,0,220,0.5)', shine:'rgba(210,160,255,0.14)' },
-    sky:    { g1:'#90eeff', g2:'#00a8e0', g3:'#004870', ray:'rgba(255,255,255,0.10)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#50d8ff', glow:'rgba(0,170,230,0.5)', shine:'rgba(160,238,255,0.14)' },
-    asgold: { g1:'#fff5b0', g2:'#f0c030', g3:'#806000', ray:'rgba(255,255,255,0.12)', text:'#2a1800', subtext:'#5a3a00', border:'#d4a017', glow:'rgba(220,170,0,0.5)', shine:'rgba(255,245,160,0.15)' },
+    gold: { g1:'#fff5b0', g2:'#f0c030', g3:'#b8860b', text:'#2a1800', subtext:'#5a3a00', border:'#d4a017' },
+    silver: { g1:'#f8f8f8', g2:'#c0c0c0', g3:'#707070', text:'#111', subtext:'#444', border:'#aaa' },
+    bronze: { g1:'#f0b888', g2:'#c06838', g3:'#602810', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#a0521a' },
+    totw: { g1:'#2a1e00', g2:'#090909', g3:'#140e00', text:'#f0d060', subtext:'#c9a84c', border:'#c9a84c' },
+    pink: { g1:'#ffb0d8', g2:'#e0107a', g3:'#780040', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#ff70c0' },
+    purple: { g1:'#d898ff', g2:'#7800e0', g3:'#3a0068', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#b050ff' },
+    sky: { g1:'#90eeff', g2:'#00a8e0', g3:'#004870', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#50d8ff' },
+    asgold: { g1:'#fff5b0', g2:'#f0c030', g3:'#806000', text:'#2a1800', subtext:'#5a3a00', border:'#d4a017' }
 };
 
-// ── SVG card builder ──────────────────────────────────────────────────────────
-function makePath() {
-    return `
-      M 60,0
-      L 220,0
-      A 22,22 0 0,1 242,22
-      L 280,22
-      A 18,18 0 0,1 280,40
-      L 280,340
-      Q 280,390 140,390
-      Q 0,390 0,340
-      L 0,40
-      A 18,18 0 0,1 0,22
-      L 38,22
-      A 22,22 0 0,1 60,0
-      Z
-    `.trim();
-}
-
-function makeNotchPath() {
-    return `
-      M 38,0 A 22,22 0 0,0 60,22 L 38,22 Z
-      M 242,0 A 22,22 0 0,1 220,22 L 242,22 Z
-    `.trim();
-}
-
 function buildCard(p, rank, type) {
-    const loggedIn = isLoggedIn();
-    let palKey;
-    if (type === 'leaderboard') palKey = p.ovr >= 80 ? 'gold' : p.ovr >= 70 ? 'silver' : 'bronze';
-    else if (type === 'totw') palKey = 'totw';
-    else palKey = { pink:'pink', purple:'purple', sky:'sky', gold:'asgold' }[p.color] || 'pink';
+    let pk;
+    if(type==='leaderboard') pk = p.ovr>=80?'gold':p.ovr>=70?'silver':'bronze';
+    else if(type==='totw') pk = 'totw';
+    else pk = {pink:'pink', purple:'purple', sky:'sky', gold:'asgold'}[p.color]||'pink';
     
-    const pal = PALETTES[palKey];
-    const isTotw = type === 'totw';
-    const isAllstar = type === 'allstar';
-    const darkText = palKey === 'gold' || palKey === 'asgold';
-
-    let label = isTotw ? 'TEAM OF THE WEEK' : isAllstar ? 'TOURNAMENT ALL STAR' : '';
-    const labelColor = isTotw ? '#c9a84c' : darkText ? '#3a2000' : 'rgba(255,255,255,0.85)';
-    const dividerColor = isTotw ? '#c9a84c' : darkText ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.55)';
-
-    const gradId = `g_${p.id}_${type}`;
-    const rayId  = `r_${p.id}_${type}`;
-    const clipId = `c_${p.id}_${type}`;
-    const imgId  = `img_${p.id}_${type}`;
-    const W = 280, H = 390;
+    const pal = PALETTES[pk];
+    const W=280, H=390;
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
     svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-    svg.setAttribute('xmlns','http://www.w3.org/2000/svg');
-
     svg.innerHTML = `
-      <defs>
-        <linearGradient id="${gradId}" x1="0%" y1="0%" x2="60%" y2="100%">
-          <stop offset="0%"   stop-color="${pal.g1}"/>
-          <stop offset="50%"  stop-color="${pal.g2}"/>
-          <stop offset="100%" stop-color="${pal.g3}"/>
-        </linearGradient>
-        <pattern id="${rayId}" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(-40 140 390)">
-          <line x1="0" y1="0" x2="0" y2="12" stroke="${pal.ray}" stroke-width="5"/>
-        </pattern>
-        <clipPath id="${clipId}"><path d="${makePath()}"/></clipPath>
-        <filter id="sh_${gradId}" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="${pal.glow}"/>
-        </filter>
-      </defs>
+        <defs>
+            <linearGradient id="g${p.id}${type}" x1="0%" y1="0%" x2="60%" y2="100%">
+                <stop offset="0%" stop-color="${pal.g1}"/><stop offset="50%" stop-color="${pal.g2}"/><stop offset="100%" stop-color="${pal.g3}"/>
+            </linearGradient>
+            <clipPath id="cp${p.id}${type}"><circle cx="140" cy="165" r="68"/></clipPath>
+        </defs>
+        <path d="M 60,0 L 220,0 A 22,22 0 0,1 242,22 L 280,22 A 18,18 0 0,1 280,40 L 280,340 Q 280,390 140,390 Q 0,390 0,340 L 0,40 A 18,18 0 0,1 0,22 L 38,22 A 22,22 0 0,1 60,0 Z" fill="url(#g${p.id}${type})"/>
+        
+        <text x="32" y="62" font-family="Oswald" font-size="36" font-weight="900" fill="${pal.text}">${p.ovr}</text>
+        <text x="32" y="78" font-family="Oswald" font-size="13" font-weight="700" fill="${pal.subtext}">${p.pos}</text>
+        <text x="32" y="94" font-family="Oswald" font-size="12" font-weight="600" fill="${pal.subtext}">${p.wf}</text>
 
-      <path d="${makePath()}" fill="${pal.g2}" filter="url(#sh_${gradId})" opacity="0.6" transform="translate(0,6)"/>
-      <path d="${makePath()}" fill="url(#${gradId})"/>
-      <path d="${makePath()}" fill="url(#${rayId})" opacity="0.9"/>
+        <circle cx="140" cy="165" r="70" fill="none" stroke="${pal.border}" stroke-width="2.5"/>
+        <image href="${p.img}" x="72" y="97" width="136" height="136" clip-path="url(#cp${p.id}${type})" preserveAspectRatio="xMidYMid slice" onerror="this.setAttribute('href','https://cdn-icons-png.flaticon.com/512/1163/1163481.png')"/>
 
-      ${pal.shine ? `<rect x="168" y="0" width="44" height="${H}" fill="${pal.shine}" transform="skewX(-7)" clip-path="url(#${clipId})"/>` : ''}
+        <line x1="30" y1="248" x2="250" y2="248" stroke="${pal.subtext}" stroke-width="1.2" opacity="0.5"/>
+        <text x="140" y="275" font-family="Oswald" font-size="22" font-weight="700" text-anchor="middle" fill="${pal.text}">${p.name.toUpperCase()}</text>
 
-      <path d="${makePath()}" fill="none" stroke="${pal.border}" stroke-width="2.5" opacity="0.7"/>
-      <path d="${makeNotchPath()}" fill="${pal.g3}" opacity="0.55"/>
-
-      <g transform="translate(30,0)">
-          <text y="48" font-family="Oswald,sans-serif" font-size="36" font-weight="900" fill="${pal.text}" opacity="0.95">${p.ovr}</text>
-          <text y="64" font-family="Oswald,sans-serif" font-size="13" font-weight="700" fill="${pal.subtext}">${p.pos}</text>
-          <text y="78" font-family="Oswald,sans-serif" font-size="10" font-weight="600" fill="${pal.subtext}">${p.wf}</text>
-      </g>
-
-      ${label
-        ? `<rect x="${W/2 - 72}" y="8" width="144" height="18" rx="3" fill="rgba(0,0,0,0.35)" stroke="${pal.border}" stroke-width="1"/>
-           <text x="${W/2}" y="21" font-family="Oswald,sans-serif" font-size="9" font-weight="900" letter-spacing="1.5" text-anchor="middle" fill="${labelColor}">${label}</text>`
-        : `<text x="${W/2}" y="20" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}" opacity="0.8">RANK #${rank + 1}</text>`
-      }
-
-      <defs><clipPath id="${imgId}"><circle cx="${W/2}" cy="165" r="68"/></clipPath></defs>
-      <circle cx="${W/2}" cy="165" r="70" fill="${pal.g3}" opacity="0.5"/>
-      <circle cx="${W/2}" cy="165" r="70" fill="none" stroke="${pal.border}" stroke-width="2.5"/>
-      <image href="${p.img}" x="${W/2-68}" y="97" width="136" height="136" clip-path="url(#${imgId})" preserveAspectRatio="xMidYMid slice" onerror="this.setAttribute('href','https://cdn-icons-png.flaticon.com/512/1163/1163481.png')"/>
-
-      <line x1="30" y1="248" x2="${W-30}" y2="248" stroke="${dividerColor}" stroke-width="1.2"/>
-      <text x="${W/2}" y="268" font-family="Oswald,sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="${pal.text}" letter-spacing="0.5">${p.name.toUpperCase()}</text>
-
-      <g transform="translate(140, 312)" font-family="Oswald,sans-serif" text-anchor="middle" fill="${pal.text}">
-        <g transform="translate(-80, 0)">
-          <text font-size="12" font-weight="700" fill="${pal.subtext}">PAC</text>
-          <text y="24" font-size="21" font-weight="900">${p.pac}</text>
+        <g transform="translate(140, 315)" font-family="Oswald" text-anchor="middle">
+            <g transform="translate(-85,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">PAC</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.pac}</text></g>
+            <g transform="translate(-51,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">SHO</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.sho}</text></g>
+            <g transform="translate(-17,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">PAS</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.pas}</text></g>
+            <g transform="translate(17,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">DRI</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.dri}</text></g>
+            <g transform="translate(51,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">DEF</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.def}</text></g>
+            <g transform="translate(85,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">PHY</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.phy}</text></g>
         </g>
-        <g transform="translate(-48, 0)">
-          <text font-size="12" font-weight="700" fill="${pal.subtext}">SHO</text>
-          <text y="24" font-size="21" font-weight="900">${p.sho}</text>
-        </g>
-        <g transform="translate(-16, 0)">
-          <text font-size="12" font-weight="700" fill="${pal.subtext}">PAS</text>
-          <text y="24" font-size="21" font-weight="900">${p.pas}</text>
-        </g>
-        <g transform="translate(16, 0)">
-          <text font-size="12" font-weight="700" fill="${pal.subtext}">DRI</text>
-          <text y="24" font-size="21" font-weight="900">${p.dri}</text>
-        </g>
-        <g transform="translate(48, 0)">
-          <text font-size="12" font-weight="700" fill="${pal.subtext}">DEF</text>
-          <text y="24" font-size="21" font-weight="900">${p.def}</text>
-        </g>
-        <g transform="translate(80, 0)">
-          <text font-size="12" font-weight="700" fill="${pal.subtext}">PHY</text>
-          <text y="24" font-size="21" font-weight="900">${p.phy}</text>
-        </g>
-      </g>
     `;
 
     const wrap = document.createElement('div');
-    wrap.className = 'card-wrap';
-    wrap.dataset.id = p.id;
-
+    wrap.className='card-wrap';
     const del = document.createElement('button');
-    del.className = 'del-btn'; del.textContent = '✕'; del.disabled = !loggedIn;
-    del.onclick = e => { e.stopPropagation(); if(confirm('Delete?')) type==='leaderboard'?deletePlayer(p.id):type==='totw'?deleteTotwPlayer(p.id):deleteAllstar(p.id); };
-
-    if (!loggedIn) {
-        const lock = document.createElement('span');
-        lock.className = 'lock-ico'; lock.textContent = '🔒';
-        wrap.appendChild(lock);
-    }
-
-    wrap.appendChild(del);
-    wrap.appendChild(svg);
-    wrap.addEventListener('click', () => { if (type === 'leaderboard') requireAuth(() => openPlayerModal(p.id)); else if (type === 'totw') requireAuth(() => openTotwModal(p.id)); else requireAuth(() => openAllstarsModal(p.id)); });
+    del.className='del-btn'; del.textContent='✕'; del.disabled=!isLoggedIn();
+    del.onclick=e=>{ e.stopPropagation(); if(confirm('Delete?')) deleteItem(p.id, type); };
+    
+    wrap.appendChild(del); wrap.appendChild(svg);
+    wrap.onclick=()=>{ if(isLoggedIn()) openEdit(p, type); };
     return wrap;
 }
 
-// ── Shared Logic & Auth ──────────────────────────────────────────────────────
-let players=[], totwPlayers=[], allstarPlayers=[], currentAdmin=null, pendingCb=null;
-const isLoggedIn = () => currentAdmin !== null;
+let players=[], totw=[], allstars=[], user=null;
+const isLoggedIn = () => !!user;
 
 function updateAdminUI() {
-    const logged = isLoggedIn();
-    document.getElementById('adminStatus').innerHTML = logged ? `✅ Logged in as ${currentAdmin.username}` : '🔒 Not logged in';
-    document.getElementById('adminActionBtn').textContent = logged ? 'Logout' : 'Admin Login';
-    document.getElementById('adminActionBtn').className = logged ? 'admin-btn logout' : 'admin-btn';
-    ['addPlayerBtn','addTotwBtn','addAllstarsBtn'].forEach(id => document.getElementById(id).disabled = !logged);
+    document.getElementById('adminStatus').textContent = user ? `✅ ${user.username}` : '🔒 Not logged in';
+    document.getElementById('adminActionBtn').textContent = user ? 'Logout' : 'Admin Login';
+    ['addPlayerBtn','addTotwBtn','addAllstarsBtn'].forEach(id=>document.getElementById(id).disabled=!user);
     renderAll();
 }
 
-function handleAdminBtn() { if(isLoggedIn()){ currentAdmin=null; updateAdminUI(); } else openLoginModal(); }
-function requireAuth(cb) { if(isLoggedIn()) cb(); else { pendingCb=cb; openLoginModal(); } }
-
-function openLoginModal() { 
-    ['loginUser','loginPass'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('loginError').textContent='';
-    document.getElementById('loginModal').style.display='block'; 
-}
+function handleAdminBtn() { if(user){user=null; updateAdminUI();} else openLoginModal(); }
+function requireAuth(cb) { if(user) cb(); else openLoginModal(); }
+function openLoginModal() { document.getElementById('loginModal').style.display='block'; }
 function closeLoginModal() { document.getElementById('loginModal').style.display='none'; }
+
 async function submitLogin() {
     const u=document.getElementById('loginUser').value, p=document.getElementById('loginPass').value;
-    if(!u||!p)return;
-    const {data}=await sb.from('admins').select('*').eq('username',u).eq('password',p).maybeSingle();
-    if(data){ currentAdmin=data; closeLoginModal(); updateAdminUI(); if(pendingCb){pendingCb(); pendingCb=null;} }
-    else document.getElementById('loginError').textContent='Invalid Login';
+    const {data} = await sb.from('admins').select('*').eq('username',u).eq('password',p).maybeSingle();
+    if(data){ user=data; closeLoginModal(); updateAdminUI(); } else document.getElementById('loginError').textContent='Fail';
 }
 
-function renderAll() { renderGrid('leaderboard', players, 'leaderboard'); renderGrid('totw-grid', totwPlayers, 'totw'); renderGrid('allstars-grid', allstarPlayers, 'allstar'); }
+function renderAll() {
+    renderGrid('leaderboard', players, 'leaderboard');
+    renderGrid('totw-grid', totw, 'totw');
+    renderGrid('allstars-grid', allstars, 'allstar');
+}
 function renderGrid(id, list, type) {
     const c=document.getElementById(id); c.innerHTML='';
-    list.sort((a,b)=>b.ovr-a.ovr);
-    list.length ? list.forEach(p=>c.appendChild(buildCard(p,0,type))) : c.innerHTML='<div class="empty-msg">No entries yet.</div>';
+    list.sort((a,b)=>b.ovr-a.ovr).forEach((p,i)=>c.appendChild(buildCard(p,i,type)));
 }
 
-async function fetchPlayers() { const {data}=await sb.from('players_records').select('*'); players=data||[]; renderAll(); }
-async function fetchTotw() { const {data}=await sb.from('totw_players').select('*'); totwPlayers=data||[]; renderAll(); }
-async function fetchAllstars() { const {data}=await sb.from('allstars_players').select('*'); allstarPlayers=data||[]; renderAll(); }
-
-// ── Modals & CRUD ────────────────────────────────────────────────────────────
-function closePlayerModal(){ document.getElementById('playerModal').style.display='none'; }
-function closeTotwModal(){ document.getElementById('totwModal').style.display='none'; }
-function closeAllstarsModal(){ document.getElementById('allstarsModal').style.display='none'; }
-
-function openPlayerModal(id=null) { 
-    resetForm('p'); if(id){ const p=players.find(x=>x.id==id); fillForm('p',p); }
-    document.getElementById('playerModal').style.display='block'; 
-}
-function openTotwModal(id=null) { 
-    resetForm('t'); if(id){ const p=totwPlayers.find(x=>x.id==id); fillForm('t',p); }
-    document.getElementById('totwModal').style.display='block'; 
-}
-function openAllstarsModal(id=null) { 
-    resetForm('a'); if(id){ const p=allstarPlayers.find(x=>x.id==id); fillForm('a',p); if(p.color)document.getElementById('a-color').value=p.color; }
-    document.getElementById('allstarsModal').style.display='block'; 
+async function refresh() {
+    const p = await sb.from('players_records').select('*'); players=p.data||[];
+    const t = await sb.from('totw_players').select('*'); totw=t.data||[];
+    const a = await sb.from('allstars_players').select('*'); allstars=a.data||[];
+    renderAll();
 }
 
-function resetForm(pre) { 
-    ['id','name','img','pos','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value='');
-    document.getElementById(`${pre}-wf`).value='⭐⭐⭐⭐';
-}
-function fillForm(pre, p) {
-    ['id','name','img','pos','wf','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value=p[f]||'');
+function openPlayerModal() { reset('p'); document.getElementById('playerModal').style.display='block'; }
+function closePlayerModal() { document.getElementById('playerModal').style.display='none'; }
+function openTotwModal() { reset('t'); document.getElementById('totwModal').style.display='block'; }
+function closeTotwModal() { document.getElementById('totwModal').style.display='none'; }
+function openAllstarsModal() { reset('a'); document.getElementById('allstarsModal').style.display='block'; }
+function closeAllstarsModal() { document.getElementById('allstarsModal').style.display='none'; }
+
+function reset(pre) { ['id','name','img','pos','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value=''); }
+function fill(pre, p) { ['id','name','img','pos','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value=p[f]); document.getElementById(`${pre}-wf`).value=p.wf; }
+
+function openEdit(p, type) {
+    if(type==='leaderboard') { fill('p',p); document.getElementById('playerModal').style.display='block'; }
+    else if(type==='totw') { fill('t',p); document.getElementById('totwModal').style.display='block'; }
+    else { fill('a',p); document.getElementById('a-color').value=p.color; document.getElementById('allstarsModal').style.display='block'; }
 }
 
-async function savePlayer() { await sb.from('players_records').upsert(getFormData('p')); closePlayerModal(); fetchPlayers(); }
-async function saveTotwPlayer() { await sb.from('totw_players').upsert(getFormData('t')); closeTotwModal(); fetchTotw(); }
-async function saveAllstar() { const d=getFormData('a'); d.color=document.getElementById('a-color').value; await sb.from('allstars_players').upsert(d); closeAllstarsModal(); fetchAllstars(); }
+async function savePlayer() { await sb.from('players_records').upsert(get('p')); closePlayerModal(); refresh(); }
+async function saveTotwPlayer() { await sb.from('totw_players').upsert(get('t')); closeTotwModal(); refresh(); }
+async function saveAllstar() { const d=get('a'); d.color=document.getElementById('a-color').value; await sb.from('allstars_players').upsert(d); closeAllstarsModal(); refresh(); }
 
-function getFormData(pre) {
-    const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`${pre}-${s}`).value)||0);
+function get(pre) {
+    const s = ['pac','sho','pas','dri','def','phy'].map(f=>parseInt(document.getElementById(`${pre}-${f}`).value)||0);
     return {
         id: document.getElementById(`${pre}-id`).value || undefined,
         name: document.getElementById(`${pre}-name`).value,
-        img: document.getElementById(`${pre}-img`).value || 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',
+        img: document.getElementById(`${pre}-img`).value,
         pos: document.getElementById(`${pre}-pos`).value.toUpperCase(),
         wf: document.getElementById(`${pre}-wf`).value,
-        pac:stats[0], sho:stats[1], pas:stats[2], dri:stats[3], def:stats[4], phy:stats[5],
-        ovr: Math.round(stats.reduce((a,b)=>a+b)/6)
+        pac:s[0], sho:s[1], pas:s[2], dri:s[3], def:s[4], phy:s[5],
+        ovr: Math.round(s.reduce((a,b)=>a+b)/6)
     };
 }
 
-async function deletePlayer(id){ await sb.from('players_records').delete().eq('id',id); fetchPlayers(); }
-async function deleteTotwPlayer(id){ await sb.from('totw_players').delete().eq('id',id); fetchTotw(); }
-async function deleteAllstar(id){ await sb.from('allstars_players').delete().eq('id',id); fetchAllstars(); }
+async function deleteItem(id, type) {
+    const table = type==='leaderboard'?'players_records':type==='totw'?'totw_players':'allstars_players';
+    await sb.from(table).delete().eq('id',id);
+    refresh();
+}
 
-(async()=>{
-    if(sb){ await Promise.all([fetchPlayers(),fetchTotw(),fetchAllstars()]); }
-    updateAdminUI();
-})();
-
-window.onclick=e=>{ if(e.target.className==='modal') e.target.style.display='none'; };
+refresh();
 </script>
 </body>
 </html>
