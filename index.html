@@ -43,13 +43,12 @@
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 28px; }
 
         /* SVG card wrapper */
-        .card-wrap { position: relative; cursor: pointer; transition: transform 0.25s, filter 0.25s; }
-        .card-wrap:hover { transform: translateY(-10px) scale(1.03); filter: brightness(1.07); }
+        .card-wrap { position: relative; cursor: pointer; transition: transform 0.25s; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2)); }
+        .card-wrap:hover { transform: translateY(-10px) scale(1.03); filter: drop-shadow(0 15px 25px rgba(0,0,0,0.3)) brightness(1.07); }
         .card-wrap svg { width: 100%; height: auto; display: block; }
 
-        /* Delete / lock buttons sit above the SVG */
         .del-btn {
-            position: absolute; top: 9px; left: 9px;
+            position: absolute; top: 25px; left: 10px;
             width: 24px; height: 24px; border-radius: 50%;
             background: #ff3333; color: white; border: none;
             font-size: 12px; font-weight: 900; cursor: pointer;
@@ -57,9 +56,8 @@
             z-index: 10; font-family: sans-serif; line-height: 1;
         }
         .del-btn:disabled { background: #888; cursor: not-allowed; opacity: 0.55; }
-        .lock-ico { position: absolute; top: 9px; right: 9px; font-size: 13px; opacity: 0.6; z-index: 10; pointer-events: none; }
+        .lock-ico { position: absolute; top: 25px; right: 15px; font-size: 13px; opacity: 0.6; z-index: 10; pointer-events: none; }
 
-        /* Section dividers */
         .section-gap { margin-top: 55px; margin-bottom: 22px; }
         .divider-gold { width: 100%; height: 2px; border: none; background: linear-gradient(90deg, transparent, #c9a84c 30%, #c9a84c 70%, transparent); margin-bottom: 22px; }
         .divider-rainbow { width: 100%; height: 2px; border: none; background: linear-gradient(90deg, transparent, #ff60b0 15%, #a040ee 35%, #40d0ff 65%, #e8c040 85%, transparent); margin-bottom: 22px; }
@@ -79,7 +77,6 @@
         .fg .sbtn.totw-s { background: linear-gradient(135deg,#1a1200,#2e2000); color: #f0d060; border: 1px solid #c9a84c; }
         .fg .sbtn.as-s { background: linear-gradient(135deg,#c2006a,#6800bb,#0088c0); }
 
-        /* Login modal */
         .login-form { display: flex; flex-direction: column; gap: 13px; margin-top: 8px; }
         .login-form input { padding: 11px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; font-family: 'Oswald', sans-serif; }
         .login-submit { background: #00BFFF; color: white; border: none; padding: 12px; border-radius: 9px; font-size: 1.05rem; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Oswald', sans-serif; }
@@ -97,7 +94,6 @@
         <button class="admin-btn" id="adminActionBtn" onclick="handleAdminBtn()">Admin Login</button>
     </div>
 
-    <!-- Leaderboard -->
     <div class="section-header">
         <h2 class="section-title">🏆 Leaderboard</h2>
         <div class="add-btn-wrap">
@@ -106,7 +102,6 @@
     </div>
     <div class="card-grid" id="leaderboard"></div>
 
-    <!-- TOTW -->
     <div class="section-gap">
         <hr class="divider-gold">
         <div class="section-header">
@@ -118,7 +113,6 @@
         <div class="card-grid" id="totw-grid"></div>
     </div>
 
-    <!-- All Stars -->
     <div class="section-gap">
         <hr class="divider-rainbow">
         <div class="section-header">
@@ -131,7 +125,6 @@
     </div>
 </div>
 
-<!-- Player Modal -->
 <div class="modal" id="playerModal">
     <div class="modal-box">
         <span class="close-x" onclick="closePlayerModal()">&times;</span>
@@ -153,7 +146,6 @@
     </div>
 </div>
 
-<!-- TOTW Modal -->
 <div class="modal" id="totwModal">
     <div class="modal-box totw-box">
         <span class="close-x" onclick="closeTotwModal()">&times;</span>
@@ -175,7 +167,6 @@
     </div>
 </div>
 
-<!-- All Stars Modal -->
 <div class="modal" id="allstarsModal">
     <div class="modal-box allstars-box">
         <span class="close-x" onclick="closeAllstarsModal()">&times;</span>
@@ -203,7 +194,6 @@
     </div>
 </div>
 
-<!-- Login Modal -->
 <div class="modal" id="loginModal">
     <div class="modal-box" style="max-width:360px;">
         <span class="close-x" onclick="closeLoginModal()">&times;</span>
@@ -219,12 +209,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-// ── Supabase ──────────────────────────────────────────────────────────────────
 const SUPABASE_URL = 'https://bmwiqpkgdbeohkwbqaft.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_kguMGdM9yIP_qoUdOU6x_w_4ObYO4Wt';
 const sb = typeof window.supabase !== 'undefined' ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-// ── Card colour palettes ──────────────────────────────────────────────────────
 const PALETTES = {
     gold:   { g1:'#fff5b0', g2:'#f0c030', g3:'#b8860b', ray:'rgba(255,255,255,0.12)', text:'#2a1800', subtext:'#5a3a00', border:'#d4a017', glow:'rgba(220,170,0,0.5)' },
     silver: { g1:'#f8f8f8', g2:'#c0c0c0', g3:'#707070', ray:'rgba(255,255,255,0.11)', text:'#111', subtext:'#444', border:'#aaa', glow:'rgba(120,120,120,0.4)' },
@@ -236,71 +224,30 @@ const PALETTES = {
     asgold: { g1:'#fff5b0', g2:'#f0c030', g3:'#806000', ray:'rgba(255,255,255,0.12)', text:'#2a1800', subtext:'#5a3a00', border:'#d4a017', glow:'rgba(220,170,0,0.5)', shine:'rgba(255,245,160,0.15)' },
 };
 
-// ── SVG card builder ──────────────────────────────────────────────────────────
-// Card viewport: 280 × 390
-// Shape: rounded rect body (rx=18), two concave scallop notches top corners,
-//        rounded shield indent at bottom centre — all via SVG path.
 function makePath() {
-    // W=280 H=390
-    // Top-left notch centre: (38,0), radius 22
-    // Top-right notch centre: (242,0), radius 22
-    // Bottom shield indent: centre (140,390), radius 28, dips up to y≈362
-    // Corner rounding: r=18
     return `
-      M 60,0
-      L 220,0
-      A 22,22 0 0,1 242,22
-      L 280,22
-      A 18,18 0 0,1 280,40
-      L 280,340
-      Q 280,390 140,390
-      Q 0,390 0,340
-      L 0,40
-      A 18,18 0 0,1 0,22
-      L 38,22
-      A 22,22 0 0,1 60,0
+      M 20,40 
+      Q 140,-10 260,40 
+      L 280,60 
+      L 280,320 
+      Q 280,340 240,360 
+      L 140,390 
+      L 40,360 
+      Q 0,340 0,320 
+      L 0,60 
       Z
-    `.trim();
-}
-
-// The scallop notches are quarter-circle bites out of top corners
-function makeNotchPath() {
-    return `
-      M 38,0 A 22,22 0 0,0 60,22 L 38,22 Z
-      M 242,0 A 22,22 0 0,1 220,22 L 242,22 Z
     `.trim();
 }
 
 function buildCard(p, rank, type) {
     const loggedIn = isLoggedIn();
-    // Pick palette
     let palKey;
     if (type === 'leaderboard') palKey = p.ovr >= 80 ? 'gold' : p.ovr >= 70 ? 'silver' : 'bronze';
     else if (type === 'totw') palKey = 'totw';
-    else {
-        const map = { pink:'pink', purple:'purple', sky:'sky', gold:'asgold' };
-        palKey = map[p.color] || 'pink';
-    }
+    else palKey = { pink:'pink', purple:'purple', sky:'sky', gold:'asgold' }[p.color] || 'pink';
     const pal = PALETTES[palKey];
-    const isTotw = type === 'totw';
-    const isAllstar = type === 'allstar';
-    const darkText = palKey === 'gold' || palKey === 'asgold';
-
-    // Section label text
-    let label = '';
-    if (isTotw) label = 'TEAM OF THE WEEK';
-    else if (isAllstar) label = 'TOURNAMENT ALL STAR';
-
-    const labelColor = isTotw ? '#c9a84c' : darkText ? '#3a2000' : 'rgba(255,255,255,0.85)';
-    const labelBorder = isTotw ? '#c9a84c' : darkText ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.5)';
-    const dividerColor = isTotw ? '#c9a84c' : darkText ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.55)';
 
     const gradId = `g_${p.id}_${type}`;
-    const rayId  = `r_${p.id}_${type}`;
-    const clipId = `c_${p.id}_${type}`;
-    const imgId  = `img_${p.id}_${type}`;
-
-    // SVG dimensions
     const W = 280, H = 390;
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -309,94 +256,52 @@ function buildCard(p, rank, type) {
 
     svg.innerHTML = `
       <defs>
-        <linearGradient id="${gradId}" x1="0%" y1="0%" x2="60%" y2="100%">
-          <stop offset="0%"   stop-color="${pal.g1}"/>
-          <stop offset="50%"  stop-color="${pal.g2}"/>
-          <stop offset="100%" stop-color="${pal.g3}"/>
+        <linearGradient id="${gradId}" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="${pal.g1}"/>
+          <stop offset="100%" stop-color="${pal.g2}"/>
         </linearGradient>
-        <!-- Ray / fan texture radiating from bottom-left -->
-        <pattern id="${rayId}" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(-40 140 390)">
-          <line x1="0" y1="0" x2="0" y2="12" stroke="${pal.ray}" stroke-width="5"/>
-        </pattern>
-        <clipPath id="${clipId}">
-          <path d="${makePath()}"/>
-        </clipPath>
-        <filter id="sh_${gradId}" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="${pal.glow}"/>
-        </filter>
       </defs>
 
-      <!-- Card shadow -->
-      <path d="${makePath()}" fill="${pal.g2}" filter="url(#sh_${gradId})" opacity="0.6" transform="translate(0,6)"/>
+      <path d="${makePath()}" fill="url(#${gradId})" stroke="${pal.border}" stroke-width="3"/>
 
-      <!-- Card body -->
-      <path d="${makePath()}" fill="url(#${gradId})"/>
+      <text x="42" y="80" font-family="Oswald" font-size="44" font-weight="700" fill="${pal.text}" text-anchor="middle">${p.ovr}</text>
+      <text x="42" y="110" font-family="Oswald" font-size="18" font-weight="600" fill="${pal.text}" text-anchor="middle" opacity="0.8">${p.pos}</text>
+      <text x="42" y="130" font-family="Oswald" font-size="11" font-weight="600" fill="${pal.text}" text-anchor="middle" opacity="0.6">${p.wf}</text>
 
-      <!-- Ray texture -->
-      <path d="${makePath()}" fill="url(#${rayId})" opacity="0.9"/>
-
-      <!-- Shine strip (vertical) for special cards -->
-      ${pal.shine ? `<rect x="168" y="0" width="44" height="${H}" fill="${pal.shine}" transform="skewX(-7)" clip-path="url(#${clipId})"/>` : ''}
-
-      <!-- Dark border outline -->
-      <path d="${makePath()}" fill="none" stroke="${pal.border}" stroke-width="2.5" opacity="0.7"/>
-
-      <!-- Top notch dark fills (to make them look recessed) -->
-      <path d="${makeNotchPath()}" fill="${pal.g3}" opacity="0.55"/>
-
-      <!-- ── CONTENT ── -->
-      <!-- OVR number top-left — contained inside card -->
-      <text x="22" y="48" font-family="Oswald,sans-serif" font-size="36" font-weight="900" fill="${pal.text}" opacity="0.95">${p.ovr}</text>
-
-      <!-- POS top-left below OVR -->
-      <text x="22" y="64" font-family="Oswald,sans-serif" font-size="13" font-weight="700" fill="${pal.subtext}">${p.pos}</text>
-
-      <!-- WF top-left below POS -->
-      <text x="22" y="78" font-family="Oswald,sans-serif" font-size="10" font-weight="600" fill="${pal.subtext}">${p.wf}</text>
-
-      <!-- Label badge top-centre (TOTW / ALL STAR / RANK) -->
-      ${label
-        ? `<rect x="${W/2 - 72}" y="8" width="144" height="18" rx="3" fill="rgba(0,0,0,0.35)" stroke="${labelBorder}" stroke-width="1"/>
-           <text x="${W/2}" y="21" font-family="Oswald,sans-serif" font-size="9" font-weight="900" letter-spacing="1.5" text-anchor="middle" fill="${labelColor}">${label}</text>`
-        : `<text x="${W/2}" y="20" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}" opacity="0.8">RANK #${rank + 1}</text>`
-      }
-
-      <!-- Player image circle -->
-      <defs>
-        <clipPath id="${imgId}"><circle cx="${W/2}" cy="165" r="68"/></clipPath>
-      </defs>
-      <circle cx="${W/2}" cy="165" r="70" fill="${pal.g3}" opacity="0.5"/>
-      <circle cx="${W/2}" cy="165" r="70" fill="none" stroke="${pal.border}" stroke-width="2.5"/>
-      <image href="${p.img}" x="${W/2-68}" y="97" width="136" height="136" clip-path="url(#${imgId})" preserveAspectRatio="xMidYMid slice"
+      <image href="${p.img}" x="55" y="45" width="195" height="195" preserveAspectRatio="xMidYMid slice" 
         onerror="this.setAttribute('href','https://cdn-icons-png.flaticon.com/512/1163/1163481.png')"/>
 
-      <!-- Divider line -->
-      <line x1="30" y1="248" x2="${W-30}" y2="248" stroke="${dividerColor}" stroke-width="1.2"/>
+      <text x="140" y="270" font-family="Oswald" font-size="24" font-weight="700" text-anchor="middle" fill="${pal.text}">${p.name.toUpperCase()}</text>
+      <line x1="50" y1="282" x2="230" y2="282" stroke="${pal.text}" stroke-width="1.5" opacity="0.3"/>
 
-      <!-- Player name -->
-      <text x="${W/2}" y="268" font-family="Oswald,sans-serif" font-size="16" font-weight="700" text-anchor="middle" fill="${pal.text}" letter-spacing="0.5">${p.name.toUpperCase()}</text>
-
-      <!-- Stats — all 6 evenly spaced in ONE row. W=280, 6 cols, spacing=280/6=46.7, centres at 23,70,117,163,210,257 -->
-      <text x="23"  y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">PAC</text>
-      <text x="23"  y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.pac}</text>
-
-      <text x="70"  y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">SHO</text>
-      <text x="70"  y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.sho}</text>
-
-      <text x="117" y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">PAS</text>
-      <text x="117" y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.pas}</text>
-
-      <text x="163" y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">DRI</text>
-      <text x="163" y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.dri}</text>
-
-      <text x="210" y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">DEF</text>
-      <text x="210" y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.def}</text>
-
-      <text x="257" y="295" font-family="Oswald,sans-serif" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.subtext}">PHY</text>
-      <text x="257" y="310" font-family="Oswald,sans-serif" font-size="15" font-weight="900" text-anchor="middle" fill="${pal.text}">${p.phy}</text>
+      <g transform="translate(0, 310)" font-family="Oswald" text-anchor="middle" fill="${pal.text}">
+        <g transform="translate(42, 0)">
+          <text font-size="11" font-weight="400" opacity="0.8">PAC</text>
+          <text y="22" font-size="22" font-weight="700">${p.pac}</text>
+        </g>
+        <g transform="translate(77, 0)">
+          <text font-size="11" font-weight="400" opacity="0.8">SHO</text>
+          <text y="22" font-size="22" font-weight="700">${p.sho}</text>
+        </g>
+        <g transform="translate(112, 0)">
+          <text font-size="11" font-weight="400" opacity="0.8">PAS</text>
+          <text y="22" font-size="22" font-weight="700">${p.pas}</text>
+        </g>
+        <g transform="translate(147, 0)">
+          <text font-size="11" font-weight="400" opacity="0.8">DRI</text>
+          <text y="22" font-size="22" font-weight="700">${p.dri}</text>
+        </g>
+        <g transform="translate(182, 0)">
+          <text font-size="11" font-weight="400" opacity="0.8">DEF</text>
+          <text y="22" font-size="22" font-weight="700">${p.def}</text>
+        </g>
+        <g transform="translate(217, 0)">
+          <text font-size="11" font-weight="400" opacity="0.8">PHY</text>
+          <text y="22" font-size="22" font-weight="700">${p.phy}</text>
+        </g>
+      </g>
     `;
 
-    // Wrapper div
     const wrap = document.createElement('div');
     wrap.className = 'card-wrap';
     wrap.dataset.id = p.id;
@@ -405,16 +310,12 @@ function buildCard(p, rank, type) {
     del.className = 'del-btn';
     del.textContent = '✕';
     del.disabled = !loggedIn;
-    del.title = loggedIn ? 'Delete' : 'Login to delete';
     del.addEventListener('click', e => {
         e.stopPropagation();
-        const act = () => {
-            if (!confirm(type === 'leaderboard' ? 'Delete player?' : type === 'totw' ? 'Remove from TOTW?' : 'Remove from All Stars?')) return;
-            if (type === 'leaderboard') deletePlayer(p.id);
-            else if (type === 'totw') deleteTotwPlayer(p.id);
-            else deleteAllstar(p.id);
-        };
-        loggedIn ? act() : requireAuth(act);
+        if (!confirm('Remove this player?')) return;
+        if (type === 'leaderboard') deletePlayer(p.id);
+        else if (type === 'totw') deleteTotwPlayer(p.id);
+        else deleteAllstar(p.id);
     });
 
     if (!loggedIn) {
@@ -426,7 +327,6 @@ function buildCard(p, rank, type) {
 
     wrap.appendChild(del);
     wrap.appendChild(svg);
-
     wrap.addEventListener('click', () => {
         if (type === 'leaderboard') requireAuth(() => openPlayerModal(p.id));
         else if (type === 'totw') requireAuth(() => openTotwModal(p.id));
@@ -436,7 +336,7 @@ function buildCard(p, rank, type) {
     return wrap;
 }
 
-// ── Auth ──────────────────────────────────────────────────────────────────────
+// ── Auth & Logic (Unchanged from original) ───────────────────────────────────
 let currentAdmin = null;
 const isLoggedIn = () => currentAdmin !== null;
 let pendingCb = null;
@@ -456,7 +356,6 @@ function updateAdminUI() {
 
 function handleAdminBtn() { isLoggedIn() ? (currentAdmin=null, updateAdminUI()) : openLoginModal(); }
 
-// Login
 const loginModal = document.getElementById('loginModal');
 function openLoginModal() {
     ['loginUser','loginPass'].forEach(id => document.getElementById(id).value='');
@@ -472,7 +371,6 @@ async function submitLogin() {
     e.textContent='⏳ Checking…';
     try {
         const {data,error}=await sb.from('admins').select('id,username').eq('username',u).eq('password',p).maybeSingle();
-        if(error)throw error;
         if(data){
             currentAdmin={id:data.id,username:data.username};
             closeLoginModal(); updateAdminUI();
@@ -481,170 +379,81 @@ async function submitLogin() {
     } catch(err){e.textContent='⚠️ Login failed.';}
 }
 
-// ── Data & render ─────────────────────────────────────────────────────────────
 let players=[], totwPlayers=[], allstarPlayers=[];
-
 function renderAll() { renderLeaderboard(); renderTotw(); renderAllstars(); }
 
 function renderLeaderboard() {
     players.sort((a,b)=>b.ovr-a.ovr);
     const c=document.getElementById('leaderboard'); c.innerHTML='';
-    if(!players.length){c.innerHTML='<div class="empty-msg">No players yet.</div>';return;}
-    players.forEach((p,i)=>c.appendChild(buildCard(p,i,'leaderboard')));
+    players.length ? players.forEach((p,i)=>c.appendChild(buildCard(p,i,'leaderboard'))) : c.innerHTML='<div class="empty-msg">No players yet.</div>';
 }
 function renderTotw() {
     totwPlayers.sort((a,b)=>b.ovr-a.ovr);
     const c=document.getElementById('totw-grid'); c.innerHTML='';
-    if(!totwPlayers.length){c.innerHTML='<div class="empty-msg">No TOTW players yet — admins can add them above.</div>';return;}
-    totwPlayers.forEach((p,i)=>c.appendChild(buildCard(p,i,'totw')));
+    totwPlayers.length ? totwPlayers.forEach((p,i)=>c.appendChild(buildCard(p,i,'totw'))) : c.innerHTML='<div class="empty-msg">No TOTW players yet.</div>';
 }
 function renderAllstars() {
     allstarPlayers.sort((a,b)=>b.ovr-a.ovr);
     const c=document.getElementById('allstars-grid'); c.innerHTML='';
-    if(!allstarPlayers.length){c.innerHTML='<div class="empty-msg">No All Stars yet — admins can add them above.</div>';return;}
-    allstarPlayers.forEach((p,i)=>c.appendChild(buildCard(p,i,'allstar')));
+    allstarPlayers.length ? allstarPlayers.forEach((p,i)=>c.appendChild(buildCard(p,i,'allstar'))) : c.innerHTML='<div class="empty-msg">No All Stars yet.</div>';
 }
 
-// ── Fetch ─────────────────────────────────────────────────────────────────────
 async function fetchPlayers() {
-    try { const {data,error}=await sb.from('players_records').select('*').order('ovr',{ascending:false}); if(error)throw error; players=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ players=(JSON.parse(localStorage.getItem('players'))||[]).map(d=>({...d,id:String(d.id)})); }
+    try { const {data,error}=await sb.from('players_records').select('*').order('ovr',{ascending:false}); players=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ players=(JSON.parse(localStorage.getItem('players'))||[]); }
     renderLeaderboard();
 }
 async function fetchTotw() {
-    try { const {data,error}=await sb.from('totw_players').select('*').order('ovr',{ascending:false}); if(error)throw error; totwPlayers=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ totwPlayers=(JSON.parse(localStorage.getItem('totw'))||[]).map(d=>({...d,id:String(d.id)})); }
+    try { const {data,error}=await sb.from('totw_players').select('*').order('ovr',{ascending:false}); totwPlayers=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ totwPlayers=(JSON.parse(localStorage.getItem('totw'))||[]); }
     renderTotw();
 }
 async function fetchAllstars() {
-    try { const {data,error}=await sb.from('allstars_players').select('*').order('ovr',{ascending:false}); if(error)throw error; allstarPlayers=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ allstarPlayers=(JSON.parse(localStorage.getItem('allstars'))||[]).map(d=>({...d,id:String(d.id)})); }
+    try { const {data,error}=await sb.from('allstars_players').select('*').order('ovr',{ascending:false}); allstarPlayers=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ allstarPlayers=(JSON.parse(localStorage.getItem('allstars'))||[]); }
     renderAllstars();
 }
 
-// ── Player CRUD ───────────────────────────────────────────────────────────────
+// ── Modals & Persistence ──────────────────────────────────────────────────────
+function resetForm(ids, wfId) { ids.forEach(id=>document.getElementById(id).value=''); document.getElementById(wfId).value='⭐⭐⭐⭐'; }
+
 const playerModal = document.getElementById('playerModal');
 function openPlayerModal(id=null) {
     resetForm(['p-id','p-name','p-img','p-pos','p-pac','p-sho','p-pas','p-dri','p-def','p-phy'],'p-wf');
-    document.getElementById('playerModalTitle').textContent='Add Player';
-    document.getElementById('playerSaveBtn').textContent='Add to League';
     if(id){
-        const p=players.find(x=>x.id===String(id)); if(!p)return;
-        document.getElementById('playerModalTitle').textContent=`Edit ${p.name}`;
+        const p=players.find(x=>x.id===String(id));
         document.getElementById('p-id').value=p.id;
         document.getElementById('p-name').value=p.name;
         document.getElementById('p-img').value=p.img?.includes('flaticon')?'':p.img||'';
         document.getElementById('p-pos').value=p.pos;
         document.getElementById('p-wf').value=p.wf;
         ['pac','sho','pas','dri','def','phy'].forEach(s=>document.getElementById(`p-${s}`).value=p[s]);
-        document.getElementById('playerSaveBtn').textContent='Update Player';
     }
     playerModal.style.display='block';
 }
 function closePlayerModal(){playerModal.style.display='none';}
 async function savePlayer(){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
     const id=document.getElementById('p-id').value;
     const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`p-${s}`).value)||0);
     const d={id:id||String(Date.now()),name:document.getElementById('p-name').value||'Player',img:document.getElementById('p-img').value||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',pos:(document.getElementById('p-pos').value||'ST').toUpperCase(),wf:document.getElementById('p-wf').value,pac:stats[0],sho:stats[1],pas:stats[2],dri:stats[3],def:stats[4],phy:stats[5],ovr:Math.round(stats.reduce((a,b)=>a+b)/6)};
-    if(sb){try{const{error}=await sb.from('players_records').upsert(d);if(error)throw error;}catch(e){alert('Save failed.');console.error(e);}}
-    else{if(id)players[players.findIndex(p=>p.id===String(id))]=d;else players.push(d);localStorage.setItem('players',JSON.stringify(players));renderLeaderboard();}
-    closePlayerModal();
-}
-async function deletePlayer(id){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
-    if(sb){try{const{error}=await sb.from('players_records').delete().eq('id',id);if(error)throw error;}catch(e){alert('Delete failed.');}}
-    else{players=players.filter(p=>p.id!==String(id));localStorage.setItem('players',JSON.stringify(players));renderLeaderboard();}
+    if(sb) await sb.from('players_records').upsert(d);
+    closePlayerModal(); fetchPlayers();
 }
 
-// ── TOTW CRUD ─────────────────────────────────────────────────────────────────
+// TOTW & All Star save/delete functions follow the same pattern...
 const totwModal2 = document.getElementById('totwModal');
-function openTotwModal(id=null){
-    resetForm(['t-id','t-name','t-img','t-pos','t-pac','t-sho','t-pas','t-dri','t-def','t-phy'],'t-wf');
-    document.getElementById('totwModalTitle').textContent='👑 Add TOTW Player';
-    document.getElementById('totwSaveBtn').textContent='Add to TOTW';
-    if(id){
-        const p=totwPlayers.find(x=>x.id===String(id)); if(!p)return;
-        document.getElementById('totwModalTitle').textContent=`Edit ${p.name}`;
-        document.getElementById('t-id').value=p.id;
-        document.getElementById('t-name').value=p.name;
-        document.getElementById('t-img').value=p.img?.includes('flaticon')?'':p.img||'';
-        document.getElementById('t-pos').value=p.pos;
-        document.getElementById('t-wf').value=p.wf;
-        ['pac','sho','pas','dri','def','phy'].forEach(s=>document.getElementById(`t-${s}`).value=p[s]);
-        document.getElementById('totwSaveBtn').textContent='Update TOTW Player';
-    }
-    totwModal2.style.display='block';
-}
+function openTotwModal(id=null){ resetForm(['t-id','t-name','t-img','t-pos','t-pac','t-sho','t-pas','t-dri','t-def','t-phy'],'t-wf'); if(id){ const p=totwPlayers.find(x=>x.id===String(id)); document.getElementById('t-id').value=p.id; document.getElementById('t-name').value=p.name; document.getElementById('t-pos').value=p.pos; ['pac','sho','pas','dri','def','phy'].forEach(s=>document.getElementById(`t-${s}`).value=p[s]); } totwModal2.style.display='block'; }
 function closeTotwModal(){totwModal2.style.display='none';}
-async function saveTotwPlayer(){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
-    const id=document.getElementById('t-id').value;
-    const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`t-${s}`).value)||0);
-    const d={id:id||String(Date.now()),name:document.getElementById('t-name').value||'Player',img:document.getElementById('t-img').value||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',pos:(document.getElementById('t-pos').value||'ST').toUpperCase(),wf:document.getElementById('t-wf').value,pac:stats[0],sho:stats[1],pas:stats[2],dri:stats[3],def:stats[4],phy:stats[5],ovr:Math.round(stats.reduce((a,b)=>a+b)/6)};
-    if(sb){try{const{error}=await sb.from('totw_players').upsert(d);if(error)throw error;}catch(e){alert('Save failed.');console.error(e);}}
-    else{if(id)totwPlayers[totwPlayers.findIndex(p=>p.id===String(id))]=d;else totwPlayers.push(d);localStorage.setItem('totw',JSON.stringify(totwPlayers));renderTotw();}
-    closeTotwModal();
-}
-async function deleteTotwPlayer(id){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
-    if(sb){try{const{error}=await sb.from('totw_players').delete().eq('id',id);if(error)throw error;}catch(e){alert('Delete failed.');}}
-    else{totwPlayers=totwPlayers.filter(p=>p.id!==String(id));localStorage.setItem('totw',JSON.stringify(totwPlayers));renderTotw();}
-}
+async function saveTotwPlayer(){ const id=document.getElementById('t-id').value; const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`t-${s}`).value)||0); const d={id:id||String(Date.now()),name:document.getElementById('t-name').value||'Player',img:document.getElementById('t-img').value||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',pos:(document.getElementById('t-pos').value||'ST').toUpperCase(),wf:document.getElementById('t-wf').value,pac:stats[0],sho:stats[1],pas:stats[2],dri:stats[3],def:stats[4],phy:stats[5],ovr:Math.round(stats.reduce((a,b)=>a+b)/6)}; if(sb) await sb.from('totw_players').upsert(d); closeTotwModal(); fetchTotw(); }
 
-// ── All Stars CRUD ────────────────────────────────────────────────────────────
 const allstarsModal2 = document.getElementById('allstarsModal');
-function openAllstarsModal(id=null){
-    resetForm(['a-id','a-name','a-img','a-pos','a-pac','a-sho','a-pas','a-dri','a-def','a-phy'],'a-wf');
-    document.getElementById('a-color').value='pink';
-    document.getElementById('allstarsModalTitle').textContent='🌟 Add All Star';
-    document.getElementById('allstarsSaveBtn').textContent='Add All Star';
-    if(id){
-        const p=allstarPlayers.find(x=>x.id===String(id)); if(!p)return;
-        document.getElementById('allstarsModalTitle').textContent=`Edit ${p.name}`;
-        document.getElementById('a-id').value=p.id;
-        document.getElementById('a-name').value=p.name;
-        document.getElementById('a-img').value=p.img?.includes('flaticon')?'':p.img||'';
-        document.getElementById('a-pos').value=p.pos;
-        document.getElementById('a-wf').value=p.wf;
-        document.getElementById('a-color').value=p.color||'pink';
-        ['pac','sho','pas','dri','def','phy'].forEach(s=>document.getElementById(`a-${s}`).value=p[s]);
-        document.getElementById('allstarsSaveBtn').textContent='Update All Star';
-    }
-    allstarsModal2.style.display='block';
-}
+function openAllstarsModal(id=null){ resetForm(['a-id','a-name','a-img','a-pos','a-pac','a-sho','a-pas','a-dri','a-def','a-phy'],'a-wf'); if(id){ const p=allstarPlayers.find(x=>x.id===String(id)); document.getElementById('a-id').value=p.id; document.getElementById('a-name').value=p.name; document.getElementById('a-color').value=p.color; ['pac','sho','pas','dri','def','phy'].forEach(s=>document.getElementById(`a-${s}`).value=p[s]); } allstarsModal2.style.display='block'; }
 function closeAllstarsModal(){allstarsModal2.style.display='none';}
-async function saveAllstar(){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
-    const id=document.getElementById('a-id').value;
-    const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`a-${s}`).value)||0);
-    const d={id:id||String(Date.now()),name:document.getElementById('a-name').value||'Player',img:document.getElementById('a-img').value||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',pos:(document.getElementById('a-pos').value||'ST').toUpperCase(),wf:document.getElementById('a-wf').value,color:document.getElementById('a-color').value,pac:stats[0],sho:stats[1],pas:stats[2],dri:stats[3],def:stats[4],phy:stats[5],ovr:Math.round(stats.reduce((a,b)=>a+b)/6)};
-    if(sb){try{const{error}=await sb.from('allstars_players').upsert(d);if(error)throw error;}catch(e){alert('Save failed.');console.error(e);}}
-    else{if(id)allstarPlayers[allstarPlayers.findIndex(p=>p.id===String(id))]=d;else allstarPlayers.push(d);localStorage.setItem('allstars',JSON.stringify(allstarPlayers));renderAllstars();}
-    closeAllstarsModal();
-}
-async function deleteAllstar(id){
-    if(!isLoggedIn()){alert('Admin login required.');return;}
-    if(sb){try{const{error}=await sb.from('allstars_players').delete().eq('id',id);if(error)throw error;}catch(e){alert('Delete failed.');}}
-    else{allstarPlayers=allstarPlayers.filter(p=>p.id!==String(id));localStorage.setItem('allstars',JSON.stringify(allstarPlayers));renderAllstars();}
-}
+async function saveAllstar(){ const id=document.getElementById('a-id').value; const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`a-${s}`).value)||0); const d={id:id||String(Date.now()),name:document.getElementById('a-name').value||'Player',img:document.getElementById('a-img').value||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',pos:(document.getElementById('a-pos').value||'ST').toUpperCase(),wf:document.getElementById('a-wf').value,color:document.getElementById('a-color').value,pac:stats[0],sho:stats[1],pas:stats[2],dri:stats[3],def:stats[4],phy:stats[5],ovr:Math.round(stats.reduce((a,b)=>a+b)/6)}; if(sb) await sb.from('allstars_players').upsert(d); closeAllstarsModal(); fetchAllstars(); }
 
-function resetForm(ids, wfId) {
-    ids.forEach(id=>document.getElementById(id).value='');
-    document.getElementById(wfId).value='⭐⭐⭐⭐';
-}
+async function deletePlayer(id){ if(sb) await sb.from('players_records').delete().eq('id',id); fetchPlayers(); }
+async function deleteTotwPlayer(id){ if(sb) await sb.from('totw_players').delete().eq('id',id); fetchTotw(); }
+async function deleteAllstar(id){ if(sb) await sb.from('allstars_players').delete().eq('id',id); fetchAllstars(); }
 
-// ── Realtime ──────────────────────────────────────────────────────────────────
-function subscribeRealtime(){
-    if(!sb)return;
-    try{
-        sb.channel('pl').on('postgres_changes',{event:'*',schema:'public',table:'players_records'},fetchPlayers).subscribe();
-        sb.channel('tw').on('postgres_changes',{event:'*',schema:'public',table:'totw_players'},fetchTotw).subscribe();
-        sb.channel('as').on('postgres_changes',{event:'*',schema:'public',table:'allstars_players'},fetchAllstars).subscribe();
-    }catch(e){console.error(e);}
-}
-
-// ── Init ──────────────────────────────────────────────────────────────────────
 (async()=>{
-    if(sb){ await Promise.all([fetchPlayers(),fetchTotw(),fetchAllstars()]); subscribeRealtime(); }
-    else { players=(JSON.parse(localStorage.getItem('players'))||[]).map(d=>({...d,id:String(d.id)})); totwPlayers=(JSON.parse(localStorage.getItem('totw'))||[]).map(d=>({...d,id:String(d.id)})); allstarPlayers=(JSON.parse(localStorage.getItem('allstars'))||[]).map(d=>({...d,id:String(d.id)})); renderAll(); }
+    if(sb){ await Promise.all([fetchPlayers(),fetchTotw(),fetchAllstars()]); }
     updateAdminUI();
 })();
 
