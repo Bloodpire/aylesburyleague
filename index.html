@@ -58,10 +58,6 @@
         .del-btn:disabled { background: #888; cursor: not-allowed; opacity: 0.55; }
         .lock-ico { position: absolute; top: 25px; right: 15px; font-size: 13px; opacity: 0.6; z-index: 10; pointer-events: none; }
 
-        .section-gap { margin-top: 55px; margin-bottom: 22px; }
-        .divider-gold { width: 100%; height: 2px; border: none; background: linear-gradient(90deg, transparent, #c9a84c 30%, #c9a84c 70%, transparent); margin-bottom: 22px; }
-        .divider-rainbow { width: 100%; height: 2px; border: none; background: linear-gradient(90deg, transparent, #ff60b0 15%, #a040ee 35%, #40d0ff 65%, #e8c040 85%, transparent); margin-bottom: 22px; }
-
         /* Modals */
         .modal { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
         .modal-box { background: white; margin: 4% auto; padding: 28px; width: 90%; max-width: 480px; border-radius: 18px; position: relative; }
@@ -81,7 +77,6 @@
         .login-form input { padding: 11px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; font-family: 'Oswald', sans-serif; }
         .login-submit { background: #00BFFF; color: white; border: none; padding: 12px; border-radius: 9px; font-size: 1.05rem; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: 'Oswald', sans-serif; }
         #loginError { color: #e74c3c; font-size: 0.88rem; text-align: center; min-height: 18px; }
-        .auth-badge { background: #2ecc71; color: white; border-radius: 20px; padding: 2px 11px; font-size: 0.82rem; font-weight: bold; }
         .empty-msg { grid-column: 1/-1; text-align: center; color: rgba(255,255,255,0.7); font-size: 1rem; padding: 28px; }
     </style>
 </head>
@@ -102,8 +97,8 @@
     </div>
     <div class="card-grid" id="leaderboard"></div>
 
-    <div class="section-gap">
-        <hr class="divider-gold">
+    <div style="margin-top: 55px; margin-bottom: 22px;">
+        <hr style="width:100%; height:2px; border:none; background: linear-gradient(90deg, transparent, #c9a84c 30%, #c9a84c 70%, transparent); margin-bottom:22px;">
         <div class="section-header">
             <h2 class="section-title">👑 Team of the Week</h2>
             <div class="add-btn-wrap totw-wrap">
@@ -113,8 +108,8 @@
         <div class="card-grid" id="totw-grid"></div>
     </div>
 
-    <div class="section-gap">
-        <hr class="divider-rainbow">
+    <div style="margin-top: 55px; margin-bottom: 22px;">
+        <hr style="width:100%; height:2px; border:none; background: linear-gradient(90deg, transparent, #ff60b0 15%, #a040ee 35%, #40d0ff 65%, #e8c040 85%, transparent); margin-bottom:22px;">
         <div class="section-header">
             <h2 class="section-title">🌟 Tournament All Stars</h2>
             <div class="add-btn-wrap allstars-wrap">
@@ -214,29 +209,18 @@ const SUPABASE_ANON_KEY = 'sb_publishable_kguMGdM9yIP_qoUdOU6x_w_4ObYO4Wt';
 const sb = typeof window.supabase !== 'undefined' ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
 const PALETTES = {
-    gold:   { g1:'#fff5b0', g2:'#f0c030', g3:'#b8860b', ray:'rgba(255,255,255,0.12)', text:'#2a1800', subtext:'#5a3a00', border:'#d4a017', glow:'rgba(220,170,0,0.5)' },
-    silver: { g1:'#f8f8f8', g2:'#c0c0c0', g3:'#707070', ray:'rgba(255,255,255,0.11)', text:'#111', subtext:'#444', border:'#aaa', glow:'rgba(120,120,120,0.4)' },
-    bronze: { g1:'#f0b888', g2:'#c06838', g3:'#602810', ray:'rgba(255,255,255,0.08)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#a0521a', glow:'rgba(140,70,0,0.5)' },
-    totw:   { g1:'#2a1e00', g2:'#090909', g3:'#140e00', ray:'rgba(201,168,76,0.06)', text:'#f0d060', subtext:'#c9a84c', border:'#c9a84c', glow:'rgba(200,165,70,0.5)', shine:'rgba(201,168,76,0.13)' },
-    pink:   { g1:'#ffb0d8', g2:'#e0107a', g3:'#780040', ray:'rgba(255,255,255,0.09)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#ff70c0', glow:'rgba(220,0,110,0.5)', shine:'rgba(255,180,220,0.14)' },
-    purple: { g1:'#d898ff', g2:'#7800e0', g3:'#3a0068', ray:'rgba(255,255,255,0.09)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#b050ff', glow:'rgba(130,0,220,0.5)', shine:'rgba(210,160,255,0.14)' },
-    sky:    { g1:'#90eeff', g2:'#00a8e0', g3:'#004870', ray:'rgba(255,255,255,0.10)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#50d8ff', glow:'rgba(0,170,230,0.5)', shine:'rgba(160,238,255,0.14)' },
-    asgold: { g1:'#fff5b0', g2:'#f0c030', g3:'#806000', ray:'rgba(255,255,255,0.12)', text:'#2a1800', subtext:'#5a3a00', border:'#d4a017', glow:'rgba(220,170,0,0.5)', shine:'rgba(255,245,160,0.15)' },
+    gold:   { g1:'#fff5b0', g2:'#f0c030', g3:'#b8860b', text:'#2a1800', border:'#d4a017' },
+    silver: { g1:'#f8f8f8', g2:'#c0c0c0', g3:'#707070', text:'#111', border:'#aaa' },
+    bronze: { g1:'#f0b888', g2:'#c06838', g3:'#602810', text:'#fff', border:'#a0521a' },
+    totw:   { g1:'#2a1e00', g2:'#090909', g3:'#c9a84c', text:'#f0d060', border:'#c9a84c' },
+    pink:   { g1:'#ffb0d8', g2:'#e0107a', g3:'#780040', text:'#fff', border:'#ff70c0' },
+    purple: { g1:'#d898ff', g2:'#7800e0', g3:'#3a0068', text:'#fff', border:'#b050ff' },
+    sky:    { g1:'#90eeff', g2:'#00a8e0', g3:'#004870', text:'#fff', border:'#50d8ff' },
+    asgold: { g1:'#fff5b0', g2:'#f0c030', g3:'#806000', text:'#2a1800', border:'#d4a017' },
 };
 
 function makePath() {
-    return `
-      M 20,40 
-      Q 140,-10 260,40 
-      L 280,60 
-      L 280,320 
-      Q 280,340 240,360 
-      L 140,390 
-      L 40,360 
-      Q 0,340 0,320 
-      L 0,60 
-      Z
-    `.trim();
+    return `M 20,40 Q 140,-10 260,40 L 280,60 L 280,320 Q 280,340 240,360 L 140,390 L 40,360 Q 0,340 0,320 L 0,60 Z`.trim();
 }
 
 function buildCard(p, rank, type) {
@@ -248,6 +232,7 @@ function buildCard(p, rank, type) {
     const pal = PALETTES[palKey];
 
     const gradId = `g_${p.id}_${type}`;
+    const clipId = `clip_${p.id}_${type}`;
     const W = 280, H = 390;
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -260,9 +245,19 @@ function buildCard(p, rank, type) {
           <stop offset="0%" stop-color="${pal.g1}"/>
           <stop offset="100%" stop-color="${pal.g2}"/>
         </linearGradient>
+        <clipPath id="${clipId}"><path d="${makePath()}"/></clipPath>
       </defs>
 
       <path d="${makePath()}" fill="url(#${gradId})" stroke="${pal.border}" stroke-width="3"/>
+
+      <g clip-path="url(#${clipId})" opacity="0.12">
+        <path d="M140,160 L0,0 L280,0 Z" fill="${pal.g3}"/>
+        <path d="M140,160 L280,0 L280,390 Z" fill="${pal.g3}"/>
+        <path d="M140,160 L280,390 L0,390 Z" fill="${pal.g3}"/>
+        <path d="M140,160 L0,390 L0,0 Z" fill="${pal.g3}"/>
+        <path d="M140,160 L140,0 L280,80 Z" fill="${pal.g3}"/>
+        <path d="M140,160 L140,0 L0,80 Z" fill="${pal.g3}"/>
+      </g>
 
       <text x="42" y="80" font-family="Oswald" font-size="44" font-weight="700" fill="${pal.text}" text-anchor="middle">${p.ovr}</text>
       <text x="42" y="110" font-family="Oswald" font-size="18" font-weight="600" fill="${pal.text}" text-anchor="middle" opacity="0.8">${p.pos}</text>
@@ -272,31 +267,31 @@ function buildCard(p, rank, type) {
         onerror="this.setAttribute('href','https://cdn-icons-png.flaticon.com/512/1163/1163481.png')"/>
 
       <text x="140" y="270" font-family="Oswald" font-size="24" font-weight="700" text-anchor="middle" fill="${pal.text}">${p.name.toUpperCase()}</text>
-      <line x1="50" y1="282" x2="230" y2="282" stroke="${pal.text}" stroke-width="1.5" opacity="0.3"/>
+      <line x1="60" y1="282" x2="220" y2="282" stroke="${pal.text}" stroke-width="1.5" opacity="0.3"/>
 
-      <g transform="translate(0, 310)" font-family="Oswald" text-anchor="middle" fill="${pal.text}">
-        <g transform="translate(42, 0)">
-          <text font-size="11" font-weight="400" opacity="0.8">PAC</text>
+      <g transform="translate(140, 310)" font-family="Oswald" text-anchor="middle" fill="${pal.text}">
+        <g transform="translate(-95, 0)">
+          <text font-size="11" opacity="0.8">PAC</text>
           <text y="22" font-size="22" font-weight="700">${p.pac}</text>
         </g>
-        <g transform="translate(77, 0)">
-          <text font-size="11" font-weight="400" opacity="0.8">SHO</text>
+        <g transform="translate(-57, 0)">
+          <text font-size="11" opacity="0.8">SHO</text>
           <text y="22" font-size="22" font-weight="700">${p.sho}</text>
         </g>
-        <g transform="translate(112, 0)">
-          <text font-size="11" font-weight="400" opacity="0.8">PAS</text>
+        <g transform="translate(-19, 0)">
+          <text font-size="11" opacity="0.8">PAS</text>
           <text y="22" font-size="22" font-weight="700">${p.pas}</text>
         </g>
-        <g transform="translate(147, 0)">
-          <text font-size="11" font-weight="400" opacity="0.8">DRI</text>
+        <g transform="translate(19, 0)">
+          <text font-size="11" opacity="0.8">DRI</text>
           <text y="22" font-size="22" font-weight="700">${p.dri}</text>
         </g>
-        <g transform="translate(182, 0)">
-          <text font-size="11" font-weight="400" opacity="0.8">DEF</text>
+        <g transform="translate(57, 0)">
+          <text font-size="11" opacity="0.8">DEF</text>
           <text y="22" font-size="22" font-weight="700">${p.def}</text>
         </g>
-        <g transform="translate(217, 0)">
-          <text font-size="11" font-weight="400" opacity="0.8">PHY</text>
+        <g transform="translate(95, 0)">
+          <text font-size="11" opacity="0.8">PHY</text>
           <text y="22" font-size="22" font-weight="700">${p.phy}</text>
         </g>
       </g>
@@ -310,159 +305,114 @@ function buildCard(p, rank, type) {
     del.className = 'del-btn';
     del.textContent = '✕';
     del.disabled = !loggedIn;
-    del.addEventListener('click', e => {
-        e.stopPropagation();
-        if (!confirm('Remove this player?')) return;
-        if (type === 'leaderboard') deletePlayer(p.id);
-        else if (type === 'totw') deleteTotwPlayer(p.id);
-        else deleteAllstar(p.id);
-    });
+    del.onclick = e => { e.stopPropagation(); if(confirm('Delete?')) type==='leaderboard'?deletePlayer(p.id):type==='totw'?deleteTotwPlayer(p.id):deleteAllstar(p.id); };
 
     if (!loggedIn) {
         const lock = document.createElement('span');
-        lock.className = 'lock-ico';
-        lock.textContent = '🔒';
+        lock.className = 'lock-ico'; lock.textContent = '🔒';
         wrap.appendChild(lock);
     }
 
     wrap.appendChild(del);
     wrap.appendChild(svg);
-    wrap.addEventListener('click', () => {
-        if (type === 'leaderboard') requireAuth(() => openPlayerModal(p.id));
-        else if (type === 'totw') requireAuth(() => openTotwModal(p.id));
-        else requireAuth(() => openAllstarsModal(p.id));
-    });
-
+    wrap.onclick = () => requireAuth(() => type==='leaderboard'?openPlayerModal(p.id):type==='totw'?openTotwModal(p.id):openAllstarsModal(p.id));
     return wrap;
 }
 
-// ── Auth & Logic (Unchanged from original) ───────────────────────────────────
-let currentAdmin = null;
+// ── Shared Logic & Auth ──────────────────────────────────────────────────────
+let players=[], totwPlayers=[], allstarPlayers=[], currentAdmin=null, pendingCb=null;
 const isLoggedIn = () => currentAdmin !== null;
-let pendingCb = null;
-function requireAuth(cb) { if (isLoggedIn()) cb(); else { pendingCb = cb; openLoginModal(); } }
 
 function updateAdminUI() {
-    const loggedIn = isLoggedIn();
-    document.getElementById('adminStatus').innerHTML = loggedIn
-        ? `✅ Logged in as <span class="auth-badge">${currentAdmin.username}</span>`
-        : '🔒 Not logged in';
-    const btn = document.getElementById('adminActionBtn');
-    btn.textContent = loggedIn ? 'Logout' : 'Admin Login';
-    btn.className = loggedIn ? 'admin-btn logout' : 'admin-btn';
-    ['addPlayerBtn','addTotwBtn','addAllstarsBtn'].forEach(id => document.getElementById(id).disabled = !loggedIn);
+    const logged = isLoggedIn();
+    document.getElementById('adminStatus').innerHTML = logged ? `✅ Logged in as ${currentAdmin.username}` : '🔒 Not logged in';
+    document.getElementById('adminActionBtn').textContent = logged ? 'Logout' : 'Admin Login';
+    document.getElementById('adminActionBtn').className = logged ? 'admin-btn logout' : 'admin-btn';
+    ['addPlayerBtn','addTotwBtn','addAllstarsBtn'].forEach(id => document.getElementById(id).disabled = !logged);
     renderAll();
 }
 
-function handleAdminBtn() { isLoggedIn() ? (currentAdmin=null, updateAdminUI()) : openLoginModal(); }
+function handleAdminBtn() { if(isLoggedIn()){ currentAdmin=null; updateAdminUI(); } else openLoginModal(); }
+function requireAuth(cb) { if(isLoggedIn()) cb(); else { pendingCb=cb; openLoginModal(); } }
 
-const loginModal = document.getElementById('loginModal');
-function openLoginModal() {
-    ['loginUser','loginPass'].forEach(id => document.getElementById(id).value='');
+function openLoginModal() { 
+    ['loginUser','loginPass'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('loginError').textContent='';
-    loginModal.style.display='block';
-    setTimeout(()=>document.getElementById('loginUser').focus(),80);
+    document.getElementById('loginModal').style.display='block'; 
 }
-function closeLoginModal() { loginModal.style.display='none'; pendingCb=null; }
+function closeLoginModal() { document.getElementById('loginModal').style.display='none'; }
 async function submitLogin() {
-    const u=document.getElementById('loginUser').value.trim(), p=document.getElementById('loginPass').value;
-    const e=document.getElementById('loginError');
-    if(!u||!p){e.textContent='Enter credentials.';return;}
-    e.textContent='⏳ Checking…';
-    try {
-        const {data,error}=await sb.from('admins').select('id,username').eq('username',u).eq('password',p).maybeSingle();
-        if(data){
-            currentAdmin={id:data.id,username:data.username};
-            closeLoginModal(); updateAdminUI();
-            if(pendingCb){const cb=pendingCb;pendingCb=null;cb();}
-        } else e.textContent='❌ Invalid credentials.';
-    } catch(err){e.textContent='⚠️ Login failed.';}
+    const u=document.getElementById('loginUser').value, p=document.getElementById('loginPass').value;
+    if(!u||!p)return;
+    const {data}=await sb.from('admins').select('*').eq('username',u).eq('password',p).maybeSingle();
+    if(data){ currentAdmin=data; closeLoginModal(); updateAdminUI(); if(pendingCb){pendingCb(); pendingCb=null;} }
+    else document.getElementById('loginError').textContent='Invalid Login';
 }
 
-let players=[], totwPlayers=[], allstarPlayers=[];
-function renderAll() { renderLeaderboard(); renderTotw(); renderAllstars(); }
-
-function renderLeaderboard() {
-    players.sort((a,b)=>b.ovr-a.ovr);
-    const c=document.getElementById('leaderboard'); c.innerHTML='';
-    players.length ? players.forEach((p,i)=>c.appendChild(buildCard(p,i,'leaderboard'))) : c.innerHTML='<div class="empty-msg">No players yet.</div>';
-}
-function renderTotw() {
-    totwPlayers.sort((a,b)=>b.ovr-a.ovr);
-    const c=document.getElementById('totw-grid'); c.innerHTML='';
-    totwPlayers.length ? totwPlayers.forEach((p,i)=>c.appendChild(buildCard(p,i,'totw'))) : c.innerHTML='<div class="empty-msg">No TOTW players yet.</div>';
-}
-function renderAllstars() {
-    allstarPlayers.sort((a,b)=>b.ovr-a.ovr);
-    const c=document.getElementById('allstars-grid'); c.innerHTML='';
-    allstarPlayers.length ? allstarPlayers.forEach((p,i)=>c.appendChild(buildCard(p,i,'allstar'))) : c.innerHTML='<div class="empty-msg">No All Stars yet.</div>';
+function renderAll() { renderGrid('leaderboard', players, 'leaderboard'); renderGrid('totw-grid', totwPlayers, 'totw'); renderGrid('allstars-grid', allstarPlayers, 'allstar'); }
+function renderGrid(id, list, type) {
+    const c=document.getElementById(id); c.innerHTML='';
+    list.sort((a,b)=>b.ovr-a.ovr);
+    list.length ? list.forEach(p=>c.appendChild(buildCard(p,0,type))) : c.innerHTML='<div class="empty-msg">No entries yet.</div>';
 }
 
-async function fetchPlayers() {
-    try { const {data,error}=await sb.from('players_records').select('*').order('ovr',{ascending:false}); players=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ players=(JSON.parse(localStorage.getItem('players'))||[]); }
-    renderLeaderboard();
-}
-async function fetchTotw() {
-    try { const {data,error}=await sb.from('totw_players').select('*').order('ovr',{ascending:false}); totwPlayers=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ totwPlayers=(JSON.parse(localStorage.getItem('totw'))||[]); }
-    renderTotw();
-}
-async function fetchAllstars() {
-    try { const {data,error}=await sb.from('allstars_players').select('*').order('ovr',{ascending:false}); allstarPlayers=(data||[]).map(d=>({...d,id:String(d.id)})); } catch(e){ allstarPlayers=(JSON.parse(localStorage.getItem('allstars'))||[]); }
-    renderAllstars();
-}
+async function fetchPlayers() { const {data}=await sb.from('players_records').select('*'); players=data||[]; renderAll(); }
+async function fetchTotw() { const {data}=await sb.from('totw_players').select('*'); totwPlayers=data||[]; renderAll(); }
+async function fetchAllstars() { const {data}=await sb.from('allstars_players').select('*'); allstarPlayers=data||[]; renderAll(); }
 
-// ── Modals & Persistence ──────────────────────────────────────────────────────
-function resetForm(ids, wfId) { ids.forEach(id=>document.getElementById(id).value=''); document.getElementById(wfId).value='⭐⭐⭐⭐'; }
+// ── Modal Form Helpers ───────────────────────────────────────────────────────
+function closePlayerModal(){ document.getElementById('playerModal').style.display='none'; }
+function closeTotwModal(){ document.getElementById('totwModal').style.display='none'; }
+function closeAllstarsModal(){ document.getElementById('allstarsModal').style.display='none'; }
 
-const playerModal = document.getElementById('playerModal');
-function openPlayerModal(id=null) {
-    resetForm(['p-id','p-name','p-img','p-pos','p-pac','p-sho','p-pas','p-dri','p-def','p-phy'],'p-wf');
-    if(id){
-        const p=players.find(x=>x.id===String(id));
-        document.getElementById('p-id').value=p.id;
-        document.getElementById('p-name').value=p.name;
-        document.getElementById('p-img').value=p.img?.includes('flaticon')?'':p.img||'';
-        document.getElementById('p-pos').value=p.pos;
-        document.getElementById('p-wf').value=p.wf;
-        ['pac','sho','pas','dri','def','phy'].forEach(s=>document.getElementById(`p-${s}`).value=p[s]);
-    }
-    playerModal.style.display='block';
+function openPlayerModal(id=null) { 
+    resetForm('p'); if(id){ const p=players.find(x=>x.id==id); fillForm('p',p); }
+    document.getElementById('playerModal').style.display='block'; 
 }
-function closePlayerModal(){playerModal.style.display='none';}
-async function savePlayer(){
-    const id=document.getElementById('p-id').value;
-    const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`p-${s}`).value)||0);
-    const d={id:id||String(Date.now()),name:document.getElementById('p-name').value||'Player',img:document.getElementById('p-img').value||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',pos:(document.getElementById('p-pos').value||'ST').toUpperCase(),wf:document.getElementById('p-wf').value,pac:stats[0],sho:stats[1],pas:stats[2],dri:stats[3],def:stats[4],phy:stats[5],ovr:Math.round(stats.reduce((a,b)=>a+b)/6)};
-    if(sb) await sb.from('players_records').upsert(d);
-    closePlayerModal(); fetchPlayers();
+function openTotwModal(id=null) { 
+    resetForm('t'); if(id){ const p=totwPlayers.find(x=>x.id==id); fillForm('t',p); }
+    document.getElementById('totwModal').style.display='block'; 
+}
+function openAllstarsModal(id=null) { 
+    resetForm('a'); if(id){ const p=allstarPlayers.find(x=>x.id==id); fillForm('a',p); if(p.color)document.getElementById('a-color').value=p.color; }
+    document.getElementById('allstarsModal').style.display='block'; 
 }
 
-// TOTW & All Star save/delete functions follow the same pattern...
-const totwModal2 = document.getElementById('totwModal');
-function openTotwModal(id=null){ resetForm(['t-id','t-name','t-img','t-pos','t-pac','t-sho','t-pas','t-dri','t-def','t-phy'],'t-wf'); if(id){ const p=totwPlayers.find(x=>x.id===String(id)); document.getElementById('t-id').value=p.id; document.getElementById('t-name').value=p.name; document.getElementById('t-pos').value=p.pos; ['pac','sho','pas','dri','def','phy'].forEach(s=>document.getElementById(`t-${s}`).value=p[s]); } totwModal2.style.display='block'; }
-function closeTotwModal(){totwModal2.style.display='none';}
-async function saveTotwPlayer(){ const id=document.getElementById('t-id').value; const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`t-${s}`).value)||0); const d={id:id||String(Date.now()),name:document.getElementById('t-name').value||'Player',img:document.getElementById('t-img').value||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',pos:(document.getElementById('t-pos').value||'ST').toUpperCase(),wf:document.getElementById('t-wf').value,pac:stats[0],sho:stats[1],pas:stats[2],dri:stats[3],def:stats[4],phy:stats[5],ovr:Math.round(stats.reduce((a,b)=>a+b)/6)}; if(sb) await sb.from('totw_players').upsert(d); closeTotwModal(); fetchTotw(); }
+function resetForm(pre) { 
+    ['id','name','img','pos','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value='');
+    document.getElementById(`${pre}-wf`).value='⭐⭐⭐⭐';
+}
+function fillForm(pre, p) {
+    ['id','name','img','pos','wf','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value=p[f]||'');
+}
 
-const allstarsModal2 = document.getElementById('allstarsModal');
-function openAllstarsModal(id=null){ resetForm(['a-id','a-name','a-img','a-pos','a-pac','a-sho','a-pas','a-dri','a-def','a-phy'],'a-wf'); if(id){ const p=allstarPlayers.find(x=>x.id===String(id)); document.getElementById('a-id').value=p.id; document.getElementById('a-name').value=p.name; document.getElementById('a-color').value=p.color; ['pac','sho','pas','dri','def','phy'].forEach(s=>document.getElementById(`a-${s}`).value=p[s]); } allstarsModal2.style.display='block'; }
-function closeAllstarsModal(){allstarsModal2.style.display='none';}
-async function saveAllstar(){ const id=document.getElementById('a-id').value; const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`a-${s}`).value)||0); const d={id:id||String(Date.now()),name:document.getElementById('a-name').value||'Player',img:document.getElementById('a-img').value||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',pos:(document.getElementById('a-pos').value||'ST').toUpperCase(),wf:document.getElementById('a-wf').value,color:document.getElementById('a-color').value,pac:stats[0],sho:stats[1],pas:stats[2],dri:stats[3],def:stats[4],phy:stats[5],ovr:Math.round(stats.reduce((a,b)=>a+b)/6)}; if(sb) await sb.from('allstars_players').upsert(d); closeAllstarsModal(); fetchAllstars(); }
+async function savePlayer() { await sb.from('players_records').upsert(getFormData('p')); closePlayerModal(); fetchPlayers(); }
+async function saveTotwPlayer() { await sb.from('totw_players').upsert(getFormData('t')); closeTotwModal(); fetchTotw(); }
+async function saveAllstar() { const d=getFormData('a'); d.color=document.getElementById('a-color').value; await sb.from('allstars_players').upsert(d); closeAllstarsModal(); fetchAllstars(); }
 
-async function deletePlayer(id){ if(sb) await sb.from('players_records').delete().eq('id',id); fetchPlayers(); }
-async function deleteTotwPlayer(id){ if(sb) await sb.from('totw_players').delete().eq('id',id); fetchTotw(); }
-async function deleteAllstar(id){ if(sb) await sb.from('allstars_players').delete().eq('id',id); fetchAllstars(); }
+function getFormData(pre) {
+    const stats=['pac','sho','pas','dri','def','phy'].map(s=>parseInt(document.getElementById(`${pre}-${s}`).value)||0);
+    return {
+        id: document.getElementById(`${pre}-id`).value || undefined,
+        name: document.getElementById(`${pre}-name`).value,
+        img: document.getElementById(`${pre}-img`).value || 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png',
+        pos: document.getElementById(`${pre}-pos`).value.toUpperCase(),
+        wf: document.getElementById(`${pre}-wf`).value,
+        pac:stats[0], sho:stats[1], pas:stats[2], dri:stats[3], def:stats[4], phy:stats[5],
+        ovr: Math.round(stats.reduce((a,b)=>a+b)/6)
+    };
+}
+
+async function deletePlayer(id){ await sb.from('players_records').delete().eq('id',id); fetchPlayers(); }
+async function deleteTotwPlayer(id){ await sb.from('totw_players').delete().eq('id',id); fetchTotw(); }
+async function deleteAllstar(id){ await sb.from('allstars_players').delete().eq('id',id); fetchAllstars(); }
 
 (async()=>{
     if(sb){ await Promise.all([fetchPlayers(),fetchTotw(),fetchAllstars()]); }
     updateAdminUI();
 })();
 
-window.onclick=e=>{
-    if(e.target===playerModal)closePlayerModal();
-    if(e.target===totwModal2)closeTotwModal();
-    if(e.target===allstarsModal2)closeAllstarsModal();
-    if(e.target===loginModal)closeLoginModal();
-};
+window.onclick=e=>{ if(e.target.className==='modal') e.target.style.display='none'; };
 </script>
 </body>
 </html>
