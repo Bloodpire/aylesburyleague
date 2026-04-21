@@ -66,7 +66,6 @@
         .fg .sbtn.as-s { background: linear-gradient(135deg,#c2006a,#6800bb,#0088c0); }
         
         #loginError { color: #e74c3c; font-size: 0.88rem; text-align: center; min-height: 18px; }
-        .empty-msg { grid-column: 1/-1; text-align: center; color: rgba(255,255,255,0.7); font-size: 1rem; padding: 28px; }
     </style>
 </head>
 <body>
@@ -113,13 +112,7 @@
         <span class="close-x" onclick="closePlayerModal()">&times;</span>
         <div class="modal-title">Add Player</div>
         <div class="fg">
-            <input type="hidden" id="p-id">
-            <input class="fw" type="text" id="p-name" placeholder="Full Name">
-            <input class="fw" type="text" id="p-img" placeholder="Photo URL">
-            <input type="text" id="p-pos" placeholder="POS">
-            <select id="p-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select>
-            <input type="number" id="p-pac" placeholder="PAC"><input type="number" id="p-sho" placeholder="SHO"><input type="number" id="p-pas" placeholder="PAS"><input type="number" id="p-dri" placeholder="DRI"><input type="number" id="p-def" placeholder="DEF"><input type="number" id="p-phy" placeholder="PHY">
-            <button class="sbtn blue" onclick="savePlayer()">Save</button>
+            <input type="hidden" id="p-id"><input class="fw" type="text" id="p-name" placeholder="Full Name"><input class="fw" type="text" id="p-img" placeholder="Photo URL"><input type="text" id="p-pos" placeholder="POS"><select id="p-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select><input type="number" id="p-pac" placeholder="PAC"><input type="number" id="p-sho" placeholder="SHO"><input type="number" id="p-pas" placeholder="PAS"><input type="number" id="p-dri" placeholder="DRI"><input type="number" id="p-def" placeholder="DEF"><input type="number" id="p-phy" placeholder="PHY"><button class="sbtn blue" onclick="savePlayer()">Save</button>
         </div>
     </div>
 </div>
@@ -129,13 +122,7 @@
         <span class="close-x" onclick="closeTotwModal()">&times;</span>
         <div class="modal-title">👑 Add TOTW Player</div>
         <div class="fg">
-            <input type="hidden" id="t-id">
-            <input class="fw" type="text" id="t-name" placeholder="Full Name">
-            <input class="fw" type="text" id="t-img" placeholder="Photo URL">
-            <input type="text" id="t-pos" placeholder="POS">
-            <select id="t-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select>
-            <input type="number" id="t-pac" placeholder="PAC"><input type="number" id="t-sho" placeholder="SHO"><input type="number" id="t-pas" placeholder="PAS"><input type="number" id="t-dri" placeholder="DRI"><input type="number" id="t-def" placeholder="DEF"><input type="number" id="t-phy" placeholder="PHY">
-            <button class="sbtn totw-s" onclick="saveTotwPlayer()">Save</button>
+            <input type="hidden" id="t-id"><input class="fw" type="text" id="t-name" placeholder="Full Name"><input class="fw" type="text" id="t-img" placeholder="Photo URL"><input type="text" id="t-pos" placeholder="POS"><select id="t-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select><input type="number" id="t-pac" placeholder="PAC"><input type="number" id="t-sho" placeholder="SHO"><input type="number" id="t-pas" placeholder="PAS"><input type="number" id="t-dri" placeholder="DRI"><input type="number" id="t-def" placeholder="DEF"><input type="number" id="t-phy" placeholder="PHY"><button class="sbtn totw-s" onclick="saveTotwPlayer()">Save</button>
         </div>
     </div>
 </div>
@@ -145,13 +132,7 @@
         <span class="close-x" onclick="closeAllstarsModal()">&times;</span>
         <div class="modal-title">🌟 Add All Star</div>
         <div class="fg">
-            <input type="hidden" id="a-id">
-            <input class="fw" type="text" id="a-name" placeholder="Full Name">
-            <input class="fw" type="text" id="a-img" placeholder="Photo URL">
-            <input type="text" id="a-pos" placeholder="POS">
-            <select id="a-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select>
-            <input type="number" id="a-pac" placeholder="PAC"><input type="number" id="a-sho" placeholder="SHO"><input type="number" id="a-pas" placeholder="PAS"><input type="number" id="a-dri" placeholder="DRI"><input type="number" id="a-def" placeholder="DEF"><input type="number" id="a-phy" placeholder="PHY">
-            <button class="sbtn as-s" onclick="saveAllstar()">Save</button>
+            <input type="hidden" id="a-id"><input class="fw" type="text" id="a-name" placeholder="Full Name"><input class="fw" type="text" id="a-img" placeholder="Photo URL"><input type="text" id="a-pos" placeholder="POS"><select id="a-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select><input type="number" id="a-pac" placeholder="PAC"><input type="number" id="a-sho" placeholder="SHO"><input type="number" id="a-pas" placeholder="PAS"><input type="number" id="a-dri" placeholder="DRI"><input type="number" id="a-def" placeholder="DEF"><input type="number" id="a-phy" placeholder="PHY"><button class="sbtn as-s" onclick="saveAllstar()">Save</button>
         </div>
     </div>
 </div>
@@ -160,11 +141,8 @@
     <div class="modal-box" style="max-width:360px;">
         <span class="close-x" onclick="closeLoginModal()">&times;</span>
         <div class="modal-title">🔐 Admin Login</div>
-        <div class="login-form" style="display: flex; flex-direction: column; gap: 13px;">
-            <input type="text" id="loginUser" placeholder="Username">
-            <input type="password" id="loginPass" placeholder="Password">
-            <div id="loginError"></div>
-            <button class="sbtn blue" onclick="submitLogin()">Login</button>
+        <div class="fg" style="display: flex; flex-direction: column; gap: 13px;">
+            <input type="text" id="loginUser" placeholder="Username"><input type="password" id="loginPass" placeholder="Password"><div id="loginError"></div><button class="sbtn blue" onclick="submitLogin()">Login</button>
         </div>
     </div>
 </div>
@@ -197,38 +175,25 @@ function buildCard(p, rank, type) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
     svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
     
-    let gradientHtml = '';
-    if(pal.stops) {
-        gradientHtml = `<linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="${pal.stops[0]}"/><stop offset="50%" stop-color="${pal.stops[1]}"/><stop offset="100%" stop-color="${pal.stops[2]}"/>
-        </linearGradient>`;
-    } else {
-        gradientHtml = `<linearGradient id="${gradId}" x1="0%" y1="0%" x2="60%" y2="100%">
-            <stop offset="0%" stop-color="${pal.g1}"/><stop offset="50%" stop-color="${pal.g2}"/><stop offset="100%" stop-color="${pal.g3}"/>
-        </linearGradient>`;
-    }
+    let grad = pal.stops 
+        ? `<linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="100%">${pal.stops.map((s,i)=>`<stop offset="${i*50}%" stop-color="${s}"/>`).join('')}</linearGradient>`
+        : `<linearGradient id="${gradId}" x1="0%" y1="0%" x2="60%" y2="100%"><stop offset="0%" stop-color="${pal.g1}"/><stop offset="50%" stop-color="${pal.g2}"/><stop offset="100%" stop-color="${pal.g3}"/></linearGradient>`;
 
     svg.innerHTML = `
         <defs>
-            ${gradientHtml}
-            <pattern id="${rayId}" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(-40)">
-                <line x1="0" y1="0" x2="0" y2="12" stroke="${pal.ray}" stroke-width="5"/>
-            </pattern>
+            ${grad}
+            <pattern id="${rayId}" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(-40)"><line x1="0" y1="0" x2="0" y2="12" stroke="${pal.ray}" stroke-width="5"/></pattern>
             <clipPath id="cp${p.id}${type}"><circle cx="140" cy="165" r="68"/></clipPath>
         </defs>
         <path d="M 60,0 L 220,0 A 22,22 0 0,1 242,22 L 280,22 A 18,18 0 0,1 280,40 L 280,340 Q 280,390 140,390 Q 0,390 0,340 L 0,40 A 18,18 0 0,1 0,22 L 38,22 A 22,22 0 0,1 60,0 Z" fill="url(#${gradId})"/>
         <path d="M 60,0 L 220,0 A 22,22 0 0,1 242,22 L 280,22 A 18,18 0 0,1 280,40 L 280,340 Q 280,390 140,390 Q 0,390 0,340 L 0,40 A 18,18 0 0,1 0,22 L 38,22 A 22,22 0 0,1 60,0 Z" fill="url(#${rayId})"/>
-        
         <text x="32" y="62" font-family="Oswald" font-size="36" font-weight="900" fill="${pal.text}">${p.ovr}</text>
         <text x="32" y="78" font-family="Oswald" font-size="13" font-weight="700" fill="${pal.subtext}">${p.pos}</text>
         <text x="32" y="94" font-family="Oswald" font-size="12" font-weight="600" fill="${pal.subtext}">${p.wf}</text>
-
         <circle cx="140" cy="165" r="70" fill="none" stroke="${pal.border}" stroke-width="2.5" opacity="0.6"/>
         <image href="${p.img}" x="72" y="97" width="136" height="136" clip-path="url(#cp${p.id}${type})" preserveAspectRatio="xMidYMid slice" onerror="this.setAttribute('href','https://cdn-icons-png.flaticon.com/512/1163/1163481.png')"/>
-
         <line x1="30" y1="248" x2="250" y2="248" stroke="${pal.subtext}" stroke-width="1.2" opacity="0.4"/>
         <text x="140" y="275" font-family="Oswald" font-size="22" font-weight="700" text-anchor="middle" fill="${pal.text}">${p.name.toUpperCase()}</text>
-
         <g transform="translate(140, 315)" font-family="Oswald" text-anchor="middle">
             <g transform="translate(-85,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">PAC</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.pac}</text></g>
             <g transform="translate(-51,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">SHO</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.sho}</text></g>
@@ -238,13 +203,11 @@ function buildCard(p, rank, type) {
             <g transform="translate(85,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">PHY</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.phy}</text></g>
         </g>
     `;
-
     const wrap = document.createElement('div');
     wrap.className='card-wrap';
     const del = document.createElement('button');
     del.className='del-btn'; del.textContent='✕'; del.disabled=!user;
     del.onclick=e=>{ e.stopPropagation(); if(confirm('Delete?')) deleteItem(p.id, type); };
-    
     wrap.appendChild(del); wrap.appendChild(svg);
     wrap.onclick=()=>{ if(user) openEdit(p, type); };
     return wrap;
@@ -302,14 +265,9 @@ function openEdit(p, type) {
     else { fill('a',p); document.getElementById('allstarsModal').style.display='block'; }
 }
 
-async function savePlayer() { await sb.from('players_records').upsert(get('p')); closePlayerModal(); refresh(); }
-async function saveTotwPlayer() { await sb.from('totw_players').upsert(get('t')); closeTotwModal(); refresh(); }
-async function saveAllstar() { await sb.from('allstars_players').upsert(get('a')); closeAllstarsModal(); refresh(); }
-
 function get(pre) {
     const s = ['pac','sho','pas','dri','def','phy'].map(f=>parseInt(document.getElementById(`${pre}-${f}`).value)||0);
-    return {
-        id: document.getElementById(`${pre}-id`).value || undefined,
+    const d = {
         name: document.getElementById(`${pre}-name`).value,
         img: document.getElementById(`${pre}-img`).value,
         pos: document.getElementById(`${pre}-pos`).value.toUpperCase(),
@@ -317,7 +275,14 @@ function get(pre) {
         pac:s[0], sho:s[1], pas:s[2], dri:s[3], def:s[4], phy:s[5],
         ovr: Math.round(s.reduce((a,b)=>a+b)/6)
     };
+    const id = document.getElementById(`${pre}-id`).value;
+    if(id) d.id = id;
+    return d;
 }
+
+async function savePlayer() { const {error} = await sb.from('players_records').upsert(get('p')); if(error) alert(error.message); closePlayerModal(); refresh(); }
+async function saveTotwPlayer() { const {error} = await sb.from('totw_players').upsert(get('t')); if(error) alert(error.message); closeTotwModal(); refresh(); }
+async function saveAllstar() { const {error} = await sb.from('allstars_players').upsert(get('a')); if(error) alert(error.message); closeAllstarsModal(); refresh(); }
 
 async function deleteItem(id, type) {
     const table = type==='leaderboard'?'players_records':type==='totw'?'totw_players':'allstars_players';
@@ -326,9 +291,7 @@ async function deleteItem(id, type) {
 }
 
 function subscribeRealtime(){
-    sb.channel('pl').on('postgres_changes',{event:'*',schema:'public',table:'players_records'},refresh).subscribe();
-    sb.channel('tw').on('postgres_changes',{event:'*',schema:'public',table:'totw_players'},refresh).subscribe();
-    sb.channel('as').on('postgres_changes',{event:'*',schema:'public',table:'allstars_players'},refresh).subscribe();
+    sb.channel('db').on('postgres_changes',{event:'*',schema:'public',table:'players_records'},refresh).on('postgres_changes',{event:'*',schema:'public',table:'totw_players'},refresh).on('postgres_changes',{event:'*',schema:'public',table:'allstars_players'},refresh).subscribe();
 }
 
 window.onclick=e=>{ if(e.target.className==='modal') e.target.style.display='none'; };
