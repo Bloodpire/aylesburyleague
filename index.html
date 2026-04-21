@@ -40,7 +40,7 @@
         .card-wrap svg { width: 100%; height: auto; display: block; }
 
         .del-btn {
-            position: absolute; top: 12px; right: 12px;
+            position: absolute; top: 12px; left: 12px;
             width: 24px; height: 24px; border-radius: 50%;
             background: #ff3333; color: white; border: none;
             font-size: 12px; font-weight: 900; cursor: pointer;
@@ -113,7 +113,13 @@
         <span class="close-x" onclick="closePlayerModal()">&times;</span>
         <div class="modal-title">Add Player</div>
         <div class="fg">
-            <input type="hidden" id="p-id"><input class="fw" type="text" id="p-name" placeholder="Full Name"><input class="fw" type="text" id="p-img" placeholder="Photo URL"><input type="text" id="p-pos" placeholder="POS"><select id="p-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select><input type="number" id="p-pac" placeholder="PAC"><input type="number" id="p-sho" placeholder="SHO"><input type="number" id="p-pas" placeholder="PAS"><input type="number" id="p-dri" placeholder="DRI"><input type="number" id="p-def" placeholder="DEF"><input type="number" id="p-phy" placeholder="PHY"><button class="sbtn blue" onclick="savePlayer()">Save</button>
+            <input type="hidden" id="p-id">
+            <input class="fw" type="text" id="p-name" placeholder="Full Name">
+            <input class="fw" type="text" id="p-img" placeholder="Photo URL">
+            <input type="text" id="p-pos" placeholder="POS">
+            <select id="p-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select>
+            <input type="number" id="p-pac" placeholder="PAC"><input type="number" id="p-sho" placeholder="SHO"><input type="number" id="p-pas" placeholder="PAS"><input type="number" id="p-dri" placeholder="DRI"><input type="number" id="p-def" placeholder="DEF"><input type="number" id="p-phy" placeholder="PHY">
+            <button class="sbtn blue" onclick="savePlayer()">Save</button>
         </div>
     </div>
 </div>
@@ -123,7 +129,13 @@
         <span class="close-x" onclick="closeTotwModal()">&times;</span>
         <div class="modal-title">👑 Add TOTW Player</div>
         <div class="fg">
-            <input type="hidden" id="t-id"><input class="fw" type="text" id="t-name" placeholder="Full Name"><input class="fw" type="text" id="t-img" placeholder="Photo URL"><input type="text" id="t-pos" placeholder="POS"><select id="t-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select><input type="number" id="t-pac" placeholder="PAC"><input type="number" id="t-sho" placeholder="SHO"><input type="number" id="t-pas" placeholder="PAS"><input type="number" id="t-dri" placeholder="DRI"><input type="number" id="t-def" placeholder="DEF"><input type="number" id="t-phy" placeholder="PHY"><button class="sbtn totw-s" onclick="saveTotwPlayer()">Save</button>
+            <input type="hidden" id="t-id">
+            <input class="fw" type="text" id="t-name" placeholder="Full Name">
+            <input class="fw" type="text" id="t-img" placeholder="Photo URL">
+            <input type="text" id="t-pos" placeholder="POS">
+            <select id="t-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select>
+            <input type="number" id="t-pac" placeholder="PAC"><input type="number" id="t-sho" placeholder="SHO"><input type="number" id="t-pas" placeholder="PAS"><input type="number" id="t-dri" placeholder="DRI"><input type="number" id="t-def" placeholder="DEF"><input type="number" id="t-phy" placeholder="PHY">
+            <button class="sbtn totw-s" onclick="saveTotwPlayer()">Save</button>
         </div>
     </div>
 </div>
@@ -133,8 +145,13 @@
         <span class="close-x" onclick="closeAllstarsModal()">&times;</span>
         <div class="modal-title">🌟 Add All Star</div>
         <div class="fg">
-            <input type="hidden" id="a-id"><input class="fw" type="text" id="a-name" placeholder="Full Name"><input class="fw" type="text" id="a-img" placeholder="Photo URL"><input type="text" id="a-pos" placeholder="POS"><select id="a-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select>
-            <input type="number" id="a-pac" placeholder="PAC"><input type="number" id="a-sho" placeholder="SHO"><input type="number" id="a-pas" placeholder="PAS"><input type="number" id="a-dri" placeholder="DRI"><input type="number" id="a-def" placeholder="DEF"><input type="number" id="a-phy" placeholder="PHY"><button class="sbtn as-s" onclick="saveAllstar()">Save</button>
+            <input type="hidden" id="a-id">
+            <input class="fw" type="text" id="a-name" placeholder="Full Name">
+            <input class="fw" type="text" id="a-img" placeholder="Photo URL">
+            <input type="text" id="a-pos" placeholder="POS">
+            <select id="a-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select>
+            <input type="number" id="a-pac" placeholder="PAC"><input type="number" id="a-sho" placeholder="SHO"><input type="number" id="a-pas" placeholder="PAS"><input type="number" id="a-dri" placeholder="DRI"><input type="number" id="a-def" placeholder="DEF"><input type="number" id="a-phy" placeholder="PHY">
+            <button class="sbtn as-s" onclick="saveAllstar()">Save</button>
         </div>
     </div>
 </div>
@@ -143,8 +160,11 @@
     <div class="modal-box" style="max-width:360px;">
         <span class="close-x" onclick="closeLoginModal()">&times;</span>
         <div class="modal-title">🔐 Admin Login</div>
-        <div class="login-form">
-            <input type="text" id="loginUser" placeholder="Username"><input type="password" id="loginPass" placeholder="Password"><div id="loginError"></div><button class="sbtn blue" style="width:100%" onclick="submitLogin()">Login</button>
+        <div class="login-form" style="display: flex; flex-direction: column; gap: 13px;">
+            <input type="text" id="loginUser" placeholder="Username">
+            <input type="password" id="loginPass" placeholder="Password">
+            <div id="loginError"></div>
+            <button class="sbtn blue" onclick="submitLogin()">Login</button>
         </div>
     </div>
 </div>
@@ -305,8 +325,15 @@ async function deleteItem(id, type) {
     refresh();
 }
 
+function subscribeRealtime(){
+    sb.channel('pl').on('postgres_changes',{event:'*',schema:'public',table:'players_records'},refresh).subscribe();
+    sb.channel('tw').on('postgres_changes',{event:'*',schema:'public',table:'totw_players'},refresh).subscribe();
+    sb.channel('as').on('postgres_changes',{event:'*',schema:'public',table:'allstars_players'},refresh).subscribe();
+}
+
 window.onclick=e=>{ if(e.target.className==='modal') e.target.style.display='none'; };
 refresh();
+subscribeRealtime();
 </script>
 </body>
 </html>
