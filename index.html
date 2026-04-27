@@ -32,6 +32,7 @@
         .section-btn.green { background: #2ecc71; color: white; }
         .section-btn.totw { background: linear-gradient(135deg, #1a1200, #2e2000); color: #f0d060; border: 1px solid #c9a84c; }
         .section-btn.allstars { background: linear-gradient(135deg, #c2006a, #6800bb, #0088c0); color: white; }
+        .section-btn.squad-btn { background: linear-gradient(135deg, #1a6b2a, #2ecc71); color: white; }
 
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 28px; }
 
@@ -52,7 +53,9 @@
         .section-gap { margin-top: 55px; margin-bottom: 22px; }
         .divider-gold { width: 100%; height: 2px; border: none; background: linear-gradient(90deg, transparent, #c9a84c 30%, #c9a84c 70%, transparent); margin-bottom: 22px; }
         .divider-rainbow { width: 100%; height: 2px; border: none; background: linear-gradient(90deg, transparent, #ff60b0 15%, #a040ee 35%, #40d0ff 65%, #e8c040 85%, transparent); margin-bottom: 22px; }
+        .divider-green { width: 100%; height: 2px; border: none; background: linear-gradient(90deg, transparent, #2ecc71 30%, #1a8a44 70%, transparent); margin-bottom: 22px; }
 
+        /* ── Modals ── */
         .modal { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
         .modal-box { background: white; margin: 4% auto; padding: 28px; width: 90%; max-width: 480px; border-radius: 18px; position: relative; }
         .modal-title { font-size: 1.7rem; font-weight: bold; text-align: center; color: #222; margin-bottom: 18px; }
@@ -64,8 +67,236 @@
         .fg .sbtn.blue { background: #00BFFF; }
         .fg .sbtn.totw-s { background: linear-gradient(135deg,#1a1200,#2e2000); color: #f0d060; border: 1px solid #c9a84c; }
         .fg .sbtn.as-s { background: linear-gradient(135deg,#c2006a,#6800bb,#0088c0); }
-        
         #loginError { color: #e74c3c; font-size: 0.88rem; text-align: center; min-height: 18px; }
+
+        /* ── Squad Builder ── */
+        #squadModal { z-index: 300; }
+        #squadModal .modal-box {
+            max-width: 1100px;
+            width: 96%;
+            margin: 1% auto;
+            padding: 20px;
+            background: #0a1a0a;
+            border-radius: 16px;
+            border: 2px solid #2ecc71;
+            max-height: 96vh;
+            overflow-y: auto;
+        }
+        #squadModal .modal-title { color: #2ecc71; font-size: 1.5rem; }
+        #squadModal .close-x { color: #2ecc71; }
+
+        .squad-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .squad-controls label { color: #aaa; font-size: 0.9rem; }
+        .formation-btn {
+            background: rgba(255,255,255,0.08);
+            color: #ccc;
+            border: 1px solid #444;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .formation-btn.active { background: #2ecc71; color: #000; border-color: #2ecc71; font-weight: 700; }
+        .squad-name-input {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid #444;
+            color: white;
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1rem;
+            width: 200px;
+        }
+        .save-squad-btn {
+            background: #2ecc71;
+            color: #000;
+            border: none;
+            padding: 7px 20px;
+            border-radius: 20px;
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        .clear-squad-btn {
+            background: rgba(255,80,80,0.15);
+            color: #ff6060;
+            border: 1px solid #ff4040;
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        /* Pitch + player bench layout */
+        .squad-layout {
+            display: grid;
+            grid-template-columns: 1fr 260px;
+            gap: 16px;
+            align-items: start;
+        }
+
+        /* The pitch */
+        .pitch-wrap {
+            position: relative;
+            background: #1a6b2a;
+            border-radius: 10px;
+            border: 3px solid #2ecc71;
+            overflow: hidden;
+            aspect-ratio: 0.7;
+        }
+        .pitch-wrap svg.pitch-lines {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Slot positions */
+        .pitch-slots {
+            position: absolute;
+            inset: 0;
+        }
+        .slot {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+        .slot:hover { transform: translate(-50%, -50%) scale(1.08); }
+
+        /* Empty slot appearance */
+        .slot-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .slot-circle {
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255,255,255,0.5);
+            background: rgba(0,0,0,0.25);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 1.3rem;
+        }
+        .slot-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-align: center;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+
+        /* Filled slot — mini card */
+        .slot-filled { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .slot-filled svg { width: 72px; height: auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.6)); }
+        .slot-filled-name {
+            color: white;
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-align: center;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+            max-width: 80px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .slot-filled-ovr {
+            color: #ffdd44;
+            font-size: 0.7rem;
+            font-weight: 900;
+        }
+        .slot-remove {
+            position: absolute;
+            top: -4px; right: -4px;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: #ff3333;
+            color: white;
+            border: none;
+            font-size: 9px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 5;
+        }
+
+        /* Player picker modal */
+        #pickerModal {
+            z-index: 400;
+        }
+        #pickerModal .modal-box {
+            max-width: 700px;
+            background: #111;
+            border: 2px solid #2ecc71;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        #pickerModal .modal-title { color: #2ecc71; }
+        #pickerModal .close-x { color: #2ecc71; }
+        .picker-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .picker-card {
+            cursor: pointer;
+            transition: transform 0.15s, filter 0.15s;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .picker-card:hover { transform: scale(1.06); filter: brightness(1.1); }
+        .picker-card svg { width: 100%; height: auto; display: block; }
+        .picker-card.used { opacity: 0.35; pointer-events: none; }
+
+        /* Squad bench / saved squads panel */
+        .squad-panel {
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            border: 1px solid #333;
+            padding: 12px;
+            color: white;
+        }
+        .squad-panel h3 { font-size: 1rem; color: #2ecc71; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .saved-squad-item {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .saved-squad-item:hover { background: rgba(46,204,113,0.12); border-color: #2ecc71; }
+        .saved-squad-name { font-weight: 700; font-size: 0.95rem; color: white; }
+        .saved-squad-meta { font-size: 0.75rem; color: #888; margin-top: 2px; }
+        .saved-squad-actions { display: flex; gap: 6px; margin-top: 6px; }
+        .sq-load-btn { background: #2ecc71; color: #000; border: none; padding: 3px 10px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer; font-family: 'Oswald', sans-serif; }
+        .sq-del-btn { background: rgba(255,60,60,0.15); color: #ff6060; border: 1px solid #ff4040; padding: 3px 10px; border-radius: 10px; font-size: 0.75rem; cursor: pointer; font-family: 'Oswald', sans-serif; }
+        .no-squads { color: #555; font-size: 0.85rem; text-align: center; padding: 20px 0; }
+        .avg-ovr-badge {
+            display: inline-block;
+            background: #2ecc71;
+            color: #000;
+            font-weight: 900;
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 6px;
+        }
     </style>
 </head>
 <body>
@@ -76,6 +307,7 @@
         <button class="admin-btn" id="adminActionBtn" onclick="handleAdminBtn()">Admin Login</button>
     </div>
 
+    <!-- Leaderboard -->
     <div class="section-header">
         <h2 class="section-title">🏆 Leaderboard</h2>
         <div class="add-btn-wrap">
@@ -84,196 +316,574 @@
     </div>
     <div class="card-grid" id="leaderboard"></div>
 
+    <!-- TOTW -->
     <div class="section-gap">
         <hr class="divider-gold">
         <div class="section-header">
             <h2 class="section-title">👑 Team of the Week</h2>
-            <div class="add-btn-wrap" style="background: rgba(0,0,0,0.35); border: 2px solid #c9a84c;">
+            <div class="add-btn-wrap" style="background:rgba(0,0,0,0.35);border:2px solid #c9a84c;">
                 <button class="section-btn totw" id="addTotwBtn" disabled onclick="openTotwModal()">+ Add TOTW</button>
             </div>
         </div>
         <div class="card-grid" id="totw-grid"></div>
     </div>
 
+    <!-- All Stars -->
     <div class="section-gap">
         <hr class="divider-rainbow">
         <div class="section-header">
             <h2 class="section-title">🌟 Tournament All Stars</h2>
-            <div class="add-btn-wrap" style="background: rgba(0,0,0,0.3); border: 2px solid rgba(255,100,180,0.7);">
+            <div class="add-btn-wrap" style="background:rgba(0,0,0,0.3);border:2px solid rgba(255,100,180,0.7);">
                 <button class="section-btn allstars" id="addAllstarsBtn" disabled onclick="openAllstarsModal()">+ Add All Star</button>
             </div>
         </div>
         <div class="card-grid" id="allstars-grid"></div>
     </div>
+
+    <!-- Squad Builder entry -->
+    <div class="section-gap">
+        <hr class="divider-green">
+        <div class="section-header">
+            <h2 class="section-title">🧩 Squad Builder</h2>
+            <div class="add-btn-wrap">
+                <button class="section-btn squad-btn" onclick="openSquadModal()">⚽ Build a Squad</button>
+            </div>
+        </div>
+        <p style="color:rgba(255,255,255,0.7);font-size:0.95rem;margin-bottom:10px;">Pick your formation and assign players from any section to build and save your squad.</p>
+    </div>
 </div>
 
+<!-- ═══════════════════ PLAYER MODALS ═══════════════════ -->
 <div class="modal" id="playerModal">
-    <div class="modal-box"><span class="close-x" onclick="closePlayerModal()">&times;</span><div class="modal-title">Add Player</div><div class="fg"><input type="hidden" id="p-id"><input class="fw" type="text" id="p-name" placeholder="Name"><input class="fw" type="text" id="p-img" placeholder="Photo URL"><input type="text" id="p-pos" placeholder="POS"><select id="p-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select><input type="number" id="p-pac" placeholder="PAC"><input type="number" id="p-sho" placeholder="SHO"><input type="number" id="p-pas" placeholder="PAS"><input type="number" id="p-dri" placeholder="DRI"><input type="number" id="p-def" placeholder="DEF"><input type="number" id="p-phy" placeholder="PHY"><button class="sbtn blue" onclick="savePlayer()">Save</button></div></div>
+    <div class="modal-box"><span class="close-x" onclick="closePlayerModal()">&times;</span><div class="modal-title" id="playerModalTitle">Add Player</div><div class="fg"><input type="hidden" id="p-id"><input class="fw" type="text" id="p-name" placeholder="Name"><input class="fw" type="text" id="p-img" placeholder="Photo URL"><input type="text" id="p-pos" placeholder="POS"><select id="p-wf"><option value="⭐">1★</option><option value="⭐⭐">2★</option><option value="⭐⭐⭐">3★</option><option value="⭐⭐⭐⭐" selected>4★</option><option value="⭐⭐⭐⭐⭐">5★</option></select><input type="number" id="p-pac" placeholder="PAC"><input type="number" id="p-sho" placeholder="SHO"><input type="number" id="p-pas" placeholder="PAS"><input type="number" id="p-dri" placeholder="DRI"><input type="number" id="p-def" placeholder="DEF"><input type="number" id="p-phy" placeholder="PHY"><button class="sbtn blue" onclick="savePlayer()">Save</button></div></div>
 </div>
-
 <div class="modal" id="totwModal">
-    <div class="modal-box" style="border-top:4px solid #c9a84c;"><span class="close-x" onclick="closeTotwModal()">&times;</span><div class="modal-title">👑 Team of the Week</div><div class="fg"><input type="hidden" id="t-id"><input class="fw" type="text" id="t-name" placeholder="Name"><input class="fw" type="text" id="t-img" placeholder="Photo URL"><input type="text" id="t-pos" placeholder="POS"><select id="t-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select><input type="number" id="t-pac" placeholder="PAC"><input type="number" id="t-sho" placeholder="SHO"><input type="number" id="t-pas" placeholder="PAS"><input type="number" id="t-dri" placeholder="DRI"><input type="number" id="t-def" placeholder="DEF"><input type="number" id="t-phy" placeholder="PHY"><button class="sbtn totw-s" onclick="saveTotwPlayer()">Save</button></div></div>
+    <div class="modal-box" style="border-top:4px solid #c9a84c;"><span class="close-x" onclick="closeTotwModal()">&times;</span><div class="modal-title">👑 Add TOTW</div><div class="fg"><input type="hidden" id="t-id"><input class="fw" type="text" id="t-name" placeholder="Name"><input class="fw" type="text" id="t-img" placeholder="Photo URL"><input type="text" id="t-pos" placeholder="POS"><select id="t-wf"><option value="⭐">1★</option><option value="⭐⭐">2★</option><option value="⭐⭐⭐">3★</option><option value="⭐⭐⭐⭐" selected>4★</option><option value="⭐⭐⭐⭐⭐">5★</option></select><input type="number" id="t-pac" placeholder="PAC"><input type="number" id="t-sho" placeholder="SHO"><input type="number" id="t-pas" placeholder="PAS"><input type="number" id="t-dri" placeholder="DRI"><input type="number" id="t-def" placeholder="DEF"><input type="number" id="t-phy" placeholder="PHY"><button class="sbtn totw-s" onclick="saveTotwPlayer()">Save</button></div></div>
 </div>
-
 <div class="modal" id="allstarsModal">
-    <div class="modal-box" style="border-top:4px solid #e040c0;"><span class="close-x" onclick="closeAllstarsModal()">&times;</span><div class="modal-title">🌟 Tournament All Star</div><div class="fg"><input type="hidden" id="a-id"><input class="fw" type="text" id="a-name" placeholder="Name"><input class="fw" type="text" id="a-img" placeholder="Photo URL"><input type="text" id="a-pos" placeholder="POS"><select id="a-wf"><option value="⭐">1★ WF</option><option value="⭐⭐">2★ WF</option><option value="⭐⭐⭐">3★ WF</option><option value="⭐⭐⭐⭐" selected>4★ WF</option><option value="⭐⭐⭐⭐⭐">5★ WF</option></select><input type="number" id="a-pac" placeholder="PAC"><input type="number" id="a-sho" placeholder="SHO"><input type="number" id="a-pas" placeholder="PAS"><input type="number" id="a-dri" placeholder="DRI"><input type="number" id="a-def" placeholder="DEF"><input type="number" id="a-phy" placeholder="PHY"><button class="sbtn as-s" onclick="saveAllstar()">Save</button></div></div>
+    <div class="modal-box" style="border-top:4px solid #e040c0;"><span class="close-x" onclick="closeAllstarsModal()">&times;</span><div class="modal-title">🌟 Add All Star</div><div class="fg"><input type="hidden" id="a-id"><input class="fw" type="text" id="a-name" placeholder="Name"><input class="fw" type="text" id="a-img" placeholder="Photo URL"><input type="text" id="a-pos" placeholder="POS"><select id="a-wf"><option value="⭐">1★</option><option value="⭐⭐">2★</option><option value="⭐⭐⭐">3★</option><option value="⭐⭐⭐⭐" selected>4★</option><option value="⭐⭐⭐⭐⭐">5★</option></select><select class="fw" id="a-color"><option value="pink">🩷 Pink</option><option value="purple">💜 Purple</option><option value="sky">🩵 Sky Blue</option><option value="gold">🌟 Gold</option></select><input type="number" id="a-pac" placeholder="PAC"><input type="number" id="a-sho" placeholder="SHO"><input type="number" id="a-pas" placeholder="PAS"><input type="number" id="a-dri" placeholder="DRI"><input type="number" id="a-def" placeholder="DEF"><input type="number" id="a-phy" placeholder="PHY"><button class="sbtn as-s" onclick="saveAllstar()">Save</button></div></div>
+</div>
+<div class="modal" id="loginModal">
+    <div class="modal-box" style="max-width:360px;"><span class="close-x" onclick="closeLoginModal()">&times;</span><div class="modal-title">🔐 Admin Login</div><div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;"><input style="padding:11px;border:1px solid #ddd;border-radius:8px;font-family:Oswald,sans-serif;font-size:1rem;" type="text" id="loginUser" placeholder="Username"><input style="padding:11px;border:1px solid #ddd;border-radius:8px;font-family:Oswald,sans-serif;font-size:1rem;" type="password" id="loginPass" placeholder="Password" onkeydown="if(event.key==='Enter')submitLogin()"><div id="loginError"></div><button style="background:#00BFFF;color:white;border:none;padding:12px;border-radius:9px;font-size:1.05rem;font-weight:bold;cursor:pointer;text-transform:uppercase;font-family:Oswald,sans-serif;" onclick="submitLogin()">Login</button></div></div>
 </div>
 
-<div class="modal" id="loginModal">
-    <div class="modal-box" style="max-width:360px;"><span class="close-x" onclick="closeLoginModal()">&times;</span><div class="modal-title">🔐 Admin Login</div><div class="fg" style="display:flex;flex-direction:column;gap:13px;"><input type="text" id="loginUser" placeholder="Username"><input type="password" id="loginPass" placeholder="Password"><div id="loginError"></div><button class="sbtn blue" onclick="submitLogin()">Login</button></div></div>
+<!-- ═══════════════════ SQUAD BUILDER MODAL ═══════════════════ -->
+<div class="modal" id="squadModal">
+    <div class="modal-box">
+        <span class="close-x" onclick="closeSquadModal()">&times;</span>
+        <div class="modal-title">🧩 Squad Builder</div>
+
+        <div class="squad-controls">
+            <span style="color:#888;font-size:0.85rem;">FORMAT:</span>
+            <button class="formation-btn active" onclick="setFormat('4v4',this)">4v4</button>
+            <button class="formation-btn" onclick="setFormat('5v5',this)">5v5</button>
+            <button class="formation-btn" onclick="setFormat('7v7',this)">7v7</button>
+            <span style="color:#888;font-size:0.85rem;margin-left:8px;">FORMATION:</span>
+            <select id="formationSelect" onchange="setFormation(this.value)" style="background:#1a1a1a;color:#ccc;border:1px solid #444;padding:5px 10px;border-radius:15px;font-family:Oswald,sans-serif;font-size:0.9rem;">
+            </select>
+        </div>
+        <div class="squad-controls" style="margin-top:-6px;">
+            <input class="squad-name-input" id="squadNameInput" placeholder="Squad name…">
+            <button class="save-squad-btn" onclick="saveSquad()">💾 Save Squad</button>
+            <button class="clear-squad-btn" onclick="clearSquad()">✕ Clear</button>
+            <span style="color:#aaa;font-size:0.9rem;">Avg OVR: <span id="avgOvrBadge" class="avg-ovr-badge">—</span></span>
+        </div>
+
+        <div class="squad-layout">
+            <!-- Pitch -->
+            <div class="pitch-wrap" id="pitchWrap">
+                <svg class="pitch-lines" viewBox="0 0 400 570" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Pitch markings -->
+                    <rect x="0" y="0" width="400" height="570" fill="#1a6b2a"/>
+                    <!-- Stripes -->
+                    <rect x="0"   y="0"   width="400" height="57"  fill="rgba(255,255,255,0.03)"/>
+                    <rect x="0"   y="114" width="400" height="57"  fill="rgba(255,255,255,0.03)"/>
+                    <rect x="0"   y="228" width="400" height="57"  fill="rgba(255,255,255,0.03)"/>
+                    <rect x="0"   y="342" width="400" height="57"  fill="rgba(255,255,255,0.03)"/>
+                    <rect x="0"   y="456" width="400" height="57"  fill="rgba(255,255,255,0.03)"/>
+                    <!-- Outer border -->
+                    <rect x="8" y="8" width="384" height="554" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" rx="4"/>
+                    <!-- Halfway line -->
+                    <line x1="8" y1="285" x2="392" y2="285" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+                    <!-- Centre circle -->
+                    <circle cx="200" cy="285" r="45" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+                    <circle cx="200" cy="285" r="3" fill="rgba(255,255,255,0.7)"/>
+                    <!-- Top penalty area -->
+                    <rect x="100" y="8" width="200" height="80" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                    <!-- Top goal area -->
+                    <rect x="148" y="8" width="104" height="32" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                    <!-- Top penalty spot -->
+                    <circle cx="200" cy="68" r="3" fill="rgba(255,255,255,0.6)"/>
+                    <!-- Bottom penalty area -->
+                    <rect x="100" y="482" width="200" height="80" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                    <!-- Bottom goal area -->
+                    <rect x="148" y="530" width="104" height="32" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                    <!-- Bottom penalty spot -->
+                    <circle cx="200" cy="502" r="3" fill="rgba(255,255,255,0.6)"/>
+                    <!-- Corner arcs -->
+                    <path d="M 8,8 A 12,12 0 0,1 20,8" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                    <path d="M 392,8 A 12,12 0 0,0 380,8" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                    <path d="M 8,562 A 12,12 0 0,0 8,550" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                    <path d="M 392,562 A 12,12 0 0,1 392,550" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+                </svg>
+                <div class="pitch-slots" id="pitchSlots"></div>
+            </div>
+
+            <!-- Right panel: saved squads -->
+            <div class="squad-panel">
+                <h3>💾 Saved Squads</h3>
+                <div id="savedSquadsList"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Player picker modal -->
+<div class="modal" id="pickerModal">
+    <div class="modal-box">
+        <span class="close-x" onclick="closePicker()">&times;</span>
+        <div class="modal-title" style="font-size:1.2rem;">Select a Player</div>
+        <div class="picker-grid" id="pickerGrid"></div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 const SUPABASE_URL = 'https://bmwiqpkgdbeohkwbqaft.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_kguMGdM9yIP_qoUdOU6x_w_4ObYO4Wt';
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = typeof window.supabase !== 'undefined' ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-const PALETTES = {
-    gold:   { g1:'#fff5b0', g2:'#f0c030', g3:'#b8860b', ray:'rgba(255,255,255,0.12)', text:'#2a1800', subtext:'#5a3a00', border:'#d4a017' },
-    silver: { g1:'#f8f8f8', g2:'#c0c0c0', g3:'#707070', ray:'rgba(255,255,255,0.11)', text:'#111', subtext:'#444', border:'#aaa' },
-    bronze: { g1:'#f0b888', g2:'#c06838', g3:'#602810', ray:'rgba(255,255,255,0.08)', text:'#fff', subtext:'rgba(255,255,255,0.85)', border:'#a0521a' },
-    totw:   { g1:'#2a1e00', g2:'#090909', g3:'#140e00', ray:'rgba(201,168,76,0.08)', text:'#f0d060', subtext:'#c9a84c', border:'#c9a84c' },
-    rainbow: { stops: ['#c2006a', '#6800bb', '#0088c0'], ray:'rgba(255,255,255,0.15)', text:'#fff', subtext:'rgba(255,255,255,0.9)', border:'#fff' }
+// ── Palettes ──────────────────────────────────────────────────────────────────
+const PAL = {
+    gold:   {g1:'#fff5b0',g2:'#f0c030',g3:'#b8860b',ray:'rgba(255,255,255,0.12)',text:'#2a1800',sub:'#5a3a00',border:'#d4a017',glow:'rgba(220,170,0,0.5)'},
+    silver: {g1:'#f8f8f8',g2:'#c0c0c0',g3:'#707070',ray:'rgba(255,255,255,0.11)',text:'#111',sub:'#444',border:'#aaa',glow:'rgba(120,120,120,0.4)'},
+    bronze: {g1:'#f0b888',g2:'#c06838',g3:'#602810',ray:'rgba(255,255,255,0.08)',text:'#fff',sub:'rgba(255,255,255,0.85)',border:'#a0521a',glow:'rgba(140,70,0,0.5)'},
+    totw:   {g1:'#2a1e00',g2:'#090909',g3:'#140e00',ray:'rgba(201,168,76,0.06)',text:'#f0d060',sub:'#c9a84c',border:'#c9a84c',glow:'rgba(200,165,70,0.5)',shine:'rgba(201,168,76,0.13)'},
+    pink:   {g1:'#ffb0d8',g2:'#e0107a',g3:'#780040',ray:'rgba(255,255,255,0.09)',text:'#fff',sub:'rgba(255,255,255,0.85)',border:'#ff70c0',glow:'rgba(220,0,110,0.5)',shine:'rgba(255,180,220,0.14)'},
+    purple: {g1:'#d898ff',g2:'#7800e0',g3:'#3a0068',ray:'rgba(255,255,255,0.09)',text:'#fff',sub:'rgba(255,255,255,0.85)',border:'#b050ff',glow:'rgba(130,0,220,0.5)',shine:'rgba(210,160,255,0.14)'},
+    sky:    {g1:'#90eeff',g2:'#00a8e0',g3:'#004870',ray:'rgba(255,255,255,0.10)',text:'#fff',sub:'rgba(255,255,255,0.85)',border:'#50d8ff',glow:'rgba(0,170,230,0.5)',shine:'rgba(160,238,255,0.14)'},
+    asgold: {g1:'#fff5b0',g2:'#f0c030',g3:'#806000',ray:'rgba(255,255,255,0.12)',text:'#2a1800',sub:'#5a3a00',border:'#d4a017',glow:'rgba(220,170,0,0.5)',shine:'rgba(255,245,160,0.15)'},
 };
 
-function buildCard(p, rank, type) {
-    let pk;
-    if(type==='leaderboard') pk = p.ovr>=80?'gold':p.ovr>=70?'silver':'bronze';
-    else if(type==='totw') pk = 'totw';
-    else pk = 'rainbow';
-    
-    const pal = PALETTES[pk];
-    const W=280, H=390;
-    const gradId = `g${p.id}${type}`;
-    const rayId = `r${p.id}${type}`;
-
-    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
-    
-    let grad = pal.stops 
-        ? `<linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="100%">${pal.stops.map((s,i)=>`<stop offset="${i*50}%" stop-color="${s}"/>`).join('')}</linearGradient>`
-        : `<linearGradient id="${gradId}" x1="0%" y1="0%" x2="60%" y2="100%"><stop offset="0%" stop-color="${pal.g1}"/><stop offset="50%" stop-color="${pal.g2}"/><stop offset="100%" stop-color="${pal.g3}"/></linearGradient>`;
-
-    svg.innerHTML = `
-        <defs>
-            ${grad}
-            <pattern id="${rayId}" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(-40)"><line x1="0" y1="0" x2="0" y2="12" stroke="${pal.ray}" stroke-width="5"/></pattern>
-            <clipPath id="cp${p.id}${type}"><circle cx="140" cy="165" r="68"/></clipPath>
-        </defs>
-        <path d="M 60,0 L 220,0 A 22,22 0 0,1 242,22 L 280,22 A 18,18 0 0,1 280,40 L 280,340 Q 280,390 140,390 Q 0,390 0,340 L 0,40 A 18,18 0 0,1 0,22 L 38,22 A 22,22 0 0,1 60,0 Z" fill="url(#${gradId})"/>
-        <path d="M 60,0 L 220,0 A 22,22 0 0,1 242,22 L 280,22 A 18,18 0 0,1 280,40 L 280,340 Q 280,390 140,390 Q 0,390 0,340 L 0,40 A 18,18 0 0,1 0,22 L 38,22 A 22,22 0 0,1 60,0 Z" fill="url(#${rayId})"/>
-        <text x="32" y="62" font-family="Oswald" font-size="36" font-weight="900" fill="${pal.text}">${p.ovr}</text>
-        <text x="32" y="78" font-family="Oswald" font-size="13" font-weight="700" fill="${pal.subtext}">${p.pos}</text>
-        <text x="32" y="94" font-family="Oswald" font-size="12" font-weight="600" fill="${pal.subtext}">${p.wf}</text>
-        <circle cx="140" cy="165" r="70" fill="none" stroke="${pal.border}" stroke-width="2.5" opacity="0.6"/>
-        <image href="${p.img}" x="72" y="97" width="136" height="136" clip-path="url(#cp${p.id}${type})" preserveAspectRatio="xMidYMid slice" onerror="this.setAttribute('href','https://cdn-icons-png.flaticon.com/512/1163/1163481.png')"/>
-        <line x1="30" y1="248" x2="250" y2="248" stroke="${pal.subtext}" stroke-width="1.2" opacity="0.4"/>
-        <text x="140" y="275" font-family="Oswald" font-size="22" font-weight="700" text-anchor="middle" fill="${pal.text}">${p.name.toUpperCase()}</text>
-        <g transform="translate(140, 315)" font-family="Oswald" text-anchor="middle">
-            <g transform="translate(-85,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">PAC</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.pac}</text></g>
-            <g transform="translate(-51,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">SHO</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.sho}</text></g>
-            <g transform="translate(-17,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">PAS</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.pas}</text></g>
-            <g transform="translate(17,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">DRI</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.dri}</text></g>
-            <g transform="translate(51,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">DEF</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.def}</text></g>
-            <g transform="translate(85,0)"><text font-size="12" font-weight="700" fill="${pal.subtext}">PHY</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.phy}</text></g>
-        </g>
-    `;
-    const wrap = document.createElement('div');
-    wrap.className='card-wrap';
-    const del = document.createElement('button');
-    del.className='del-btn'; del.textContent='✕'; del.disabled=!user;
-    del.onclick=e=>{ e.stopPropagation(); if(confirm('Delete?')) deleteItem(p.id, type); };
-    wrap.appendChild(del); wrap.appendChild(svg);
-    wrap.onclick=()=>{ if(user) openEdit(p, type); };
-    return wrap;
+function palFor(p, type) {
+    if (type==='leaderboard') return p.ovr>=80?'gold':p.ovr>=70?'silver':'bronze';
+    if (type==='totw') return 'totw';
+    const m={pink:'pink',purple:'purple',sky:'sky',gold:'asgold'};
+    return m[p.color]||'pink';
 }
 
+// ── SVG card path ─────────────────────────────────────────────────────────────
+function cardPath() {
+    return 'M 60,0 L 220,0 A 22,22 0 0,1 242,22 L 280,22 A 18,18 0 0,1 280,40 L 280,340 Q 280,390 140,390 Q 0,390 0,340 L 0,40 A 18,18 0 0,1 0,22 L 38,22 A 22,22 0 0,1 60,0 Z';
+}
+function notchPath() {
+    return 'M 38,0 A 22,22 0 0,0 60,22 L 38,22 Z M 242,0 A 22,22 0 0,1 220,22 L 242,22 Z';
+}
+
+function makeSVG(p, type, W=280, H=390) {
+    const pk = palFor(p, type);
+    const pal = PAL[pk];
+    const uid = `${p.id}_${type}_${Math.random().toString(36).slice(2,6)}`;
+    const isTotw = type==='totw', isAllstar = type==='allstar';
+    const darkText = pk==='gold'||pk==='asgold';
+    let label = isTotw ? 'TEAM OF THE WEEK' : isAllstar ? 'TOURNAMENT ALL STAR' : '';
+    const labelColor = isTotw ? '#c9a84c' : darkText ? '#3a2000' : 'rgba(255,255,255,0.85)';
+    const labelBorder = isTotw ? '#c9a84c' : darkText ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.5)';
+    const divColor = isTotw ? '#c9a84c' : darkText ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.55)';
+    const rankLabel = label ? '' : `<text x="140" y="20" font-family="Oswald" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.sub}" opacity="0.8">RANK</text>`;
+
+    return `<svg viewBox="0 0 280 390" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gr${uid}" x1="0%" y1="0%" x2="60%" y2="100%">
+      <stop offset="0%" stop-color="${pal.g1}"/><stop offset="50%" stop-color="${pal.g2}"/><stop offset="100%" stop-color="${pal.g3}"/>
+    </linearGradient>
+    <pattern id="ry${uid}" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(-40 140 390)">
+      <line x1="0" y1="0" x2="0" y2="12" stroke="${pal.ray}" stroke-width="5"/>
+    </pattern>
+    <clipPath id="cp${uid}i"><circle cx="140" cy="165" r="68"/></clipPath>
+    <filter id="sh${uid}"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="${pal.glow}"/></filter>
+  </defs>
+  <path d="${cardPath()}" fill="${pal.g2}" filter="url(#sh${uid})" opacity="0.5" transform="translate(0,5)"/>
+  <path d="${cardPath()}" fill="url(#gr${uid})"/>
+  <path d="${cardPath()}" fill="url(#ry${uid})" opacity="0.9"/>
+  ${pal.shine?`<rect x="168" y="0" width="44" height="390" fill="${pal.shine}" transform="skewX(-7)" clip-path="url(#cp${uid}i)"/>`:''}
+  <path d="${cardPath()}" fill="none" stroke="${pal.border}" stroke-width="2.5" opacity="0.7"/>
+  <path d="${notchPath()}" fill="${pal.g3}" opacity="0.55"/>
+  <text x="22" y="48" font-family="Oswald" font-size="36" font-weight="900" fill="${pal.text}">${p.ovr}</text>
+  <text x="22" y="64" font-family="Oswald" font-size="13" font-weight="700" fill="${pal.sub}">${p.pos}</text>
+  <text x="22" y="78" font-family="Oswald" font-size="10" font-weight="600" fill="${pal.sub}">${p.wf}</text>
+  ${label
+    ? `<rect x="68" y="8" width="144" height="18" rx="3" fill="rgba(0,0,0,0.35)" stroke="${labelBorder}" stroke-width="1"/>
+       <text x="140" y="21" font-family="Oswald" font-size="9" font-weight="900" letter-spacing="1.5" text-anchor="middle" fill="${labelColor}">${label}</text>`
+    : `<text x="140" y="20" font-family="Oswald" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.sub}" opacity="0.8">RANK</text>`
+  }
+  <circle cx="140" cy="165" r="70" fill="${pal.g3}" opacity="0.5"/>
+  <circle cx="140" cy="165" r="70" fill="none" stroke="${pal.border}" stroke-width="2.5"/>
+  <image href="${p.img||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png'}" x="72" y="97" width="136" height="136" clip-path="url(#cp${uid}i)" preserveAspectRatio="xMidYMid slice"/>
+  <line x1="30" y1="248" x2="250" y2="248" stroke="${divColor}" stroke-width="1.2"/>
+  <text x="140" y="275" font-family="Oswald" font-size="22" font-weight="700" text-anchor="middle" fill="${pal.text}">${p.name.toUpperCase()}</text>
+  <g transform="translate(140,315)" font-family="Oswald" text-anchor="middle">
+    <g transform="translate(-85,0)"><text font-size="12" font-weight="700" fill="${pal.sub}">PAC</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.pac}</text></g>
+    <g transform="translate(-51,0)"><text font-size="12" font-weight="700" fill="${pal.sub}">SHO</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.sho}</text></g>
+    <g transform="translate(-17,0)"><text font-size="12" font-weight="700" fill="${pal.sub}">PAS</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.pas}</text></g>
+    <g transform="translate(17,0)"><text font-size="12" font-weight="700" fill="${pal.sub}">DRI</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.dri}</text></g>
+    <g transform="translate(51,0)"><text font-size="12" font-weight="700" fill="${pal.sub}">DEF</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.def}</text></g>
+    <g transform="translate(85,0)"><text font-size="12" font-weight="700" fill="${pal.sub}">PHY</text><text y="25" font-size="22" font-weight="900" fill="${pal.text}">${p.phy}</text></g>
+  </g>
+</svg>`;
+}
+
+// ── Main data ─────────────────────────────────────────────────────────────────
 let players=[], totw=[], allstars=[], user=null;
+
+function allPlayers() {
+    return [
+        ...players.map(p=>({...p,_type:'leaderboard'})),
+        ...totw.map(p=>({...p,_type:'totw'})),
+        ...allstars.map(p=>({...p,_type:'allstar'})),
+    ];
+}
 
 function updateAdminUI() {
     document.getElementById('adminStatus').textContent = user ? `✅ ${user.username}` : '🔒 Not logged in';
     document.getElementById('adminActionBtn').textContent = user ? 'Logout' : 'Admin Login';
+    document.getElementById('adminActionBtn').className = user ? 'admin-btn logout' : 'admin-btn';
     ['addPlayerBtn','addTotwBtn','addAllstarsBtn'].forEach(id=>document.getElementById(id).disabled=!user);
     renderAll();
 }
-
-function handleAdminBtn() { if(user){user=null; updateAdminUI();} else openLoginModal(); }
-function openLoginModal() { document.getElementById('loginModal').style.display='block'; }
-function closeLoginModal() { document.getElementById('loginModal').style.display='none'; }
-
-async function submitLogin() {
-    const u=document.getElementById('loginUser').value, p=document.getElementById('loginPass').value;
-    const {data} = await sb.from('admins').select('*').eq('username',u).eq('password',p).maybeSingle();
-    if(data){ user=data; closeLoginModal(); updateAdminUI(); } else document.getElementById('loginError').textContent='Fail';
+function handleAdminBtn() { if(user){user=null;updateAdminUI();}else openLoginModal(); }
+function openLoginModal(){document.getElementById('loginModal').style.display='block';}
+function closeLoginModal(){document.getElementById('loginModal').style.display='none';}
+async function submitLogin(){
+    const u=document.getElementById('loginUser').value,p=document.getElementById('loginPass').value;
+    const{data}=await sb.from('admins').select('*').eq('username',u).eq('password',p).maybeSingle();
+    if(data){user=data;closeLoginModal();updateAdminUI();}else document.getElementById('loginError').textContent='Invalid credentials.';
 }
 
-function renderAll() {
-    renderGrid('leaderboard', players, 'leaderboard');
-    renderGrid('totw-grid', totw, 'totw');
-    renderGrid('allstars-grid', allstars, 'allstar');
+function buildCard(p,i,type){
+    const wrap=document.createElement('div');
+    wrap.className='card-wrap';
+    wrap.innerHTML=makeSVG(p,type);
+    const del=document.createElement('button');
+    del.className='del-btn';del.textContent='✕';del.disabled=!user;
+    del.onclick=e=>{e.stopPropagation();if(confirm('Delete?'))deleteItem(p.id,type);};
+    wrap.insertBefore(del,wrap.firstChild);
+    wrap.onclick=()=>{if(user)openEdit(p,type);};
+    return wrap;
 }
-function renderGrid(id, list, type) {
-    const c=document.getElementById(id); c.innerHTML='';
+
+function renderAll(){
+    renderGrid('leaderboard',players,'leaderboard');
+    renderGrid('totw-grid',totw,'totw');
+    renderGrid('allstars-grid',allstars,'allstar');
+}
+function renderGrid(id,list,type){
+    const c=document.getElementById(id);c.innerHTML='';
     list.sort((a,b)=>b.ovr-a.ovr).forEach((p,i)=>c.appendChild(buildCard(p,i,type)));
 }
 
-async function refresh() {
-    const p = await sb.from('players_records').select('*'); players=p.data||[];
-    const t = await sb.from('totw_players').select('*'); totw=t.data||[];
-    const a = await sb.from('allstars_players').select('*'); allstars=a.data||[];
+async function refresh(){
+    const[pr,tr,ar]=await Promise.all([
+        sb.from('players_records').select('*'),
+        sb.from('totw_players').select('*'),
+        sb.from('allstars_players').select('*'),
+    ]);
+    players=pr.data||[];totw=tr.data||[];allstars=ar.data||[];
     renderAll();
+    renderSavedSquads();
 }
 
-function openPlayerModal() { reset('p'); document.getElementById('playerModal').style.display='block'; }
-function closePlayerModal() { document.getElementById('playerModal').style.display='none'; }
-function openTotwModal() { reset('t'); document.getElementById('totwModal').style.display='block'; }
-function closeTotwModal() { document.getElementById('totwModal').style.display='none'; }
-function openAllstarsModal() { reset('a'); document.getElementById('allstarsModal').style.display='block'; }
-function closeAllstarsModal() { document.getElementById('allstarsModal').style.display='none'; }
+function openPlayerModal(){reset('p');document.getElementById('playerModalTitle').textContent='Add Player';document.getElementById('playerModal').style.display='block';}
+function closePlayerModal(){document.getElementById('playerModal').style.display='none';}
+function openTotwModal(){reset('t');document.getElementById('totwModal').style.display='block';}
+function closeTotwModal(){document.getElementById('totwModal').style.display='none';}
+function openAllstarsModal(){reset('a');document.getElementById('allstarsModal').style.display='block';}
+function closeAllstarsModal(){document.getElementById('allstarsModal').style.display='none';}
+function reset(pre){['id','name','img','pos','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value='');}
+function fill(pre,p){['id','name','img','pos','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value=p[f]||'');document.getElementById(`${pre}-wf`).value=p.wf;}
+function openEdit(p,type){if(type==='leaderboard'){fill('p',p);document.getElementById('playerModal').style.display='block';}else if(type==='totw'){fill('t',p);document.getElementById('totwModal').style.display='block';}else{fill('a',p);document.getElementById('allstarsModal').style.display='block';}}
+function get(pre){const s=['pac','sho','pas','dri','def','phy'].map(f=>parseInt(document.getElementById(`${pre}-${f}`).value)||0);const eid=document.getElementById(`${pre}-id`).value;return{id:eid||String(Date.now()),name:document.getElementById(`${pre}-name`).value||'Player',img:document.getElementById(`${pre}-img`).value||'',pos:(document.getElementById(`${pre}-pos`).value||'ST').toUpperCase(),wf:document.getElementById(`${pre}-wf`).value,pac:s[0],sho:s[1],pas:s[2],dri:s[3],def:s[4],phy:s[5],ovr:Math.round(s.reduce((a,b)=>a+b)/6)};}
+async function savePlayer(){await sb.from('players_records').upsert(get('p'));closePlayerModal();refresh();}
+async function saveTotwPlayer(){await sb.from('totw_players').upsert(get('t'));closeTotwModal();refresh();}
+async function saveAllstar(){const d={...get('a'),color:document.getElementById('a-color').value};await sb.from('allstars_players').upsert(d);closeAllstarsModal();refresh();}
+async function deleteItem(id,type){const t=type==='leaderboard'?'players_records':type==='totw'?'totw_players':'allstars_players';await sb.from(t).delete().eq('id',id);refresh();}
 
-function reset(pre) { ['id','name','img','pos','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value=''); }
-function fill(pre, p) { ['id','name','img','pos','pac','sho','pas','dri','def','phy'].forEach(f=>document.getElementById(`${pre}-${f}`).value=p[f]); document.getElementById(`${pre}-wf`).value=p.wf; }
+// ══════════════════════════════════════════════════════════════════════════════
+// SQUAD BUILDER
+// ══════════════════════════════════════════════════════════════════════════════
 
-function openEdit(p, type) {
-    if(type==='leaderboard') { fill('p',p); document.getElementById('playerModal').style.display='block'; }
-    else if(type==='totw') { fill('t',p); document.getElementById('totwModal').style.display='block'; }
-    else { fill('a',p); document.getElementById('allstarsModal').style.display='block'; }
+// Formations: each slot has {label, x%, y%} — x/y as percentage of pitch width/height
+const FORMATIONS = {
+    '4v4': {
+        '2-1-1': [
+            {label:'GK',x:50,y:90},{label:'DEF',x:25,y:72},{label:'DEF',x:75,y:72},
+            {label:'MID',x:50,y:50},{label:'FWD',x:50,y:20}
+        ],
+        '1-2-1': [
+            {label:'GK',x:50,y:90},{label:'DEF',x:50,y:72},
+            {label:'MID',x:28,y:50},{label:'MID',x:72,y:50},{label:'FWD',x:50,y:20}
+        ],
+        '1-1-2': [
+            {label:'GK',x:50,y:90},{label:'DEF',x:50,y:72},{label:'MID',x:50,y:52},
+            {label:'FWD',x:28,y:20},{label:'FWD',x:72,y:20}
+        ],
+    },
+    '5v5': {
+        '2-2-1': [
+            {label:'GK',x:50,y:90},{label:'DEF',x:25,y:73},{label:'DEF',x:75,y:73},
+            {label:'MID',x:25,y:50},{label:'MID',x:75,y:50},{label:'FWD',x:50,y:20}
+        ],
+        '2-1-2': [
+            {label:'GK',x:50,y:90},{label:'DEF',x:25,y:73},{label:'DEF',x:75,y:73},
+            {label:'MID',x:50,y:50},{label:'FWD',x:28,y:20},{label:'FWD',x:72,y:20}
+        ],
+        '1-3-1': [
+            {label:'GK',x:50,y:90},{label:'DEF',x:50,y:73},
+            {label:'MID',x:20,y:50},{label:'MID',x:50,y:50},{label:'MID',x:80,y:50},
+            {label:'FWD',x:50,y:20}
+        ],
+    },
+    '7v7': {
+        '3-2-1': [
+            {label:'GK',x:50,y:90},
+            {label:'DEF',x:20,y:74},{label:'DEF',x:50,y:74},{label:'DEF',x:80,y:74},
+            {label:'MID',x:30,y:52},{label:'MID',x:70,y:52},
+            {label:'FWD',x:50,y:22}
+        ],
+        '2-3-1': [
+            {label:'GK',x:50,y:90},
+            {label:'DEF',x:28,y:74},{label:'DEF',x:72,y:74},
+            {label:'MID',x:18,y:52},{label:'MID',x:50,y:52},{label:'MID',x:82,y:52},
+            {label:'FWD',x:50,y:22}
+        ],
+        '3-1-2': [
+            {label:'GK',x:50,y:90},
+            {label:'DEF',x:20,y:74},{label:'DEF',x:50,y:74},{label:'DEF',x:80,y:74},
+            {label:'MID',x:50,y:52},
+            {label:'FWD',x:28,y:22},{label:'FWD',x:72,y:22}
+        ],
+        '2-2-2': [
+            {label:'GK',x:50,y:90},
+            {label:'DEF',x:28,y:74},{label:'DEF',x:72,y:74},
+            {label:'MID',x:28,y:52},{label:'MID',x:72,y:52},
+            {label:'FWD',x:28,y:22},{label:'FWD',x:72,y:22}
+        ],
+    },
+};
+
+let currentFormat = '4v4';
+let currentFormation = '2-1-1';
+let squadSlots = []; // array of {label, x, y, player|null, type|null}
+let activeSlotIndex = null;
+
+function openSquadModal() {
+    document.getElementById('squadModal').style.display = 'block';
+    setFormat('4v4', document.querySelector('.formation-btn'));
+    renderSavedSquads();
+}
+function closeSquadModal() { document.getElementById('squadModal').style.display = 'none'; }
+
+function setFormat(fmt, btn) {
+    currentFormat = fmt;
+    document.querySelectorAll('.formation-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const fmtForms = FORMATIONS[fmt];
+    const sel = document.getElementById('formationSelect');
+    sel.innerHTML = Object.keys(fmtForms).map(k=>`<option value="${k}">${k}</option>`).join('');
+    currentFormation = sel.value;
+    initSlots();
 }
 
-function get(pre) {
-    const s = ['pac','sho','pas','dri','def','phy'].map(f=>parseInt(document.getElementById(`${pre}-${f}`).value)||0);
-    const existingId = document.getElementById(`${pre}-id`).value;
-    return {
-        id: (existingId && existingId !== "") ? existingId : String(Date.now()),
-        name: document.getElementById(`${pre}-name`).value || "Player",
-        img: document.getElementById(`${pre}-img`).value || "",
-        pos: (document.getElementById(`${pre}-pos`).value || "ST").toUpperCase(),
-        wf: document.getElementById(`${pre}-wf`).value,
-        pac:s[0], sho:s[1], pas:s[2], dri:s[3], def:s[4], phy:s[5],
-        ovr: Math.round(s.reduce((a,b)=>a+b)/6)
+function setFormation(val) {
+    currentFormation = val;
+    initSlots();
+}
+
+function initSlots() {
+    const layout = FORMATIONS[currentFormat][currentFormation];
+    squadSlots = layout.map(s=>({...s, player:null, type:null}));
+    renderPitch();
+}
+
+function renderPitch() {
+    const container = document.getElementById('pitchSlots');
+    container.innerHTML = '';
+    let filled = 0, total = squadSlots.length;
+    squadSlots.forEach((slot, i) => {
+        const el = document.createElement('div');
+        el.className = 'slot';
+        el.style.left = slot.x + '%';
+        el.style.top  = slot.y + '%';
+
+        if (slot.player) {
+            filled++;
+            const miniSvg = makeMiniCard(slot.player, slot.type);
+            const rel = document.createElement('div');
+            rel.style.position = 'relative';
+            rel.innerHTML = miniSvg;
+            const rmBtn = document.createElement('button');
+            rmBtn.className = 'slot-remove';
+            rmBtn.textContent = '✕';
+            rmBtn.onclick = e => { e.stopPropagation(); squadSlots[i].player=null; squadSlots[i].type=null; renderPitch(); };
+            rel.appendChild(rmBtn);
+            el.appendChild(rel);
+            const nameEl = document.createElement('div');
+            nameEl.className = 'slot-filled-name';
+            nameEl.textContent = slot.player.name;
+            el.appendChild(nameEl);
+            el.onclick = () => openPicker(i);
+        } else {
+            el.innerHTML = `<div class="slot-empty">
+                <div class="slot-circle">+</div>
+                <div class="slot-label">${slot.label}</div>
+            </div>`;
+            el.onclick = () => openPicker(i);
+        }
+        container.appendChild(el);
+    });
+
+    // Avg OVR
+    const assigned = squadSlots.filter(s=>s.player);
+    if (assigned.length > 0) {
+        const avg = Math.round(assigned.reduce((a,s)=>a+s.player.ovr,0)/assigned.length);
+        document.getElementById('avgOvrBadge').textContent = avg;
+    } else {
+        document.getElementById('avgOvrBadge').textContent = '—';
+    }
+}
+
+function makeMiniCard(p, type) {
+    const pk = palFor(p, type);
+    const pal = PAL[pk];
+    const uid = `mini_${p.id}_${Math.random().toString(36).slice(2,6)}`;
+    return `<svg viewBox="0 0 280 390" xmlns="http://www.w3.org/2000/svg" style="width:72px;height:auto;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.7));">
+  <defs>
+    <linearGradient id="gr${uid}" x1="0%" y1="0%" x2="60%" y2="100%">
+      <stop offset="0%" stop-color="${pal.g1}"/><stop offset="50%" stop-color="${pal.g2}"/><stop offset="100%" stop-color="${pal.g3}"/>
+    </linearGradient>
+    <clipPath id="cp${uid}"><circle cx="140" cy="165" r="68"/></clipPath>
+  </defs>
+  <path d="${cardPath()}" fill="url(#gr${uid})"/>
+  <path d="${cardPath()}" fill="none" stroke="${pal.border}" stroke-width="3" opacity="0.8"/>
+  <path d="${notchPath()}" fill="${pal.g3}" opacity="0.5"/>
+  <text x="22" y="50" font-family="Oswald" font-size="38" font-weight="900" fill="${pal.text}">${p.ovr}</text>
+  <text x="22" y="66" font-family="Oswald" font-size="14" font-weight="700" fill="${pal.sub}">${p.pos}</text>
+  <circle cx="140" cy="165" r="70" fill="${pal.g3}" opacity="0.4"/>
+  <image href="${p.img||'https://cdn-icons-png.flaticon.com/512/1163/1163481.png'}" x="72" y="97" width="136" height="136" clip-path="url(#cp${uid})" preserveAspectRatio="xMidYMid slice"/>
+  <text x="140" y="275" font-family="Oswald" font-size="24" font-weight="700" text-anchor="middle" fill="${pal.text}">${p.name.split(' ')[0].toUpperCase()}</text>
+</svg>`;
+}
+
+// ── Picker ────────────────────────────────────────────────────────────────────
+function openPicker(slotIndex) {
+    activeSlotIndex = slotIndex;
+    const grid = document.getElementById('pickerGrid');
+    grid.innerHTML = '';
+    const usedIds = squadSlots.filter((_,i)=>i!==slotIndex && squadSlots[i].player).map(s=>s.player.id+'_'+s.type);
+    const all = allPlayers();
+    if (!all.length) {
+        grid.innerHTML = '<p style="color:#888;text-align:center;grid-column:1/-1;">No players found. Add players first.</p>';
+    }
+    all.forEach(p => {
+        const key = p.id+'_'+p._type;
+        const div = document.createElement('div');
+        div.className = 'picker-card' + (usedIds.includes(key) ? ' used' : '');
+        div.innerHTML = makeSVG(p, p._type);
+        div.onclick = () => { assignPlayer(p, p._type); closePicker(); };
+        grid.appendChild(div);
+    });
+    document.getElementById('pickerModal').style.display = 'block';
+}
+function closePicker() { document.getElementById('pickerModal').style.display = 'none'; activeSlotIndex = null; }
+
+function assignPlayer(p, type) {
+    if (activeSlotIndex === null) return;
+    squadSlots[activeSlotIndex].player = p;
+    squadSlots[activeSlotIndex].type = type;
+    renderPitch();
+}
+
+// ── Save/Load squads (localStorage) ──────────────────────────────────────────
+function saveSquad() {
+    const name = document.getElementById('squadNameInput').value.trim() || `Squad ${Date.now()}`;
+    const saved = JSON.parse(localStorage.getItem('savedSquads')||'[]');
+    const squad = {
+        id: Date.now(),
+        name,
+        format: currentFormat,
+        formation: currentFormation,
+        slots: squadSlots.map(s=>({label:s.label,x:s.x,y:s.y,playerId:s.player?.id||null,playerType:s.type||null})),
+        savedAt: new Date().toLocaleDateString()
     };
+    saved.push(squad);
+    localStorage.setItem('savedSquads', JSON.stringify(saved));
+    document.getElementById('squadNameInput').value = '';
+    renderSavedSquads();
+    // Flash feedback
+    const btn = document.querySelector('.save-squad-btn');
+    btn.textContent = '✅ Saved!';
+    setTimeout(()=>btn.textContent='💾 Save Squad', 1500);
 }
 
-async function savePlayer() { const {error} = await sb.from('players_records').upsert(get('p')); if(error) alert(error.message); closePlayerModal(); refresh(); }
-async function saveTotwPlayer() { const {error} = await sb.from('totw_players').upsert(get('t')); if(error) alert(error.message); closeTotwModal(); refresh(); }
-async function saveAllstar() { const {error} = await sb.from('allstars_players').upsert(get('a')); if(error) alert(error.message); closeAllstarsModal(); refresh(); }
+function loadSquad(squad) {
+    currentFormat = squad.format;
+    currentFormation = squad.formation;
+    // Update UI controls
+    document.querySelectorAll('.formation-btn').forEach(b=>{
+        b.classList.toggle('active', b.textContent===squad.format);
+    });
+    const sel = document.getElementById('formationSelect');
+    const fmtForms = FORMATIONS[squad.format];
+    sel.innerHTML = Object.keys(fmtForms).map(k=>`<option value="${k}">${k}</option>`).join('');
+    sel.value = squad.formation;
 
-async function deleteItem(id, type) {
-    const table = type==='leaderboard'?'players_records':type==='totw'?'totw_players':'allstars_players';
-    await sb.from(table).delete().eq('id',id);
-    refresh();
+    const all = allPlayers();
+    squadSlots = squad.slots.map(s=>{
+        let player = null, type = null;
+        if (s.playerId) {
+            const found = all.find(p=>String(p.id)===String(s.playerId) && p._type===s.playerType);
+            if (found) { player = found; type = s.playerType; }
+        }
+        return {label:s.label, x:s.x, y:s.y, player, type};
+    });
+    renderPitch();
 }
 
-function subscribeRealtime(){
-    sb.channel('db').on('postgres_changes',{event:'*',schema:'public',table:'players_records'},refresh)
-      .on('postgres_changes',{event:'*',schema:'public',table:'totw_players'},refresh)
-      .on('postgres_changes',{event:'*',schema:'public',table:'allstars_players'},refresh).subscribe();
+function deleteSavedSquad(id) {
+    const saved = JSON.parse(localStorage.getItem('savedSquads')||'[]').filter(s=>s.id!==id);
+    localStorage.setItem('savedSquads', JSON.stringify(saved));
+    renderSavedSquads();
 }
 
-window.onclick=e=>{ if(e.target.className==='modal') e.target.style.display='none'; };
+function renderSavedSquads() {
+    const list = document.getElementById('savedSquadsList');
+    if (!list) return;
+    const saved = JSON.parse(localStorage.getItem('savedSquads')||'[]');
+    if (!saved.length) { list.innerHTML = '<div class="no-squads">No squads saved yet.</div>'; return; }
+    list.innerHTML = saved.slice().reverse().map(sq=>`
+        <div class="saved-squad-item">
+            <div class="saved-squad-name">${sq.name}</div>
+            <div class="saved-squad-meta">${sq.format} · ${sq.formation} · ${sq.savedAt}</div>
+            <div class="saved-squad-actions">
+                <button class="sq-load-btn" onclick="loadSquad(${JSON.stringify(sq).replace(/"/g,'&quot;')})">Load</button>
+                <button class="sq-del-btn" onclick="deleteSavedSquad(${sq.id})">Delete</button>
+            </div>
+        </div>`).join('');
+}
+
+function clearSquad() {
+    squadSlots.forEach(s=>{ s.player=null; s.type=null; });
+    renderPitch();
+}
+
+// ── Realtime & init ───────────────────────────────────────────────────────────
+window.onclick = e => { if(e.target.className==='modal') e.target.style.display='none'; };
 refresh();
-subscribeRealtime();
+if(sb) sb.channel('db')
+    .on('postgres_changes',{event:'*',schema:'public',table:'players_records'},refresh)
+    .on('postgres_changes',{event:'*',schema:'public',table:'totw_players'},refresh)
+    .on('postgres_changes',{event:'*',schema:'public',table:'allstars_players'},refresh)
+    .subscribe();
 </script>
 </body>
 </html>
