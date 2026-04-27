@@ -297,6 +297,48 @@
             border-radius: 10px;
             margin-left: 6px;
         }
+
+        /* ── MOBILE FIXES ── */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .section-title { font-size: 1.5rem; }
+            
+            /* Responsive Grid */
+            .card-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 15px;
+            }
+
+            /* Stacked Squad Layout */
+            .squad-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .pitch-wrap {
+                aspect-ratio: 0.8;
+                width: 100%;
+            }
+
+            /* Larger touch targets for slots */
+            .slot { width: 65px; }
+            .slot-circle { width: 45px; height: 45px; }
+            .slot-filled svg { width: 60px; }
+
+            /* Scrollable controls */
+            .squad-controls {
+                justify-content: flex-start;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 10px;
+                display: block;
+                -webkit-overflow-scrolling: touch;
+            }
+            .formation-btn { display: inline-block; margin-right: 5px; }
+
+            /* Modals */
+            .modal-box { width: 95%; margin: 10px auto; padding: 15px; }
+            .picker-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+        }
     </style>
 </head>
 <body>
@@ -307,7 +349,6 @@
         <button class="admin-btn" id="adminActionBtn" onclick="handleAdminBtn()">Admin Login</button>
     </div>
 
-    <!-- Leaderboard -->
     <div class="section-header">
         <h2 class="section-title">🏆 Leaderboard</h2>
         <div class="add-btn-wrap">
@@ -316,7 +357,6 @@
     </div>
     <div class="card-grid" id="leaderboard"></div>
 
-    <!-- TOTW -->
     <div class="section-gap">
         <hr class="divider-gold">
         <div class="section-header">
@@ -328,7 +368,6 @@
         <div class="card-grid" id="totw-grid"></div>
     </div>
 
-    <!-- All Stars -->
     <div class="section-gap">
         <hr class="divider-rainbow">
         <div class="section-header">
@@ -340,7 +379,6 @@
         <div class="card-grid" id="allstars-grid"></div>
     </div>
 
-    <!-- Squad Builder entry -->
     <div class="section-gap">
         <hr class="divider-green">
         <div class="section-header">
@@ -353,7 +391,6 @@
     </div>
 </div>
 
-<!-- ═══════════════════ PLAYER MODALS ═══════════════════ -->
 <div class="modal" id="playerModal">
     <div class="modal-box"><span class="close-x" onclick="closePlayerModal()">&times;</span><div class="modal-title" id="playerModalTitle">Add Player</div><div class="fg"><input type="hidden" id="p-id"><input class="fw" type="text" id="p-name" placeholder="Name"><input class="fw" type="text" id="p-img" placeholder="Photo URL"><input type="text" id="p-pos" placeholder="POS"><select id="p-wf"><option value="⭐">1★</option><option value="⭐⭐">2★</option><option value="⭐⭐⭐">3★</option><option value="⭐⭐⭐⭐" selected>4★</option><option value="⭐⭐⭐⭐⭐">5★</option></select><input type="number" id="p-pac" placeholder="PAC"><input type="number" id="p-sho" placeholder="SHO"><input type="number" id="p-pas" placeholder="PAS"><input type="number" id="p-dri" placeholder="DRI"><input type="number" id="p-def" placeholder="DEF"><input type="number" id="p-phy" placeholder="PHY"><button class="sbtn blue" onclick="savePlayer()">Save</button></div></div>
 </div>
@@ -367,7 +404,6 @@
     <div class="modal-box" style="max-width:360px;"><span class="close-x" onclick="closeLoginModal()">&times;</span><div class="modal-title">🔐 Admin Login</div><div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;"><input style="padding:11px;border:1px solid #ddd;border-radius:8px;font-family:Oswald,sans-serif;font-size:1rem;" type="text" id="loginUser" placeholder="Username"><input style="padding:11px;border:1px solid #ddd;border-radius:8px;font-family:Oswald,sans-serif;font-size:1rem;" type="password" id="loginPass" placeholder="Password" onkeydown="if(event.key==='Enter')submitLogin()"><div id="loginError"></div><button style="background:#00BFFF;color:white;border:none;padding:12px;border-radius:9px;font-size:1.05rem;font-weight:bold;cursor:pointer;text-transform:uppercase;font-family:Oswald,sans-serif;" onclick="submitLogin()">Login</button></div></div>
 </div>
 
-<!-- ═══════════════════ SQUAD BUILDER MODAL ═══════════════════ -->
 <div class="modal" id="squadModal">
     <div class="modal-box">
         <span class="close-x" onclick="closeSquadModal()">&times;</span>
@@ -390,37 +426,24 @@
         </div>
 
         <div class="squad-layout">
-            <!-- Pitch -->
             <div class="pitch-wrap" id="pitchWrap">
                 <svg class="pitch-lines" viewBox="0 0 400 570" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Pitch markings -->
                     <rect x="0" y="0" width="400" height="570" fill="#1a6b2a"/>
-                    <!-- Stripes -->
                     <rect x="0"   y="0"   width="400" height="57"  fill="rgba(255,255,255,0.03)"/>
                     <rect x="0"   y="114" width="400" height="57"  fill="rgba(255,255,255,0.03)"/>
                     <rect x="0"   y="228" width="400" height="57"  fill="rgba(255,255,255,0.03)"/>
                     <rect x="0"   y="342" width="400" height="57"  fill="rgba(255,255,255,0.03)"/>
                     <rect x="0"   y="456" width="400" height="57"  fill="rgba(255,255,255,0.03)"/>
-                    <!-- Outer border -->
                     <rect x="8" y="8" width="384" height="554" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" rx="4"/>
-                    <!-- Halfway line -->
                     <line x1="8" y1="285" x2="392" y2="285" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
-                    <!-- Centre circle -->
                     <circle cx="200" cy="285" r="45" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
                     <circle cx="200" cy="285" r="3" fill="rgba(255,255,255,0.7)"/>
-                    <!-- Top penalty area -->
                     <rect x="100" y="8" width="200" height="80" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
-                    <!-- Top goal area -->
                     <rect x="148" y="8" width="104" height="32" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
-                    <!-- Top penalty spot -->
                     <circle cx="200" cy="68" r="3" fill="rgba(255,255,255,0.6)"/>
-                    <!-- Bottom penalty area -->
                     <rect x="100" y="482" width="200" height="80" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
-                    <!-- Bottom goal area -->
                     <rect x="148" y="530" width="104" height="32" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
-                    <!-- Bottom penalty spot -->
                     <circle cx="200" cy="502" r="3" fill="rgba(255,255,255,0.6)"/>
-                    <!-- Corner arcs -->
                     <path d="M 8,8 A 12,12 0 0,1 20,8" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
                     <path d="M 392,8 A 12,12 0 0,0 380,8" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
                     <path d="M 8,562 A 12,12 0 0,0 8,550" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
@@ -429,7 +452,6 @@
                 <div class="pitch-slots" id="pitchSlots"></div>
             </div>
 
-            <!-- Right panel: saved squads -->
             <div class="squad-panel">
                 <h3>💾 Saved Squads</h3>
                 <div id="savedSquadsList"></div>
@@ -438,7 +460,6 @@
     </div>
 </div>
 
-<!-- Player picker modal -->
 <div class="modal" id="pickerModal">
     <div class="modal-box">
         <span class="close-x" onclick="closePicker()">&times;</span>
@@ -756,7 +777,8 @@ function makeMiniCard(p, type) {
     const pk = palFor(p, type);
     const pal = PAL[pk];
     const uid = `mini_${p.id}_${Math.random().toString(36).slice(2,6)}`;
-    return `<svg viewBox="0 0 280 390" xmlns="http://www.w3.org/2000/svg" style="width:72px;height:auto;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.7));">
+    const cardWidth = window.innerWidth < 768 ? '60px' : '72px';
+    return `<svg viewBox="0 0 280 390" xmlns="http://www.w3.org/2000/svg" style="width:${cardWidth};height:auto;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.7));">
   <defs>
     <linearGradient id="gr${uid}" x1="0%" y1="0%" x2="60%" y2="100%">
       <stop offset="0%" stop-color="${pal.g1}"/><stop offset="50%" stop-color="${pal.g2}"/><stop offset="100%" stop-color="${pal.g3}"/>
