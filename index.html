@@ -297,48 +297,6 @@
             border-radius: 10px;
             margin-left: 6px;
         }
-
-        /* ── MOBILE FIXES ── */
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .section-title { font-size: 1.5rem; }
-            
-            /* Responsive Grid */
-            .card-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-                gap: 15px;
-            }
-
-            /* Stacked Squad Layout */
-            .squad-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .pitch-wrap {
-                aspect-ratio: 0.8;
-                width: 100%;
-            }
-
-            /* Larger touch targets for slots */
-            .slot { width: 65px; }
-            .slot-circle { width: 45px; height: 45px; }
-            .slot-filled svg { width: 60px; }
-
-            /* Scrollable controls */
-            .squad-controls {
-                justify-content: flex-start;
-                overflow-x: auto;
-                white-space: nowrap;
-                padding-bottom: 10px;
-                display: block;
-                -webkit-overflow-scrolling: touch;
-            }
-            .formation-btn { display: inline-block; margin-right: 5px; }
-
-            /* Modals */
-            .modal-box { width: 95%; margin: 10px auto; padding: 15px; }
-            .picker-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
-        }
     </style>
 </head>
 <body>
@@ -511,7 +469,6 @@ function makeSVG(p, type, W=280, H=390) {
     const labelColor = isTotw ? '#c9a84c' : darkText ? '#3a2000' : 'rgba(255,255,255,0.85)';
     const labelBorder = isTotw ? '#c9a84c' : darkText ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.5)';
     const divColor = isTotw ? '#c9a84c' : darkText ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.55)';
-    const rankLabel = label ? '' : `<text x="140" y="20" font-family="Oswald" font-size="11" font-weight="700" text-anchor="middle" fill="${pal.sub}" opacity="0.8">RANK</text>`;
 
     return `<svg viewBox="0 0 280 390" xmlns="http://www.w3.org/2000/svg">
   <defs>
@@ -777,8 +734,7 @@ function makeMiniCard(p, type) {
     const pk = palFor(p, type);
     const pal = PAL[pk];
     const uid = `mini_${p.id}_${Math.random().toString(36).slice(2,6)}`;
-    const cardWidth = window.innerWidth < 768 ? '60px' : '72px';
-    return `<svg viewBox="0 0 280 390" xmlns="http://www.w3.org/2000/svg" style="width:${cardWidth};height:auto;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.7));">
+    return `<svg viewBox="0 0 280 390" xmlns="http://www.w3.org/2000/svg" style="width:72px;height:auto;display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,0.7));">
   <defs>
     <linearGradient id="gr${uid}" x1="0%" y1="0%" x2="60%" y2="100%">
       <stop offset="0%" stop-color="${pal.g1}"/><stop offset="50%" stop-color="${pal.g2}"/><stop offset="100%" stop-color="${pal.g3}"/>
