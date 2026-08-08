@@ -346,7 +346,7 @@
 
 <script>
     const SUPABASE_URL = 'https://bmwiqpkgdbeohkwbqaft.supabase.co';
-    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const SUPABASE_ANON_KEY = 'sb_publishable_kguMGdM9yIP_qoUdOU6x_w_4ObYO4Wt';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let rawPlayers = [];
@@ -356,7 +356,7 @@
 
     async function fetchPlayers() {
         const { data, error } = await supabase
-            .from('players')
+            .from('players_records')
             .select('*');
 
         if (error) { console.error('Error fetching players:', error); return; }
@@ -396,7 +396,7 @@
             <div class="detail-row"><span>Overall Rating</span><strong>${p.ovr} OVR</strong></div>
             <div class="detail-row"><span>Goals Scored</span><strong>⚽ ${p.goals || 0}</strong></div>
             <div class="detail-row"><span>Assists</span><strong>🅰️ ${p.assists || 0}</strong></div>
-            <div class="detail-row"><span>Weak Foot</span><strong>${p.wf}</strong></div>
+            <div class="detail-row"><span>Weak Foot</span><strong>${p.wf || '⭐⭐⭐⭐'}</strong></div>
             <div class="detail-row"><span>Skill Moves</span><strong>${'⭐'.repeat(p.sm || 4)}</strong></div>
             <div style="margin-top:15px;">
                 <div style="margin-bottom:8px; font-weight:700;">PlayStyles:</div>
@@ -424,7 +424,7 @@
             document.getElementById('name').value = p.name;
             document.getElementById('img-url').value = p.img.includes('flaticon') ? '' : p.img;
             document.getElementById('pos').value = p.pos;
-            document.getElementById('wf').value = p.wf;
+            document.getElementById('wf').value = p.wf || '⭐⭐⭐⭐';
             document.getElementById('sm').value = p.sm || 4;
             document.getElementById('pac').value = p.pac;
             document.getElementById('sho').value = p.sho;
@@ -469,9 +469,9 @@
         };
 
         if (idInput) {
-            await supabase.from('players').update(playerData).eq('id', idInput);
+            await supabase.from('players_records').update(playerData).eq('id', idInput);
         } else {
-            await supabase.from('players').insert([playerData]);
+            await supabase.from('players_records').insert([playerData]);
         }
 
         closeModal();
@@ -480,7 +480,7 @@
 
     async function deletePlayer(playerId) {
         if (confirm("Permanently delete this player?")) {
-            await supabase.from('players').delete().eq('id', playerId);
+            await supabase.from('players_records').delete().eq('id', playerId);
             fetchPlayers();
         }
     }
