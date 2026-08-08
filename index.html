@@ -460,14 +460,22 @@
         const passInput = document.getElementById('adminPass').value.trim();
         const errDiv = document.getElementById('loginError');
 
-        // Check against Supabase admin table
+        // Query the 'admins' table explicitly
         const { data, error } = await db
             .from('admins')
             .select('*')
             .or(`username.eq.${userInput},email.eq.${userInput}`)
             .eq('password', passInput);
 
-        if (error || !data || data.length === 0) {
+        if (error) {
+            console.error('Supabase error checking admins table:', error);
+            errDiv.innerText = "Error connecting to admins table";
+            errDiv.style.display = 'block';
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            errDiv.innerText = "Invalid admin credentials";
             errDiv.style.display = 'block';
             return;
         }
@@ -593,10 +601,17 @@
             ovr: ovr
         };
 
+        let res;
         if (idInput) {
-            await db.from('players_records').update(playerData).eq('id', idInput);
+            res = await db.from('players_records').update(playerData).eq('id', idInput);
         } else {
-            await db.from('players_records').insert([playerData]);
+            res = await db.from('players_records').insert([playerData]);
+        }
+
+        if (res.error) {
+            console.error("Save error from Supabase:", res.error);
+            alert("Error saving player: " + res.error.message);
+            return;
         }
 
         closeModal();
@@ -606,7 +621,12 @@
     async function deletePlayer(playerId) {
         if (!isAdmin) return;
         if (confirm("Permanently delete this player?")) {
-            await db.from('players_records').delete().eq('id', playerId);
+            const { error } = await db.from('players_records').delete().eq('id', playerId);
+            if (error) {
+                console.error("Delete error from Supabase:", error);
+                alert("Error deleting player: " + error.message);
+                return;
+            }
             fetchPlayers();
         }
     }
