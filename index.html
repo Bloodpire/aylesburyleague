@@ -60,7 +60,7 @@
             display: none;
         }
 
-        /* Controls Section (Add Button + Filters) */
+        /* Controls Section */
         .controls-section {
             display: flex;
             flex-wrap: wrap;
@@ -99,7 +99,7 @@
 
         .filter-group label { font-size: 0.85rem; font-weight: 700; color: #aaa; text-transform: uppercase; }
 
-        /* EA FC Authentic Card Base */
+        /* EA FC Card Base */
         .fc-card {
             position: relative;
             width: 230px;
@@ -125,7 +125,7 @@
             box-sizing: border-box;
         }
 
-        /* --- Dynamic Card Tiers --- */
+        /* Tiers */
         .fc-card.gold { background: linear-gradient(135deg, #f3e098 0%, #d4af37 50%, #aa7c11 100%); }
         .fc-card.gold .fc-card-inner { background: radial-gradient(circle at 50% 35%, #fff2a8 0%, #dfb547 60%, #8c6200 100%); color: #2b1f00; }
 
@@ -150,7 +150,7 @@
             font-weight: 800;
             cursor: pointer;
             z-index: 10;
-            display: none; /* Hidden until admin logs in */
+            display: none;
         }
 
         .card-top-left {
@@ -460,16 +460,16 @@
         const passInput = document.getElementById('adminPass').value.trim();
         const errDiv = document.getElementById('loginError');
 
-        // Query the 'admins' table explicitly
+        // Clean query strictly matching existing columns: username and password
         const { data, error } = await db
             .from('admins')
             .select('*')
-            .or(`username.eq.${userInput},email.eq.${userInput}`)
+            .eq('username', userInput)
             .eq('password', passInput);
 
         if (error) {
             console.error('Supabase error checking admins table:', error);
-            errDiv.innerText = "Error connecting to admins table";
+            errDiv.innerText = "Error: " + error.message;
             errDiv.style.display = 'block';
             return;
         }
@@ -491,7 +491,6 @@
         document.getElementById('addPlayerBtn').style.display = 'block';
         document.getElementById('editFromDetailBtn').style.display = 'block';
         
-        // Show all delete buttons on cards
         document.querySelectorAll('.delete-btn').forEach(btn => btn.style.display = 'block');
     }
 
