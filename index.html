@@ -9,11 +9,14 @@
     <style>
         :root {
             --sky-blue: #00BFFF;
+            --gold: #f1c40f;
+            --bg-dark: #11141a;
+            --card-bg: #1e2430;
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: #11141a;
+            background: var(--bg-dark);
             color: #fff;
             min-height: 100vh;
             margin: 0;
@@ -30,12 +33,40 @@
         }
 
         h1 { 
-            color: #f1c40f; 
+            color: var(--gold); 
             text-shadow: 0 4px 15px rgba(241, 196, 15, 0.3); 
             font-size: 2.5rem; 
             margin: 0; 
             font-weight: 900;
         }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: #aaa;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 800;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .tab-btn.active { color: #000; background: var(--gold); box-shadow: 0 4px 12px rgba(241, 196, 15, 0.3); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         .admin-login-btn {
             background: #2c3e50;
@@ -68,14 +99,14 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 30px;
-            background: #1e2430;
+            background: var(--card-bg);
             padding: 15px 25px;
             border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.08);
         }
 
         .open-modal-btn {
-            background: linear-gradient(135deg, #f39c12, #f1c40f);
+            background: linear-gradient(135deg, #f39c12, var(--gold));
             color: #000;
             border: none;
             padding: 10px 25px;
@@ -91,12 +122,7 @@
 
         .open-modal-btn:hover { transform: translateY(-2px); }
 
-        .filter-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
+        .filter-group { display: flex; gap: 10px; align-items: center; }
         .filter-group label { font-size: 0.85rem; font-weight: 700; color: #aaa; text-transform: uppercase; }
 
         /* EA FC Card Base */
@@ -125,7 +151,6 @@
             box-sizing: border-box;
         }
 
-        /* Tiers */
         .fc-card.gold { background: linear-gradient(135deg, #f3e098 0%, #d4af37 50%, #aa7c11 100%); }
         .fc-card.gold .fc-card-inner { background: radial-gradient(circle at 50% 35%, #fff2a8 0%, #dfb547 60%, #8c6200 100%); color: #2b1f00; }
 
@@ -135,7 +160,6 @@
         .fc-card.bronze { background: linear-gradient(135deg, #d39869 0%, #a05a2c 50%, #5c3214 100%); }
         .fc-card.bronze .fc-card-inner { background: radial-gradient(circle at 50% 35%, #f2be9b 0%, #b86d3b 60%, #4a240c 100%); color: #260d02; }
 
-        /* Card Elements */
         .delete-btn {
             position: absolute;
             top: 10px;
@@ -163,18 +187,8 @@
             z-index: 3;
         }
 
-        .card-ovr { 
-            font-size: 2.2rem; 
-            font-weight: 900; 
-            letter-spacing: -1px; 
-        }
-
-        .card-pos { 
-            font-weight: 800; 
-            margin-top: 4px; 
-            word-break: break-word;
-            line-height: 1.1;
-        }
+        .card-ovr { font-size: 2.2rem; font-weight: 900; letter-spacing: -1px; }
+        .card-pos { font-weight: 800; margin-top: 4px; word-break: break-word; line-height: 1.1; }
 
         .card-player-img {
             position: absolute;
@@ -193,35 +207,31 @@
             width: 100%;
             left: 0;
             text-align: center;
-            font-size: 1.05rem;
-            font-weight: 800;
+            font-size: 1.15rem;
+            font-weight: 900;
             text-transform: uppercase;
             border-top: 1px solid rgba(0,0,0,0.15);
             padding-top: 6px;
+            letter-spacing: 0.5px;
         }
 
         .card-stats {
             position: absolute;
-            top: 232px;
-            left: 10px;
-            right: 10px;
+            top: 242px;
+            left: 6px;
+            right: 6px;
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             text-align: center;
-            font-size: 0.65rem;
+            font-size: 0.75rem;
             font-weight: 800;
         }
 
-        .stat-val { 
-            font-size: 0.95rem; 
-            font-weight: 900; 
-            display: block; 
-            margin-top: 2px;
-        }
+        .stat-val { font-size: 1.15rem; font-weight: 900; display: block; margin-top: 1px; }
 
         .card-badges {
             position: absolute;
-            bottom: 22px;
+            bottom: 12px;
             width: 100%;
             left: 0;
             display: flex;
@@ -239,6 +249,81 @@
             justify-items: center;
         }
 
+        /* League Table Styles */
+        .league-table-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        th {
+            color: #aaa;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        td { font-weight: 700; }
+        tr:hover { background: rgba(255,255,255,0.02); }
+        .pts-col { color: var(--gold); font-weight: 900; font-size: 1.1rem; }
+
+        /* Match Calendar Grid */
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .match-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            position: relative;
+        }
+
+        .match-date {
+            font-size: 0.85rem;
+            color: var(--gold);
+            font-weight: 800;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .match-teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .match-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            background: #2c3e50;
+        }
+
+        .status-live { background: #e74c3c; animation: pulse 1.5s infinite; }
+        .status-upcoming { background: #2980b9; }
+
         /* Modals */
         .modal {
             display: none;
@@ -251,7 +336,7 @@
         }
 
         .modal-content {
-            background: #1e2430;
+            background: var(--card-bg);
             color: #fff;
             margin: 4% auto;
             padding: 30px;
@@ -263,14 +348,14 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .modal-header { font-size: 1.6rem; font-weight: 800; margin-bottom: 20px; text-align: center; color: #f1c40f; }
+        .modal-header { font-size: 1.6rem; font-weight: 800; margin-bottom: 20px; text-align: center; color: var(--gold); }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .full-width { grid-column: span 2; }
 
         input, select {
             padding: 10px 12px;
-            background: #11141a;
+            background: var(--bg-dark);
             border: 1px solid rgba(255,255,255,0.2);
             color: #fff;
             border-radius: 8px;
@@ -281,7 +366,7 @@
 
         .save-btn {
             grid-column: span 2;
-            background: #f1c40f;
+            background: var(--gold);
             color: #000;
             border: none;
             padding: 12px;
@@ -304,7 +389,7 @@
         }
 
         .playstyle-badge {
-            background: #f1c40f;
+            background: var(--gold);
             color: #000;
             padding: 4px 10px;
             border-radius: 12px;
@@ -334,29 +419,69 @@
         </div>
     </div>
 
-    <!-- Filter & Add Bar -->
-    <div class="controls-section">
-        <button id="addPlayerBtn" class="open-modal-btn" onclick="openEditModal()">+ Add New Player</button>
-        
-        <div class="filter-group">
-            <label>Filter Position:</label>
-            <select id="posFilter" onchange="applyFilters()">
-                <option value="ALL">All Positions</option>
-                <option value="ATT">Attackers (ST, CF, RW, LW)</option>
-                <option value="MID">Midfielders (CM, CAM, CDM)</option>
-                <option value="DEF">Defenders (CB, LB, RB)</option>
-            </select>
-
-            <label>Sort By:</label>
-            <select id="sortBy" onchange="applyFilters()">
-                <option value="ovr">Overall Rating</option>
-                <option value="goals">Most Goals</option>
-                <option value="assists">Most Assists</option>
-            </select>
-        </div>
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('cards')">Cards</button>
+        <button class="tab-btn" onclick="switchTab('calendar')">Calendar</button>
+        <button class="tab-btn" onclick="switchTab('table')">League Table</button>
     </div>
 
-    <div id="leaderboard"></div>
+    <!-- TAB 1: CARDS -->
+    <div id="cardsTab" class="tab-content active">
+        <div class="controls-section">
+            <button id="addPlayerBtn" class="open-modal-btn" onclick="openEditModal()">+ Add New Player</button>
+            <div class="filter-group">
+                <label>Filter Position:</label>
+                <select id="posFilter" onchange="applyFilters()">
+                    <option value="ALL">All Positions</option>
+                    <option value="ATT">Attackers (ST, CF, RW, LW)</option>
+                    <option value="MID">Midfielders (CM, CAM, CDM)</option>
+                    <option value="DEF">Defenders (CB, LB, RB)</option>
+                </select>
+
+                <label>Sort By:</label>
+                <select id="sortBy" onchange="applyFilters()">
+                    <option value="ovr">Overall Rating</option>
+                    <option value="goals">Most Goals</option>
+                    <option value="assists">Most Assists</option>
+                </select>
+            </div>
+        </div>
+        <div id="leaderboard"></div>
+    </div>
+
+    <!-- TAB 2: CALENDAR -->
+    <div id="calendarTab" class="tab-content">
+        <div class="controls-section">
+            <button id="addMatchBtn" class="open-modal-btn" onclick="openMatchModal()">+ Schedule Match</button>
+        </div>
+        <div id="matchesGrid" class="matches-grid"></div>
+    </div>
+
+    <!-- TAB 3: LEAGUE TABLE -->
+    <div id="tableTab" class="tab-content">
+        <div class="controls-section">
+            <button id="addTeamBtn" class="open-modal-btn" onclick="openTeamModal()">+ Add Team</button>
+        </div>
+        <div class="league-table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Pos</th>
+                        <th>Team</th>
+                        <th>P</th>
+                        <th>W</th>
+                        <th>D</th>
+                        <th>L</th>
+                        <th>GD</th>
+                        <th>PTS</th>
+                        <th class="admin-only-col" style="display:none;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="leagueTableBody"></tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <!-- Admin Login Modal -->
@@ -369,6 +494,44 @@
             <input type="password" id="adminPass" placeholder="Password">
             <button class="save-btn" onclick="loginAdmin()">Login</button>
             <div id="loginError" class="login-error">Invalid admin credentials</div>
+        </div>
+    </div>
+</div>
+
+<!-- Add/Edit Team Modal -->
+<div id="teamModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeTeamModal()">&times;</span>
+        <div class="modal-header" id="teamModalTitle">Add Team</div>
+        <div class="form-grid">
+            <input type="hidden" id="team-id">
+            <input type="text" id="team-name" placeholder="Team Name" class="full-width">
+            <input type="number" id="team-played" placeholder="Played (P)">
+            <input type="number" id="team-wins" placeholder="Wins (W)">
+            <input type="number" id="team-draws" placeholder="Draws (D)">
+            <input type="number" id="team-losses" placeholder="Losses (L)">
+            <input type="number" id="team-gd" placeholder="Goal Difference (GD)" class="full-width">
+            <button class="save-btn" onclick="saveTeam()">Save Team Stats</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Match Modal -->
+<div id="matchModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeMatchModal()">&times;</span>
+        <div class="modal-header">Schedule Match</div>
+        <div class="form-grid">
+            <input type="text" id="match-home" placeholder="Home Team">
+            <input type="text" id="match-away" placeholder="Away Team">
+            <input type="date" id="match-date">
+            <input type="time" id="match-time">
+            <select id="match-status" class="full-width">
+                <option value="Upcoming">Upcoming</option>
+                <option value="Live">Live</option>
+                <option value="Final">Final</option>
+            </select>
+            <button class="save-btn" onclick="saveMatch()">Save Match</button>
         </div>
     </div>
 </div>
@@ -388,7 +551,6 @@
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal()">&times;</span>
         <div class="modal-header" id="modalTitle">Add Player</div>
-        
         <div class="form-grid">
             <input type="hidden" id="edit-id">
             <input type="text" id="name" placeholder="Full Name" class="full-width">
@@ -414,12 +576,9 @@
             <input type="number" id="dri" placeholder="DRI" max="99">
             <input type="number" id="def" placeholder="DEF" max="99">
             <input type="number" id="phy" placeholder="PHY" max="99">
-            
             <input type="number" id="goals" placeholder="Goals Scored">
             <input type="number" id="assists" placeholder="Assists">
-
-            <input type="text" id="playstyles" placeholder="PlayStyles (e.g. Finesse Shot, Power Header)" class="full-width">
-
+            <input type="text" id="playstyles" placeholder="PlayStyles (e.g. Finesse Shot)" class="full-width">
             <button class="save-btn" onclick="savePlayer()" id="saveBtnText">Save Player Data</button>
         </div>
     </div>
@@ -432,68 +591,238 @@
 
     let rawPlayers = [];
     let displayedPlayers = [];
+    let teamsList = [];
+    let matchesList = [];
     let isAdmin = false;
 
-    const modal = document.getElementById('playerModal');
-    const detailModal = document.getElementById('detailModal');
-    const adminModal = document.getElementById('adminModal');
+    // Tab Navigation
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        if(tabName === 'cards') {
+            document.getElementById('cardsTab').classList.add('active');
+            event.target.classList.add('active');
+        } else if(tabName === 'calendar') {
+            document.getElementById('calendarTab').classList.add('active');
+            event.target.classList.add('active');
+            fetchMatches();
+        } else if(tabName === 'table') {
+            document.getElementById('tableTab').classList.add('active');
+            event.target.classList.add('active');
+            fetchTeams();
+        }
+    }
+
+    /* Weighted OVR Calculation */
+    function calculateWeightedOVR(pos, pac, sho, pas, dri, def, phy) {
+        const position = (pos || '').toUpperCase();
+        let ovr = 0;
+        if (['ST', 'CF'].some(p => position.includes(p))) {
+            ovr = (sho * 0.40) + (dri * 0.25) + (pac * 0.15) + (phy * 0.10) + (pas * 0.10);
+        } else if (['RW', 'LW', 'RM', 'LM'].some(p => position.includes(p))) {
+            ovr = (pac * 0.35) + (dri * 0.30) + (pas * 0.15) + (sho * 0.15) + (phy * 0.05);
+        } else if (position.includes('CAM')) {
+            ovr = (pas * 0.35) + (dri * 0.30) + (sho * 0.20) + (pac * 0.10) + (phy * 0.05);
+        } else if (position.includes('CDM')) {
+            ovr = (def * 0.35) + (phy * 0.25) + (pas * 0.20) + (dri * 0.10) + (pac * 0.10);
+        } else if (position.includes('CM')) {
+            ovr = (pas * 0.30) + (dri * 0.20) + (def * 0.15) + (phy * 0.15) + (sho * 0.10) + (pac * 0.10);
+        } else if (['RB', 'LB', 'RWB', 'LWB'].some(p => position.includes(p))) {
+            ovr = (pac * 0.30) + (def * 0.30) + (phy * 0.15) + (pas * 0.15) + (dri * 0.10);
+        } else if (position.includes('CB')) {
+            ovr = (def * 0.45) + (phy * 0.35) + (pac * 0.10) + (pas * 0.05) + (dri * 0.05);
+        } else {
+            ovr = (pac + sho + pas + dri + def + phy) / 6;
+        }
+        return Math.round(ovr);
+    }
 
     async function fetchPlayers() {
-        const { data, error } = await db
-            .from('players_records')
-            .select('*');
-
-        if (error) { console.error('Error fetching players:', error); return; }
+        const { data } = await db.from('players_records').select('*');
         rawPlayers = data || [];
         applyFilters();
     }
 
-    /* Admin Functionality */
-    function openAdminModal() { adminModal.style.display = 'block'; }
-    function closeAdminModal() { 
-        adminModal.style.display = 'none'; 
-        document.getElementById('loginError').style.display = 'none';
+    async function fetchTeams() {
+        const { data } = await db.from('teams').select('*');
+        teamsList = data || [];
+        renderLeagueTable();
     }
+
+    async function fetchMatches() {
+        const { data } = await db.from('matches').select('*');
+        matchesList = data || [];
+        renderCalendar();
+    }
+
+    /* Admin Login */
+    function openAdminModal() { document.getElementById('adminModal').style.display = 'block'; }
+    function closeAdminModal() { document.getElementById('adminModal').style.display = 'none'; }
 
     async function loginAdmin() {
         const userInput = document.getElementById('adminUser').value.trim();
         const passInput = document.getElementById('adminPass').value.trim();
-        const errDiv = document.getElementById('loginError');
+        const { data } = await db.from('admins').select('*').eq('username', userInput).eq('password', passInput);
 
-        // Clean query strictly matching existing columns: username and password
-        const { data, error } = await db
-            .from('admins')
-            .select('*')
-            .eq('username', userInput)
-            .eq('password', passInput);
-
-        if (error) {
-            console.error('Supabase error checking admins table:', error);
-            errDiv.innerText = "Error: " + error.message;
-            errDiv.style.display = 'block';
-            return;
+        if (data && data.length > 0) {
+            isAdmin = true;
+            closeAdminModal();
+            enableAdminUI();
+        } else {
+            document.getElementById('loginError').style.display = 'block';
         }
-
-        if (!data || data.length === 0) {
-            errDiv.innerText = "Invalid admin credentials";
-            errDiv.style.display = 'block';
-            return;
-        }
-
-        isAdmin = true;
-        closeAdminModal();
-        enableAdminUI();
     }
 
     function enableAdminUI() {
         document.getElementById('adminLoginBtn').style.display = 'none';
         document.getElementById('adminBadge').style.display = 'inline-block';
-        document.getElementById('addPlayerBtn').style.display = 'block';
-        document.getElementById('editFromDetailBtn').style.display = 'block';
-        
-        document.querySelectorAll('.delete-btn').forEach(btn => btn.style.display = 'block');
+        document.querySelectorAll('.open-modal-btn').forEach(b => b.style.display = 'block');
+        document.querySelectorAll('.admin-only-col').forEach(c => c.style.display = 'table-cell');
+        renderLeaderboard();
+        renderLeagueTable();
+        renderCalendar();
     }
 
+    /* League Table Logic */
+    function renderLeagueTable() {
+        const body = document.getElementById('leagueTableBody');
+        body.innerHTML = '';
+
+        // Calculate Points: (Wins * 3) + Draws
+        teamsList.forEach(t => {
+            t.pts = (t.wins * 3) + (t.draws * 1);
+        });
+
+        // Sort by Points descending, then Goal Difference
+        teamsList.sort((a, b) => b.pts - a.pts || b.gd - a.gd);
+
+        teamsList.forEach((t, i) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${i + 1}</td>
+                <td>${t.name}</td>
+                <td>${t.played || 0}</td>
+                <td>${t.wins || 0}</td>
+                <td>${t.draws || 0}</td>
+                <td>${t.losses || 0}</td>
+                <td>${t.gd || 0}</td>
+                <td class="pts-col">${t.pts}</td>
+                <td class="admin-only-col" style="display:${isAdmin ? 'table-cell' : 'none'};">
+                    <button onclick="openTeamModal('${t.id}')" style="background:var(--gold); border:none; padding:4px 8px; border-radius:4px; font-weight:800; cursor:pointer;">Edit</button>
+                    <button onclick="deleteTeam('${t.id}')" style="background:#e74c3c; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-weight:800; cursor:pointer;">X</button>
+                </td>
+            `;
+            body.appendChild(row);
+        });
+    }
+
+    function openTeamModal(id = null) {
+        if(!isAdmin) return;
+        document.getElementById('team-id').value = '';
+        document.getElementById('team-name').value = '';
+        document.getElementById('team-played').value = '';
+        document.getElementById('team-wins').value = '';
+        document.getElementById('team-draws').value = '';
+        document.getElementById('team-losses').value = '';
+        document.getElementById('team-gd').value = '';
+
+        if(id) {
+            const t = teamsList.find(x => String(x.id) === String(id));
+            if(t) {
+                document.getElementById('team-id').value = t.id;
+                document.getElementById('team-name').value = t.name;
+                document.getElementById('team-played').value = t.played;
+                document.getElementById('team-wins').value = t.wins;
+                document.getElementById('team-draws').value = t.draws;
+                document.getElementById('team-losses').value = t.losses;
+                document.getElementById('team-gd').value = t.gd;
+            }
+        }
+        document.getElementById('teamModal').style.display = 'block';
+    }
+    function closeTeamModal() { document.getElementById('teamModal').style.display = 'none'; }
+
+    async function saveTeam() {
+        const id = document.getElementById('team-id').value;
+        const wins = parseInt(document.getElementById('team-wins').value) || 0;
+        const draws = parseInt(document.getElementById('team-draws').value) || 0;
+
+        const teamData = {
+            name: document.getElementById('team-name').value,
+            played: parseInt(document.getElementById('team-played').value) || 0,
+            wins: wins,
+            draws: draws,
+            losses: parseInt(document.getElementById('team-losses').value) || 0,
+            gd: parseInt(document.getElementById('team-gd').value) || 0,
+            pts: (wins * 3) + draws
+        };
+
+        if(id) {
+            await db.from('teams').update(teamData).eq('id', id);
+        } else {
+            await db.from('teams').insert([teamData]);
+        }
+        closeTeamModal();
+        fetchTeams();
+    }
+
+    async function deleteTeam(id) {
+        if(confirm("Delete team?")) {
+            await db.from('teams').delete().eq('id', id);
+            fetchTeams();
+        }
+    }
+
+    /* Match Calendar Logic */
+    function renderCalendar() {
+        const grid = document.getElementById('matchesGrid');
+        grid.innerHTML = '';
+
+        matchesList.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'match-card';
+            let statusClass = m.status === 'Live' ? 'status-live' : 'status-upcoming';
+
+            card.innerHTML = `
+                <div class="match-date">📅 ${m.match_date || 'TBD'} • ${m.match_time || ''}</div>
+                <div class="match-teams">
+                    <span>${m.home_team}</span>
+                    <span style="color:var(--gold); font-size:0.8rem;">VS</span>
+                    <span>${m.away_team}</span>
+                </div>
+                <span class="match-status ${statusClass}">${m.status || 'Upcoming'}</span>
+                ${isAdmin ? `<button onclick="deleteMatch('${m.id}')" style="position:absolute; top:15px; right:15px; background:#e74c3c; color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer;">X</button>` : ''}
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function openMatchModal() { if(isAdmin) document.getElementById('matchModal').style.display = 'block'; }
+    function closeMatchModal() { document.getElementById('matchModal').style.display = 'none'; }
+
+    async function saveMatch() {
+        const matchData = {
+            home_team: document.getElementById('match-home').value,
+            away_team: document.getElementById('match-away').value,
+            match_date: document.getElementById('match-date').value,
+            match_time: document.getElementById('match-time').value,
+            status: document.getElementById('match-status').value
+        };
+
+        await db.from('matches').insert([matchData]);
+        closeMatchModal();
+        fetchMatches();
+    }
+
+    async function deleteMatch(id) {
+        if(confirm("Delete match?")) {
+            await db.from('matches').delete().eq('id', id);
+            fetchMatches();
+        }
+    }
+
+    /* Existing Player Cards & Filtering */
     function applyFilters() {
         const posFilter = document.getElementById('posFilter').value;
         const sortBy = document.getElementById('sortBy').value;
@@ -510,13 +839,54 @@
         renderLeaderboard();
     }
 
+    function renderLeaderboard() {
+        const container = document.getElementById('leaderboard');
+        container.innerHTML = '';
+
+        displayedPlayers.forEach((p) => {
+            const ovrVal = p.ovr || 75;
+            let tierClass = 'gold';
+            if (ovrVal < 65) tierClass = 'bronze';
+            else if (ovrVal < 75) tierClass = 'silver';
+
+            const posText = p.pos || 'ST';
+            const posFontSize = posText.length > 6 ? '0.65rem' : posText.length > 3 ? '0.8rem' : '1rem';
+
+            const card = document.createElement('div');
+            card.className = `fc-card ${tierClass}`;
+            const imgSrc = (p.img && p.img !== 'EMPTY') ? p.img : 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png';
+
+            card.innerHTML = `
+                <div class="fc-card-inner">
+                    <button class="delete-btn" style="display: ${isAdmin ? 'block' : 'none'};" onclick="event.stopPropagation(); deletePlayer('${p.id}')">X</button>
+                    <div class="card-top-left">
+                        <div class="card-ovr">${ovrVal}</div>
+                        <div class="card-pos" style="font-size: ${posFontSize};">${posText}</div>
+                    </div>
+                    <img src="${imgSrc}" class="card-player-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
+                    <div class="card-name">${p.name}</div>
+                    <div class="card-stats">
+                        <div>PAC<span class="stat-val">${p.pac || 70}</span></div>
+                        <div>SHO<span class="stat-val">${p.sho || 70}</span></div>
+                        <div>PAS<span class="stat-val">${p.pas || 70}</span></div>
+                        <div>DRI<span class="stat-val">${p.dri || 70}</span></div>
+                        <div>DEF<span class="stat-val">${p.def || 70}</span></div>
+                        <div>PHY<span class="stat-val">${p.phy || 70}</span></div>
+                    </div>
+                    <div class="card-badges">
+                        <span>⚽ ${p.goals || 0}</span>
+                        <span>🅰️ ${p.assists || 0}</span>
+                    </div>
+                </div>
+            `;
+            card.addEventListener('click', () => openDetailModal(p));
+            container.appendChild(card);
+        });
+    }
+
     function openDetailModal(p) {
         document.getElementById('detailName').innerText = p.name;
-        
-        const playstyleTags = (p.playstyles || 'None')
-            .split(',')
-            .map(ps => `<span class="playstyle-badge">${ps.trim()}</span>`)
-            .join('');
+        const playstyleTags = (p.playstyles || 'None').split(',').map(ps => `<span class="playstyle-badge">${ps.trim()}</span>`).join('');
 
         document.getElementById('detailBody').innerHTML = `
             <div class="detail-row"><span>Position</span><strong>${p.pos}</strong></div>
@@ -533,15 +903,11 @@
 
         const editBtn = document.getElementById('editFromDetailBtn');
         editBtn.style.display = isAdmin ? 'block' : 'none';
-        editBtn.onclick = () => {
-            closeDetailModal();
-            openEditModal(p.id);
-        };
-
-        detailModal.style.display = "block";
+        editBtn.onclick = () => { closeDetailModal(); openEditModal(p.id); };
+        document.getElementById('detailModal').style.display = "block";
     }
 
-    function closeDetailModal() { detailModal.style.display = "none"; }
+    function closeDetailModal() { document.getElementById('detailModal').style.display = "none"; }
 
     function openEditModal(playerId = null) {
         if (!isAdmin) return;
@@ -567,119 +933,52 @@
             document.getElementById('playstyles').value = p.playstyles || '';
             document.getElementById('saveBtnText').innerText = "Update Player Info";
         }
-        modal.style.display = "block";
+        document.getElementById('playerModal').style.display = "block";
     }
 
-    function closeModal() { modal.style.display = "none"; }
+    function closeModal() { document.getElementById('playerModal').style.display = "none"; }
 
     async function savePlayer() {
         if (!isAdmin) return;
+        const posInput = document.getElementById('pos').value || "ST";
+        const pac = parseInt(document.getElementById('pac').value) || 70;
+        const sho = parseInt(document.getElementById('sho').value) || 70;
+        const pas = parseInt(document.getElementById('pas').value) || 70;
+        const dri = parseInt(document.getElementById('dri').value) || 70;
+        const def = parseInt(document.getElementById('def').value) || 70;
+        const phy = parseInt(document.getElementById('phy').value) || 70;
 
-        const idInput = document.getElementById('edit-id').value;
-        const stats = [
-            parseInt(document.getElementById('pac').value) || 70,
-            parseInt(document.getElementById('sho').value) || 70,
-            parseInt(document.getElementById('pas').value) || 70,
-            parseInt(document.getElementById('dri').value) || 70,
-            parseInt(document.getElementById('def').value) || 70,
-            parseInt(document.getElementById('phy').value) || 70
-        ];
-        const ovr = Math.round(stats.reduce((a, b) => a + b) / 6);
+        const ovr = calculateWeightedOVR(posInput, pac, sho, pas, dri, def, phy);
         
         const playerData = {
             name: document.getElementById('name').value || "Player",
             img: document.getElementById('img-url').value || "https://cdn-icons-png.flaticon.com/512/1163/1163481.png",
-            pos: (document.getElementById('pos').value || "ST").toUpperCase(),
+            pos: posInput.toUpperCase(),
             wf: document.getElementById('wf').value,
             sm: parseInt(document.getElementById('sm').value) || 4,
-            pac: stats[0], sho: stats[1], pas: stats[2],
-            dri: stats[3], def: stats[4], phy: stats[5],
+            pac: pac, sho: sho, pas: pas, dri: dri, def: def, phy: phy,
             goals: parseInt(document.getElementById('goals').value) || 0,
             assists: parseInt(document.getElementById('assists').value) || 0,
             playstyles: document.getElementById('playstyles').value || 'Technical',
             ovr: ovr
         };
 
-        let res;
+        const idInput = document.getElementById('edit-id').value;
         if (idInput) {
-            res = await db.from('players_records').update(playerData).eq('id', idInput);
+            await db.from('players_records').update(playerData).eq('id', idInput);
         } else {
-            res = await db.from('players_records').insert([playerData]);
+            await db.from('players_records').insert([playerData]);
         }
-
-        if (res.error) {
-            console.error("Save error from Supabase:", res.error);
-            alert("Error saving player: " + res.error.message);
-            return;
-        }
-
         closeModal();
         fetchPlayers();
     }
 
     async function deletePlayer(playerId) {
         if (!isAdmin) return;
-        if (confirm("Permanently delete this player?")) {
-            const { error } = await db.from('players_records').delete().eq('id', playerId);
-            if (error) {
-                console.error("Delete error from Supabase:", error);
-                alert("Error deleting player: " + error.message);
-                return;
-            }
+        if (confirm("Delete player?")) {
+            await db.from('players_records').delete().eq('id', playerId);
             fetchPlayers();
         }
-    }
-
-    function renderLeaderboard() {
-        const container = document.getElementById('leaderboard');
-        container.innerHTML = '';
-
-        displayedPlayers.forEach((p) => {
-            const ovrVal = p.ovr || 75;
-            let tierClass = 'gold';
-            if (ovrVal < 65) tierClass = 'bronze';
-            else if (ovrVal < 75) tierClass = 'silver';
-
-            const posText = p.pos || 'ST';
-            const posFontSize = posText.length > 6 ? '0.65rem' : posText.length > 3 ? '0.8rem' : '1rem';
-
-            const card = document.createElement('div');
-            card.className = `fc-card ${tierClass}`;
-            
-            const imgSrc = (p.img && p.img !== 'EMPTY') ? p.img : 'https://cdn-icons-png.flaticon.com/512/1163/1163481.png';
-
-            card.innerHTML = `
-                <div class="fc-card-inner">
-                    <button class="delete-btn" style="display: ${isAdmin ? 'block' : 'none'};" onclick="event.stopPropagation(); deletePlayer('${p.id}')">X</button>
-                    
-                    <div class="card-top-left">
-                        <div class="card-ovr">${ovrVal}</div>
-                        <div class="card-pos" style="font-size: ${posFontSize};">${posText}</div>
-                    </div>
-
-                    <img src="${imgSrc}" class="card-player-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1163/1163481.png'">
-
-                    <div class="card-name">${p.name}</div>
-
-                    <div class="card-stats">
-                        <div>PAC<span class="stat-val">${p.pac || 70}</span></div>
-                        <div>SHO<span class="stat-val">${p.sho || 70}</span></div>
-                        <div>PAS<span class="stat-val">${p.pas || 70}</span></div>
-                        <div>DRI<span class="stat-val">${p.dri || 70}</span></div>
-                        <div>DEF<span class="stat-val">${p.def || 70}</span></div>
-                        <div>PHY<span class="stat-val">${p.phy || 70}</span></div>
-                    </div>
-
-                    <div class="card-badges">
-                        <span>⚽ ${p.goals || 0}</span>
-                        <span>🅰️ ${p.assists || 0}</span>
-                    </div>
-                </div>
-            `;
-
-            card.addEventListener('click', () => openDetailModal(p));
-            container.appendChild(card);
-        });
     }
 
     function resetForm() {
@@ -700,12 +999,6 @@
         document.getElementById('sm').value = '4';
         document.getElementById('modalTitle').innerText = 'Add New Player';
         document.getElementById('saveBtnText').innerText = 'Add to League';
-    }
-
-    window.onclick = function(e) {
-        if (e.target == modal) closeModal();
-        if (e.target == detailModal) closeDetailModal();
-        if (e.target == adminModal) closeAdminModal();
     }
 
     fetchPlayers();
