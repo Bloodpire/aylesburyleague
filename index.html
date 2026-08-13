@@ -4,21 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aylesbury League</title>
+    <!-- Supabase JS Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --card-bg: #1e293b;
+            --bg-dark: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
             --accent-yellow: #f59e0b;
             --accent-green: #10b981;
-            --text-light: #f8fafc;
-            --text-muted: #94a3b8;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-dark);
-            color: var(--text-light);
+            color: var(--text-main);
             margin: 0;
             padding: 20px;
         }
@@ -27,8 +33,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto 30px auto;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
         }
 
         .logo-title {
@@ -42,46 +50,59 @@
             color: var(--accent-yellow);
             margin: 0;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            font-weight: 800;
         }
 
         .admin-badge {
-            background-color: rgba(16, 185, 129, 0.2);
+            background-color: rgba(16, 185, 129, 0.15);
             color: var(--accent-green);
-            padding: 6px 16px;
+            padding: 8px 18px;
             border-radius: 20px;
-            font-weight: bold;
+            font-weight: 700;
             font-size: 0.85rem;
             border: 1px solid var(--accent-green);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
+        /* Nav Tabs */
         .nav-tabs {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
+            justify-content: flex-start;
+            gap: 10px;
+            max-width: 1100px;
+            margin: 0 auto 25px auto;
         }
 
         .tab-btn {
             background-color: var(--card-bg);
-            color: var(--text-light);
-            border: none;
-            padding: 12px 24px;
-            font-size: 1rem;
-            font-weight: bold;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            font-weight: 800;
             border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease-in-out;
+            letter-spacing: 0.5px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            border-color: var(--text-muted);
         }
 
         .tab-btn.active {
             background-color: var(--accent-yellow);
-            color: #000;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+            color: #0d1117;
+            border-color: var(--accent-yellow);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
         }
 
@@ -93,56 +114,73 @@
             display: block;
         }
 
+        /* Action Bar */
         .action-bar {
             background-color: var(--card-bg);
-            padding: 15px 20px;
+            padding: 18px;
             border-radius: 10px;
+            border: 1px solid var(--border-color);
             margin-bottom: 20px;
         }
 
         .btn-add {
             background-color: var(--accent-yellow);
-            color: #000;
+            color: #0d1117;
             border: none;
-            padding: 10px 20px;
-            font-weight: bold;
+            padding: 10px 22px;
+            font-weight: 800;
+            font-size: 0.9rem;
             border-radius: 20px;
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: transform 0.1s ease;
         }
 
         .btn-add:hover {
-            transform: scale(1.03);
+            transform: translateY(-2px);
+            filter: brightness(1.1);
         }
 
-        /* League Table Styles */
+        /* Dark Table */
         table {
             width: 100%;
             border-collapse: collapse;
             background-color: var(--card-bg);
             border-radius: 10px;
             overflow: hidden;
+            border: 1px solid var(--border-color);
         }
 
         th, td {
-            padding: 14px 18px;
+            padding: 16px 20px;
             text-align: center;
         }
 
         th {
-            background-color: rgba(0, 0, 0, 0.2);
+            background-color: rgba(0, 0, 0, 0.4);
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        tr:nth-child(even) {
+        td {
+            border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
             background-color: rgba(255, 255, 255, 0.02);
         }
 
         .team-name-cell {
             text-align: left;
-            font-weight: bold;
+            font-weight: 700;
+            color: #ffffff;
         }
 
         /* Player Cards Grid */
@@ -153,22 +191,30 @@
         }
 
         .fifa-card {
-            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-            border-radius: 12px;
-            padding: 15px;
+            background: linear-gradient(145deg, #1f2937, #111827);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px 15px;
             color: white;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             position: relative;
             text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .fifa-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-yellow);
         }
 
         .fifa-card img {
-            width: 100px;
-            height: 100px;
+            width: 105px;
+            height: 105px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid white;
-            margin-bottom: 10px;
+            border: 3px solid var(--accent-yellow);
+            margin: 10px 0;
+            background-color: var(--bg-dark);
         }
 
         .fifa-card .player-rating {
@@ -176,29 +222,33 @@
             font-weight: 900;
             position: absolute;
             top: 15px;
-            left: 15px;
+            left: 18px;
+            color: var(--accent-yellow);
         }
 
         .fifa-card .player-pos {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             position: absolute;
-            top: 45px;
-            left: 15px;
-            font-weight: bold;
-            color: #cbd5e1;
+            top: 48px;
+            left: 18px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
         }
 
         .fifa-card h3 {
-            margin: 5px 0;
-            font-size: 1.2rem;
+            margin: 8px 0 0 0;
+            font-size: 1.1rem;
+            color: #ffffff;
         }
 
-        /* Modal Styles */
+        /* Modals */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.75);
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -206,63 +256,74 @@
 
         .modal-content {
             background-color: var(--card-bg);
-            padding: 25px;
-            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 14px;
             width: 90%;
-            max-width: 400px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
         }
 
         .modal-content h2 {
             margin-top: 0;
             color: var(--accent-yellow);
+            font-size: 1.3rem;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 6px;
             text-align: left;
         }
 
         .form-group label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
         }
 
-        .form-group input, .form-group select {
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid #334155;
-            background-color: #0f172a;
-            color: white;
+        .form-group input {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            font-size: 0.95rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-yellow);
         }
 
         .modal-actions {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
         }
 
         .btn-cancel {
-            background-color: #475569;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            background-color: #21262d;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: 600;
         }
 
         .btn-save {
             background-color: var(--accent-green);
-            color: white;
+            color: #0d1117;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 800;
         }
     </style>
 </head>
@@ -270,7 +331,7 @@
 
     <header>
         <div class="logo-title">
-            <span style="font-size: 2rem;">⚽</span>
+            <span style="font-size: 2.2rem;">⚽</span>
             <h1>Aylesbury League</h1>
         </div>
         <div class="admin-badge">⚡ Admin Active</div>
@@ -283,7 +344,7 @@
     </div>
 
     <div class="container">
-        <!-- LEAGUE TABLE TAB -->
+        <!-- LEAGUE TAB -->
         <div id="league-tab" class="tab-content active">
             <div class="action-bar">
                 <button class="btn-add" onclick="openModal('team-modal')">+ ADD TEAM</button>
@@ -341,7 +402,7 @@
         </div>
     </div>
 
-    <!-- ADD TEAM MODAL -->
+    <!-- MODALS -->
     <div id="team-modal" class="modal">
         <div class="modal-content">
             <h2>Add New Team</h2>
@@ -356,7 +417,6 @@
         </div>
     </div>
 
-    <!-- ADD MATCH MODAL -->
     <div id="match-modal" class="modal">
         <div class="modal-content">
             <h2>Schedule Match</h2>
@@ -369,11 +429,11 @@
                 <input type="text" id="match-away" placeholder="Away Team Name">
             </div>
             <div class="form-group">
-                <label>Match Date</label>
+                <label>Date</label>
                 <input type="date" id="match-date">
             </div>
             <div class="form-group">
-                <label>Match Time</label>
+                <label>Time</label>
                 <input type="time" id="match-time">
             </div>
             <div class="modal-actions">
@@ -383,13 +443,12 @@
         </div>
     </div>
 
-    <!-- ADD PLAYER MODAL -->
     <div id="player-modal" class="modal">
         <div class="modal-content">
             <h2>Add Player Card</h2>
             <div class="form-group">
                 <label>Player Name</label>
-                <input type="text" id="player-name" placeholder="e.g. John Doe">
+                <input type="text" id="player-name" placeholder="e.g. John Smith">
             </div>
             <div class="form-group">
                 <label>Position</label>
@@ -400,7 +459,7 @@
                 <input type="number" id="player-rating" value="80">
             </div>
             <div class="form-group">
-                <label>Upload Image File (Supabase Storage)</label>
+                <label>Upload Image File</label>
                 <input type="file" id="player-img-file" accept="image/*">
             </div>
             <div class="form-group">
@@ -415,12 +474,12 @@
     </div>
 
     <script>
-        // SUPABASE INIT - Replace with your project details
+        // SUPABASE SETUP (Ensure URL has NO trailing /rest/v1/)
         const SUPABASE_URL = 'https://bmwiqpkgdbohkwbqaft.supabase.co';
-        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+        const SUPABASE_KEY = 'YOUR_ACTUAL_SUPABASE_ANON_KEY';
         const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // TAB SWITCHING LOGIC
+        // TAB SWITCHER
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -440,11 +499,11 @@
             }
         }
 
-        // MODAL HELPERS
+        // MODAL TOGGLES
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-        // --- TEAMS LOGIC ---
+        // --- TEAMS DATA ---
         async function fetchTeams() {
             const { data, error } = await db.from('teams').select('*').order('pts', { ascending: false });
             if (error) return console.error(error);
@@ -471,9 +530,9 @@
 
         async function saveTeam() {
             const name = document.getElementById('team-name').value;
-            if (!name) return alert('Enter a team name!');
+            if (!name) return alert('Please enter a team name!');
 
-            // gd is EXCLUDED so Supabase calculates it automatically!
+            // gd is left out so Supabase generated column calculates it automatically!
             const { error } = await db.from('teams').insert([{
                 name: name,
                 played: 0,
@@ -494,7 +553,7 @@
             }
         }
 
-        // --- MATCHES LOGIC ---
+        // --- MATCHES DATA ---
         async function fetchMatches() {
             const { data, error } = await db.from('matches').select('*').order('match_date', { ascending: true });
             if (error) return console.error(error);
@@ -506,8 +565,8 @@
                     <tr>
                         <td>${match.match_date || 'TBD'}</td>
                         <td>${match.match_time || 'TBD'}</td>
-                        <td>${match.home_team}</td>
-                        <td>${match.away_team}</td>
+                        <td class="team-name-cell">${match.home_team}</td>
+                        <td class="team-name-cell">${match.away_team}</td>
                         <td>${match.status || 'Upcoming'}</td>
                     </tr>
                 `;
@@ -520,7 +579,7 @@
             const date = document.getElementById('match-date').value;
             const time = document.getElementById('match-time').value;
 
-            if (!home || !away) return alert('Please enter both teams!');
+            if (!home || !away) return alert('Enter both teams!');
 
             const { error } = await db.from('matches').insert([{
                 home_team: home,
@@ -538,7 +597,7 @@
             }
         }
 
-        // --- PLAYERS / CARDS LOGIC ---
+        // --- PLAYERS / CARDS DATA ---
         async function fetchPlayers() {
             const { data, error } = await db.from('players').select('*');
             if (error) return console.error(error);
@@ -567,11 +626,11 @@
 
             if (!name) return alert('Enter player name!');
 
-            // Supabase Storage handling if file was chosen
+            // Upload image to Supabase Storage if file is picked
             if (fileInput.files.length > 0) {
                 const file = fileInput.files[0];
                 const fileName = `${Date.now()}_${file.name}`;
-                const { data: uploadData, error: uploadErr } = await db.storage
+                const { error: uploadErr } = await db.storage
                     .from('player-photos')
                     .upload(fileName, file);
 
@@ -598,7 +657,7 @@
             }
         }
 
-        // Initial Load
+        // Load League Table on Startup
         fetchTeams();
     </script>
 </body>
